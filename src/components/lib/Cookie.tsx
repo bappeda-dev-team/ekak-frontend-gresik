@@ -18,7 +18,13 @@ export const getCookie = (name: string): string | null => {
   return null;
 };
 
-export const login = async (username: string, password: string): Promise<boolean> => {
+export const login = async (username: string, password: string, captcha_id: string, captcha_answer: string): Promise<boolean> => {
+  const payload = {
+    username: username,
+    password: password,
+    captcha_key: captcha_id,
+    captcha_answer: captcha_answer,
+  }
   try {
     const API_URL = process.env.NEXT_PUBLIC_API_URL;
     const response = await fetch(`${API_URL}/user/login`, {
@@ -26,7 +32,7 @@ export const login = async (username: string, password: string): Promise<boolean
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ username, password }),
+      body: JSON.stringify(payload),
     });
 
     const data = await response.json();

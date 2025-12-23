@@ -11,7 +11,11 @@ import {
   TbCalendar, TbHexagonLetterV, TbHexagonLetterM, TbClipboardText, TbZoomExclamation,
   TbListDetails, TbAlertTriangle, TbDatabasePlus, TbCalendarPlus, TbDeviceImacDollar, 
   TbFocus2, TbHexagonLetterC, TbHexagonLetterO, TbHexagonLetterI,
-  TbBuildingCottage, TbCalendarStar, TbChartPie, TbListTree
+  TbBuildingCottage, TbCalendarStar, TbChartPie, TbListTree,
+  TbBubble,
+  TbDatabaseLeak,
+  TbChefHat,
+  TbNotebook
 } from "react-icons/tb";
 import Image from 'next/image';
 import { usePathname, useParams } from 'next/navigation';
@@ -38,6 +42,7 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
   // MENU UTAMA
   const [DataMaster, setDataMaster] = useState<boolean | null>(null);
   const [DataMasterOpd, setDataMasterOpd] = useState<boolean | null>(null);
+  const [DataMasterDewan, setDataMasterDewan] = useState<boolean | null>(null);
   const [PerencanaanKota, setPerencanaanKota] = useState<boolean | null>(null);
   const [PerencanaanOPD, setPerencanaanOPD] = useState<boolean | null>(null);
   const [Perencanaan, setPerencanaan] = useState<boolean | null>(null);
@@ -67,6 +72,7 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
     ) {
       setDataMaster(true);
       setDataMasterOpd(false);
+      setDataMasterDewan(false);
       setPerencanaanKota(false);
       setPerencanaanOPD(false);
       setLaporan(false);
@@ -85,6 +91,18 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
     ) {
       setDataMaster(false);
       setDataMasterOpd(true);
+      setDataMasterDewan(false);
+      setPerencanaanKota(false);
+      setPerencanaanOPD(false);
+      setLaporan(false);
+    }
+    //DATA MASTER DEWAN
+    if (
+      url.startsWith("/DataMasterDewan")
+    ) {
+      setDataMaster(false);
+      setDataMasterOpd(false);
+      setDataMasterDewan(true);
       setPerencanaanKota(false);
       setPerencanaanOPD(false);
       setLaporan(false);
@@ -103,6 +121,7 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
     ) {
       setDataMaster(false);
       setDataMasterOpd(false);
+      setDataMasterDewan(false);
       setPerencanaanKota(true);
       setPerencanaanOPD(false);
       setLaporan(false);
@@ -153,6 +172,7 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
     ) {
       setDataMaster(false);
       setDataMasterOpd(false);
+      setDataMasterDewan(false);
       setPerencanaanKota(false);
       setPerencanaanOPD(true);
       setPerencanaan(false);
@@ -192,6 +212,7 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
     ) {
       setDataMaster(false);
       setDataMasterOpd(false);
+      setDataMasterDewan(false);
       setPerencanaanKota(false);
       setPerencanaanOPD(false);
       setPerencanaan(true);
@@ -220,10 +241,12 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       url === `/laporancascadingpemda` ||
       url === `/controlpokin` ||
       url === `/leaderboardrekin` ||
+      url === `/laporanpokir` ||
       url === "/laporancascadingopd"
     ) {
       setDataMaster(false);
       setDataMasterOpd(false);
+      setDataMasterDewan(false);
       setPerencanaanKota(false);
       setPerencanaanOPD(false);
       setPerencanaan(false);
@@ -374,6 +397,24 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
                   <span className={`${!isOpen && 'hidden'} origin-left duration-200`}>Program Unggulan</span>
                 </li>
               </Link>
+              <Link href="/DataMaster/master-dapil">
+                <li className={`flex items-center gap-x-2 cursor-pointer p-2 rounded-xl transition-all duration-300 ease-in-out ${url === "/DataMaster/master-dapil" ? "bg-white text-gray-800" : "hover:bg-slate-500"}`}>
+                  <TbMapPin className="text-xl" />
+                  <span className={`${!isOpen && 'hidden'} origin-left duration-200`}>Master Dapil</span>
+                </li>
+              </Link>
+              <Link href="/DataMaster/master-dewan">
+                <li className={`flex items-center gap-x-2 cursor-pointer p-2 rounded-xl transition-all duration-300 ease-in-out ${url === "/DataMaster/master-dewan" ? "bg-white text-gray-800" : "hover:bg-slate-500"}`}>
+                  <TbChefHat className="text-xl" />
+                  <span className={`${!isOpen && 'hidden'} origin-left duration-200`}>Master Dewan</span>
+                </li>
+              </Link>
+              <Link href="/DataMaster/master-kamus-usulan">
+                <li className={`flex items-center gap-x-2 cursor-pointer p-2 rounded-xl transition-all duration-300 ease-in-out ${url === "/DataMaster/master-kamus-usulan" ? "bg-white text-gray-800" : "hover:bg-slate-500"}`}>
+                  <TbNotebook className="text-xl" />
+                  <span className={`${!isOpen && 'hidden'} origin-left duration-200`}>Master Kamus Usulan</span>
+                </li>
+              </Link>
               {/* LABEL MASTER PROGRAM KEGIATAN */}
               <li
                 className={`flex justify-between items-center gap-x-2 cursor-pointer p-2 rounded-xl transition-all duration-300 ease-in-out hover:bg-slate-500`}
@@ -448,6 +489,37 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
                 <li className={`flex items-center gap-x-2 cursor-pointer p-2 rounded-xl ${url === "/subkegiatanopd" ? "bg-white text-gray-800" : "hover:bg-slate-500"}`}>
                   <TbFileCode2 className="text-xl" />
                   <span className={`${!isOpen && 'hidden'} origin-left duration-200`}>Sub Kegiatan OPD</span>
+                </li>
+              </Link>
+              <Link href="/usulanpokiropd">
+                <li className={`flex items-center gap-x-2 cursor-pointer p-2 rounded-xl ${url === "/usulanpokiropd" ? "bg-white text-gray-800" : "hover:bg-slate-500"}`}>
+                  <TbFileCode2 className="text-xl" />
+                  <span className={`${!isOpen && 'hidden'} origin-left duration-200`}>Usulan Pokir OPD</span>
+                </li>
+              </Link>
+            </div>
+          }
+
+
+          {/* LABEL DATA MASTER DEWAN */}
+          {(User?.roles == 'super_admin' || User?.roles == 'dewan') &&
+            <li
+              className={`flex justify-between items-center font-medium gap-x-2 cursor-pointer p-2 rounded-xl hover:bg-slate-500 transition-all duration-300 ease-in-out`}
+              onClick={() => setDataMasterDewan(DataMasterDewan ? false : true)}
+            >
+              <div className="flex items-center gap-2">
+                <TbDatabaseLeak className="text-xl" />
+                <span className={`${!isOpen && 'hidden'} origin-left duration-200`}>Data Master Dewan</span>
+              </div>
+              <TbChevronRight className={`transition-all duration-200 ease-in-out ${DataMasterDewan ? "rotate-90" : ""}`} />
+            </li>
+          }
+          {(User?.roles == 'super_admin' || User?.roles == 'dewan') &&
+            <div className={`transition-all duration-300 ease-in-out ${DataMasterDewan ? 'px-3 py-2 flex flex-col border-l-2 border-white rounded-b-xl ml-2  max-h-screen opacity-100' : 'max-h-0 opacity-0 pointer-events-none'}`}>
+              <Link href="/DataMasterDewan/pokir">
+                <li className={`flex items-center gap-x-2 cursor-pointer p-2 rounded-xl ${url === "/DataMasterDewan/pokir" ? "bg-white text-gray-800" : "hover:bg-slate-500"}`}>
+                  <TbBubble className="text-xl" />
+                  <span className={`${!isOpen && 'hidden'} origin-left duration-200`}>Pokir</span>
                 </li>
               </Link>
             </div>
@@ -855,6 +927,12 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
               <li className={`flex items-center gap-x-2 text-sm cursor-pointer p-2 rounded-xl ${url === "/leaderboardrekin" ? "bg-white text-gray-800" : "hover:bg-slate-500"}`}>
                 <TbChartBar className="text-xl" />
                 <span className={`${!isOpen && 'hidden'} origin-left duration-200`}>Leaderboard Rekin</span>
+              </li>
+            </Link>
+            <Link href="/laporanpokir">
+              <li className={`flex items-center gap-x-2 text-sm cursor-pointer p-2 rounded-xl ${url === "/laporanpokir" ? "bg-white text-gray-800" : "hover:bg-slate-500"}`}>
+                <TbBook2 className="text-xl" />
+                <span className={`${!isOpen && 'hidden'} origin-left duration-200`}>Laporan Pokir</span>
               </li>
             </Link>
             {/* LABEL LAPORAN REVIEW */}
