@@ -7,6 +7,7 @@ import { getToken } from "@/components/lib/Cookie";
 import { AlertNotification, AlertQuestion } from "@/components/global/Alert";
 import { TbCirclePlus, TbPencil, TbTrash } from "react-icons/tb";
 import { useBrandingContext } from "@/context/BrandingContext";
+import { ModalMasterDapil } from "./ModalMasterDapil";
 
 interface Dapil {
     id: number;
@@ -21,12 +22,13 @@ const Table = () => {
     const [Data, setData] = useState<Dapil[]>([]);
     const [Loading, setLoading] = useState<boolean | null>(null);
     const [Error, setError] = useState<boolean | null>(null);
-    const [DataNull, setDataNull] = useState<boolean | null>(null);
     const token = getToken();
     const { branding } = useBrandingContext();
 
     // MODAL & TRIGGER
-    const [ModalTambah, setModalTambah] = useState<boolean>(false);
+    const [ModalOpen, setModalOpen] = useState<boolean>(false);
+    const [DataModal, setDataModal] = useState<Dapil | null>(null);
+    const [JenisModal, setJenisModal] = useState<"tambah" | "edit">("tambah");
     const [fetchTrigger, setfetchTrigger] = useState<boolean>(false);
 
     useEffect(() => {
@@ -42,17 +44,14 @@ const Table = () => {
                 });
                 const result = await response.json();
                 const data = result.data;
-                if (data.length === 0) {
-                    setDataNull(true);
+                if (data === null) {
                     setData([]);
                 } else if (data.code == 500) {
                     setError(true);
                     setData([]);
                 } else {
-                    setDataNull(false);
                     setData(data);
                 }
-                setData(data);
             } catch (err) {
                 setError(true);
                 console.error(err)
@@ -63,15 +62,17 @@ const Table = () => {
         fetchSubKegiatan();
     }, [branding, fetchTrigger, token]);
 
-    // const handleModal = (jenis: "opd" | "all") => {
-    //     if (ModalTambah) {
-    //         setJenisModal("opd");
-    //         setModalTambah(false);
-    //     } else {
-    //         setJenisModal(jenis);
-    //         setModalTambah(true);
-    //     }
-    // }
+    const handleModal = (data: Dapil | null, jenis: "tambah" | "edit") => {
+        if (ModalOpen) {
+            setJenisModal(jenis);
+            setModalOpen(false);
+            setDataModal(data);
+        } else {
+            setJenisModal(jenis);
+            setModalOpen(true);
+            setDataModal(data);
+        }
+    }
 
     // const hapusDapil = async (id: any) => {
     //     const API_URL = process.env.NEXT_PUBLIC_API_URL;
@@ -108,7 +109,21 @@ const Table = () => {
     }
 
     return (
-        <>
+        <div className="mt-3 rounded-xl shadow-lg border">
+            <div className="flex items-center justify-between border-b px-5 py-5">
+                <div className="flex flex-col items-end">
+                    <h1 className="uppercase font-bold">Master Dapil</h1>
+                </div>
+                <div className="flex flex-col">
+                    <ButtonSky
+                        className="flex items-center justify-center"
+                        onClick={() => handleModal(null, "tambah")}
+                    >
+                        <TbCirclePlus className="mr-1" />
+                        Tambah Data
+                    </ButtonSky>
+                </div>
+            </div>
             <div className="overflow-auto m-2 rounded-t-xl border">
                 <table className="w-full">
                     <thead>
@@ -130,9 +145,9 @@ const Table = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        {DataNull ?
+                        {Data.length === 0 ?
                             <tr>
-                                <td className="px-6 py-3 uppercase" colSpan={5}>
+                                <td className="px-6 py-3 uppercase" colSpan={6}>
                                     Data Kosong / Belum Ditambahkan
                                 </td>
                             </tr>
@@ -146,7 +161,10 @@ const Table = () => {
                                     <td className="border-r border-b px-6 py-4">{item.nama_kecamatan ?? "-"}</td>
                                     <td className="border-r border-b px-6 py-4">
                                         <div className="flex flex-col items-center gap-1">
-                                            <ButtonSky className="w-full flex items-center gap-1">
+                                            <ButtonSky
+                                                className="w-full flex items-center gap-1"
+                                                onClick={() => handleModal(item, "edit")}
+                                            >
                                                 <TbPencil />
                                                 Edit
                                             </ButtonSky>
@@ -170,8 +188,17 @@ const Table = () => {
                         }
                     </tbody>
                 </table>
+                {ModalOpen &&
+                    <ModalMasterDapil
+                        isOpen={ModalOpen}
+                        onClose={() => handleModal(null, "tambah")}
+                        onSuccess={() => setfetchTrigger((prev) => !prev)}
+                        jenis={JenisModal}
+                        Data={DataModal}
+                    />
+                }
             </div>
-        </>
+        </div>
     )
 }
 

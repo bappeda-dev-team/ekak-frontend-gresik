@@ -21,13 +21,13 @@ interface UsulanPokir {
     status: string;
     id_kamus_usulan: number;
     nama_kamus_usulan: string;
-    nip_pengusul: string | null;
-    jumlah: number | string | null;
-    satuan: string | null;
-    kecamatan: string | null;
-    kelurahan: string | null;
-    rt: string | null;
-    rw: string | null;
+    nip_pengusul: string;
+    jumlah: number | string;
+    satuan: string;
+    kecamatan: string;
+    kelurahan: string;
+    rt: string;
+    rw: string;
 }
 
 const Table = () => {
@@ -68,7 +68,6 @@ const Table = () => {
                     setDataNull(false);
                     setData(data);
                 }
-                setData(data);
             } catch (err) {
                 setError(true);
                 console.error(err)
@@ -219,6 +218,7 @@ const Table = () => {
                     <ModalPokirDewan 
                         isOpen={ModalOpen}
                         onClose={() => handleModal(null, "tambah")}
+                        onSuccess={() => setfetchTrigger((prev) => !prev)}
                         Data={DataModal}
                         jenis={JenisModal}
                     />
