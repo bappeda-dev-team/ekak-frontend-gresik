@@ -42,6 +42,7 @@ interface FormValue {
     usulan: string;
     rt: string;
     rw: string;
+    tahun: string;
 }
 interface KamusUsulan {
     id: number,
@@ -58,6 +59,22 @@ interface modal {
 
 export const ModalPokirDewan: React.FC<modal> = ({ isOpen, onClose, onSuccess, jenis, Data }) => {
 
+    const [Proses, setProses] = useState<boolean>(false);
+    
+    const [OptionKamus, setOptionKamus] = useState<OptionType[]>([]);
+    const [LoadingKamus, setLoadingKamus] = useState<boolean>(false);
+    
+    const [OptionKecamatan, setOptionKecamatan] = useState<OptionTypeString[]>([]);
+    const [Kecamatan, setKecamatan] = useState<OptionTypeString | null>(null);
+
+    const [OptionKelurahan, setOptionKelurahan] = useState<OptionTypeString[]>([]);
+
+    const [LoadingKecamatan, setLoadingKecamatan] = useState<boolean>(false);
+    const [LoadingKelurahan, setLoadingKelurahan] = useState<boolean>(false);
+    
+    const { branding } = useBrandingContext();
+    const token = getToken();
+    
     const { control, reset, handleSubmit, formState: { errors } } = useForm<FormValue>({
         defaultValues: {
             kecamatan: null,
@@ -71,23 +88,9 @@ export const ModalPokirDewan: React.FC<modal> = ({ isOpen, onClose, onSuccess, j
             usulan: Data?.usulan,
             rt: Data?.rt,
             rw: Data?.rw,
+            tahun: String(branding?.tahun?.value),
         }
     });
-    const [Proses, setProses] = useState<boolean>(false);
-
-    const [OptionKamus, setOptionKamus] = useState<OptionType[]>([]);
-    const [LoadingKamus, setLoadingKamus] = useState<boolean>(false);
-
-    const [OptionKecamatan, setOptionKecamatan] = useState<OptionTypeString[]>([]);
-    const [Kecamatan, setKecamatan] = useState<OptionTypeString | null>(null);
-
-    const [OptionKelurahan, setOptionKelurahan] = useState<OptionTypeString[]>([]);
-
-    const [LoadingKecamatan, setLoadingKecamatan] = useState<boolean>(false);
-    const [LoadingKelurahan, setLoadingKelurahan] = useState<boolean>(false);
-
-    const { branding } = useBrandingContext();
-    const token = getToken();
 
     const fetchKamusUsulan = async () => {
         try {
