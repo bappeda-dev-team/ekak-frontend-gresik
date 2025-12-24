@@ -49,11 +49,11 @@ interface UsulanPokir {
     rw: string | null;
 }
 
-export const ModalSubKegiatanOpd: React.FC<ModalProps> = ({ isOpen, onClose, kode_opd, tahun, onSuccess }) => {
+export const ModalUsulanPokirOpd: React.FC<ModalProps> = ({ isOpen, onClose, kode_opd, tahun, onSuccess }) => {
 
     const { control, handleSubmit, reset } = useForm<FormValue>();
 
-    const [OptionUsulan, setOptionUsulan] = useState<UsulanPokir[]>([]);
+    const [OptionPokir, setOptionPokir] = useState<UsulanPokir[]>([]);
     const [LoadingOption, setLoadingOption] = useState<boolean>(false);
     const [Proses, setProses] = useState<boolean>(false);
     const token = getToken();
@@ -72,39 +72,47 @@ export const ModalSubKegiatanOpd: React.FC<ModalProps> = ({ isOpen, onClose, kod
         { label: "pokir 6", value: 6 },
     ]
 
-    useEffect(() => {
-        const fetchOptionPokir = async () => {
-            setLoadingOption(true);
-            try {
-                const response = await fetch(`${branding?.api_perencanaan}/usulan_pokok_pikiran/findall?tahun=${tahun}`, {
-                    headers: {
-                        Authorization: `${token}`,
-                        'Content-Type': 'application/json',
-                    },
-                });
-                if (!response.ok) {
-                    throw new Error('error fetch option master sub kegiatan dengan response !ok');
-                }
-                const result = await response.json();
-                if(result.code === 200){
-                    const data = result.data.map((item: UsulanPokir) => ({
-                        value: item.id,
-                        label: item.usulan,
-                    }))
-                    setOptionUsulan(data);
-                } else {
-                    setOptionUsulan([]);
-                    AlertNotification("Gagal", "Gagal mengambil data dropdown Pokir, cek koneksi internet, jika berlanjut hubungi tim developer", "error", 3000);
-                }
-            } catch (err) {
-                console.log('error saat fetch option Master Sub Kegaitan', err);
-                AlertNotification("Gagal", "Gagal mengambil data dropdown Pokir, cek koneksi internet, jika berlanjut hubungi tim developer", "error", 3000);
-            } finally {
-                setLoadingOption(false);
-            }
+    const fetchOptionPokir = async () => {
+        const payload = {
+            tahun: "2025",
+            nip_pengusul: "198701012010011001",
+            kode_opd: "1.03.2.10.0.00.02.0000",
+            rekin_id: "RK-2025-001",
+            require_kode_opd: true,
+            require_rekin_id: true
         }
-        fetchOptionPokir();
-    }, [])
+        try {
+            setLoadingOption(true);
+            const response = await fetch(`${branding?.api_perencanaan}/usulan_pokok_pikiran/findall_with_filter`, {
+                method: "POST",
+                headers: {
+                    Authorization: `${token}`,
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(payload),
+            });
+            if (!response.ok) {
+                throw new Error('error fetch option master sub kegiatan dengan response !ok');
+            }
+            const result = await response.json();
+            if (result.code === 200) {
+                const data = result.data.map((item: UsulanPokir) => ({
+                    value: item.id,
+                    label: item.usulan,
+                }))
+                console.log("dropdown: ", data);
+                setOptionPokir(data);
+            } else {
+                setOptionPokir([]);
+                AlertNotification("Gagal", "Gagal mengambil data dropdown Pokir, cek koneksi internet, jika berlanjut hubungi tim developer", "error", 3000);
+            }
+        } catch (err) {
+            console.log('error saat fetch option Master Sub Kegaitan', err);
+            AlertNotification("Gagal", "Gagal mengambil data dropdown Pokir, cek koneksi internet, jika berlanjut hubungi tim developer", "error", 3000);
+        } finally {
+            setLoadingOption(false);
+        }
+    }
 
     const onSubmit: SubmitHandler<FormValue> = async (data) => {
         const API_URL = process.env.NEXT_PUBLIC_API_URL;
@@ -170,9 +178,11 @@ export const ModalSubKegiatanOpd: React.FC<ModalProps> = ({ isOpen, onClose, kod
                                         isLoading={LoadingOption}
                                         isSearchable
                                         isClearable
-                                        onChange={(option) => {
-                                            field.onChange(option);
-                                        }}
+                                        // onMenuOpen={() => {
+                                        //     if (OptionPokir.length === 0) {
+                                        //         fetchOptionPokir();
+                                        //     }
+                                        // }}
                                         styles={{
                                             control: (baseStyles) => ({
                                                 ...baseStyles,

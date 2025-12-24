@@ -8,6 +8,7 @@ import { AlertNotification, AlertQuestion } from "@/components/global/Alert";
 import { TbCirclePlus, TbPencil, TbTrash } from "react-icons/tb";
 import { useBrandingContext } from "@/context/BrandingContext";
 import { ModalPokirDewan } from "./ModalPokirDewan";
+import { ModalPokirOpd } from "./ModalPokirOpd";
 
 interface UsulanPokir {
     id: string;
@@ -41,6 +42,7 @@ const Table = () => {
 
     // MODAL & TRIGGER
     const [ModalOpen, setModalOpen] = useState<boolean>(false);
+    const [ModalOpdOpen, setModalOpdOpen] = useState<boolean>(false);
     const [JenisModal, setJenisModal] = useState<"tambah" | "edit">("tambah");
     const [DataModal, setDataModal] = useState<any>(null);
     const [fetchTrigger, setfetchTrigger] = useState<boolean>(false);
@@ -86,6 +88,16 @@ const Table = () => {
         } else {
             setJenisModal(jenis);
             setModalOpen(true);
+            setDataModal(data);
+        }
+    }
+
+    const handleModalOpd = (data: any) => {
+        if (ModalOpdOpen) {
+            setModalOpdOpen(false);
+            setDataModal(data);
+        } else {
+            setModalOpdOpen(true);
             setDataModal(data);
         }
     }
@@ -141,6 +153,7 @@ const Table = () => {
                         <tr className="bg-blue-500 text-white">
                             <th className="border-r border-b px-6 py-3 min-w-[50px] text-center">No</th>
                             <th className="border-r border-b px-6 py-3 min-w-[200px]">Kamus Usulan</th>
+                            <th className="border-r border-b px-6 py-3 min-w-[200px]">OPD</th>
                             <th className="border-l border-b px-6 py-3 min-w-[300px]">Kecamatan</th>
                             <th className="border-l border-b px-6 py-3 min-w-[200px]">Kelurahan</th>
                             <th className="border-l border-b px-6 py-3 min-w-[200px]">Pengusul</th>
@@ -163,6 +176,7 @@ const Table = () => {
                             <th className="border-l border-b px-6 py-3 text-center">9</th>
                             <th className="border-l border-b px-6 py-3 text-center">10</th>
                             <th className="border-l border-b px-6 py-3 text-center">11</th>
+                            <th className="border-l border-b px-6 py-3 text-center">12</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -176,24 +190,34 @@ const Table = () => {
                             Data.map((item: UsulanPokir, index: number) => (
                                 <tr key={index}>
                                     <td className="border-r border-b px-6 py-4 text-center">{index + 1}</td>
-                                    <td className="border-r border-b px-6 py-4">{item.nama_kamus_usulan ?? "-"}</td>
-                                    <td className="border-r border-b px-6 py-4">{item.kecamatan ?? "-"}</td>
-                                    <td className="border-r border-b px-6 py-4">{item.kelurahan ?? "-"}</td>
-                                    <td className="border-r border-b px-6 py-4">{item.nip_pengusul ?? "-"}</td>
-                                    <td className="border-r border-b px-6 py-4 text-center">{item.jumlah ?? "-"}</td>
-                                    <td className="border-r border-b px-6 py-4 text-center">{item.satuan ?? "-"}</td>
-                                    <td className="border-r border-b px-6 py-4">{item.alamat ?? "-"}</td>
-                                    <td className="border-r border-b px-6 py-4">{item.uraian ?? "-"}</td>
-                                    <td className="border-r border-b px-6 py-4">{item.usulan ?? "-"}</td>
+                                    <td className="border-r border-b px-6 py-4">{item.nama_kamus_usulan || "-"}</td>
+                                    <td className="border-r border-b px-6 py-4">{item.nama_opd || "-"}</td>
+                                    <td className="border-r border-b px-6 py-4">{item.kecamatan || "-"}</td>
+                                    <td className="border-r border-b px-6 py-4">{item.kelurahan || "-"}</td>
+                                    <td className="border-r border-b px-6 py-4">{item.nip_pengusul || "-"}</td>
+                                    <td className="border-r border-b px-6 py-4 text-center">{item.jumlah || "-"}</td>
+                                    <td className="border-r border-b px-6 py-4 text-center">{item.satuan || "-"}</td>
+                                    <td className="border-r border-b px-6 py-4">{item.alamat || "-"}</td>
+                                    <td className="border-r border-b px-6 py-4">{item.uraian || "-"}</td>
+                                    <td className="border-r border-b px-6 py-4">{item.usulan || "-"}</td>
                                     <td className="border-r border-b px-6 py-4">
                                         <div className="flex flex-col items-center gap-1">
-                                            <ButtonSky
+                                            {(branding?.user.roles == "super_admin" && item.kode_opd === null) &&
+                                                <ButtonSky
+                                                    onClick={() => handleModalOpd(item)}
+                                                    className="w-full flex items-center gap-1"
+                                                >
+                                                    <TbPencil />
+                                                    OPD
+                                                </ButtonSky>
+                                            }
+                                            {/* <ButtonSky
                                                 onClick={() => handleModal(item, "edit")}
                                                 className="w-full flex items-center gap-1"
                                             >
                                                 <TbPencil />
                                                 Edit
-                                            </ButtonSky>
+                                            </ButtonSky> */}
                                             <ButtonRed
                                                 className="w-full *:flex items-center gap-1"
                                                 onClick={() => {
@@ -215,12 +239,20 @@ const Table = () => {
                     </tbody>
                 </table>
                 {ModalOpen &&
-                    <ModalPokirDewan 
+                    <ModalPokirDewan
                         isOpen={ModalOpen}
                         onClose={() => handleModal(null, "tambah")}
                         onSuccess={() => setfetchTrigger((prev) => !prev)}
                         Data={DataModal}
                         jenis={JenisModal}
+                    />
+                }
+                {ModalOpdOpen &&
+                    <ModalPokirOpd
+                        isOpen={ModalOpdOpen}
+                        onClose={() => handleModalOpd(null)}
+                        onSuccess={() => setfetchTrigger((prev) => !prev)}
+                        Data={DataModal}
                     />
                 }
             </div>

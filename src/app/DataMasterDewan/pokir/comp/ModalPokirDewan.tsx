@@ -215,7 +215,7 @@ export const ModalPokirDewan: React.FC<modal> = ({ isOpen, onClose, onSuccess, j
             //key : value
             kecamatan: Kecamatan?.label,
             kelurahan: data.kelurahan?.label,
-            nip_pengusul: branding?.user.nip,
+            nip_pengusul: branding?.user?.nip,
             id_kamus_usulan: data.id_kamus_usulan?.value,
             jumlah: data.jumlah,
             satuan: data.satuan,

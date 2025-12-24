@@ -7,65 +7,87 @@ import { getToken } from "@/components/lib/Cookie";
 import { AlertNotification, AlertQuestion } from "@/components/global/Alert";
 import { TbCirclePlus, TbTrash } from "react-icons/tb";
 import { useBrandingContext } from "@/context/BrandingContext";
+import { ModalUsulanPokirOpd } from "./ModalUsulanPokirOpd";
+
+interface PokirOpd {
+    alamat: string;
+    id: string;
+    id_kamus_usulan: number;
+    jumlah: string;
+    kecamatan: string;
+    kelurahan: string | null;
+    kode_opd: string;
+    nama_kamus_usulan: string;
+    nama_opd: string;
+    nip_pengusul: string;
+    rt: string;
+    rw: string;
+    satuan: string;
+    status: string;
+    tahun: string;
+    uraian: string;
+    usulan: string;
+}
 
 const Table = () => {
 
-    // const [Data, setData] = useState<subkegiatan[]>([]);
+    const [Data, setData] = useState<PokirOpd[]>([]);
     const [Loading, setLoading] = useState<boolean | null>(null);
     const [Error, setError] = useState<boolean | null>(null);
     const [DataNull, setDataNull] = useState<boolean | null>(null);
-    const token = getToken();
-    const { branding } = useBrandingContext();
 
     // MODAL & TRIGGER
-    const [ModalTambah, setModalTambah] = useState<boolean>(false);
+    const [ModalOpen, setModalOpen] = useState<boolean>(false);
     const [fetchTrigger, setfetchTrigger] = useState<boolean>(false);
 
-    // useEffect(() => {
-    //     const API_URL = process.env.NEXT_PUBLIC_API_URL;
-    //     const fetchSubKegiatan = async () => {
-    //         setLoading(true)
-    //         try {
-    //             const response = await fetch(`${API_URL}/subkegiatanopd/findall/${opd}/${tahun}`, {
-    //                 headers: {
-    //                     Authorization: `${token}`,
-    //                     'Content-Type': 'application/json',
-    //                 },
-    //             });
-    //             const result = await response.json();
-    //             const data = result.data;
-    //             if (data === null) {
-    //                 setDataNull(true);
-    //                 setSubKegiatan([]);
-    //             } else if (data.code == 500) {
-    //                 setError(true);
-    //                 setSubKegiatan([]);
-    //             } else {
-    //                 setDataNull(false);
-    //                 setSubKegiatan(data);
-    //             }
-    //             setSubKegiatan(data);
-    //         } catch (err) {
-    //             setError(true);
-    //             console.error(err)
-    //         } finally {
-    //             setLoading(false);
-    //         }
-    //     }
-    //     if (tahun && opd) {
-    //         fetchSubKegiatan();
-    //     }
-    // }, [opd, tahun, fetchTrigger, token]);
+    const token = getToken();
+    const { branding } = useBrandingContext();
+    const opd = branding?.user?.roles == "super_admin" ? branding?.opd?.value : branding?.user?.kode_opd;
 
-    // const handleModal = (jenis: "opd" | "all") => {
-    //     if (ModalTambah) {
-    //         setJenisModal("opd");
-    //         setModalTambah(false);
-    //     } else {
-    //         setJenisModal(jenis);
-    //         setModalTambah(true);
-    //     }
-    // }
+    useEffect(() => {
+        const fetchPokir = async () => {
+            const payload = {
+                tahun: String(branding?.tahun?.value),
+                nip_pengusul: "",
+                kode_opd: opd,
+                rekin_id: "",
+                require_kode_opd: true,
+                require_rekin_id: false
+            }
+            try {
+                setLoading(true);
+                const response = await fetch(`${branding?.api_perencanaan}/usulan_pokok_pikiran/findall_with_filter`, {
+                    method: "POST",
+                    headers: {
+                        Authorization: `${token}`,
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(payload),
+                });
+                const result = await response.json();
+                if (result.code === 200) {
+                    // console.log(result);
+                    setData(result.data);
+                } else {
+                    AlertNotification("Gagal", "Gagal mengambil data Pokir, cek koneksi internet, jika berlanjut hubungi tim developer", "error", 3000);
+                }
+            } catch (err) {
+                console.log('error saat fetch option Master Sub Kegaitan', err);
+                AlertNotification("Gagal", "Gagal mengambil data Pokir, cek koneksi internet, jika berlanjut hubungi tim developer", "error", 3000);
+            } finally {
+                setLoading(false);
+            }
+        }
+        fetchPokir();
+    }, [branding, fetchTrigger, token]);
+
+    const handleModal = () => {
+        if (ModalOpen) {
+            setModalOpen(false);
+        } else {
+            setModalOpen(true);
+        }
+    }
 
     // const hapusSubKegiatan = async (id: any) => {
     //     const API_URL = process.env.NEXT_PUBLIC_API_URL;
@@ -103,15 +125,15 @@ const Table = () => {
 
     return (
         <>
-            <div className="flex flex-wrap items-center gap-1">
+            {/* <div className="flex flex-wrap items-center gap-1">
                 <ButtonSkyBorder
                     className="m-2 flex items-center gap-1"
-                // onClick={() => handleModal("opd")}
+                    onClick={() => handleModal()}
                 >
                     <TbCirclePlus />
                     Tambah Usulan Pokir
                 </ButtonSkyBorder>
-            </div>
+            </div> */}
             <div className="overflow-auto m-2 rounded-t-xl border">
                 <table className="w-full">
                     <thead>
@@ -131,30 +153,40 @@ const Table = () => {
                                 </td>
                             </tr>
                             :
-                            <tr>
-                                <td className="border-r border-b px-6 py-4 text-center">1</td>
-                                <td className="border-r border-b px-6 py-4">1.12.23.12</td>
-                                <td className="border-r border-b px-6 py-4">Contoh Pokir</td>
-                                <td className="border-r border-b px-6 py-4">Bappeda</td>
-                                <td className="border-r border-b px-6 py-4">
-                                    <ButtonRed
-                                        className="w-full flex items-center gap-1"
-                                        onClick={() => {
-                                            AlertQuestion("Hapus?", "Hapus Pokok Pikiran yang dipilih?", "question", "Hapus", "Batal").then((result) => {
-                                                if (result.isConfirmed) {
-                                                    // hapusSubKegiatan(data.id);
-                                                }
-                                            });
-                                        }}
-                                    >
-                                        <TbTrash />
-                                        Hapus
-                                    </ButtonRed>
-                                </td>
-                            </tr>
+                            Data.map((item: PokirOpd, index: number) => (
+                                <tr key={index}>
+                                    <td className="border-r border-b px-6 py-4 text-center">{index + 1}</td>
+                                    <td className="border-r border-b px-6 py-4">{item.id || "-"}</td>
+                                    <td className="border-r border-b px-6 py-4">{item.usulan || "-"}</td>
+                                    <td className="border-r border-b px-6 py-4">{item.nama_opd || "-"}</td>
+                                    <td className="border-r border-b px-6 py-4">
+                                        <ButtonRed
+                                            className="w-full flex items-center gap-1"
+                                            onClick={() => {
+                                                AlertQuestion("Hapus?", "Hapus Pokok Pikiran yang dipilih?", "question", "Hapus", "Batal").then((result) => {
+                                                    if (result.isConfirmed) {
+                                                        // hapusSubKegiatan(data.id);
+                                                        AlertNotification("Pengembangan Developer", "", "info", 3000);
+                                                    }
+                                                });
+                                            }}
+                                        >
+                                            <TbTrash />
+                                            Hapus
+                                        </ButtonRed>
+                                    </td>
+                                </tr>
+                            ))
                         }
                     </tbody>
                 </table>
+                <ModalUsulanPokirOpd
+                    isOpen={ModalOpen}
+                    onClose={() => handleModal()}
+                    onSuccess={() => setfetchTrigger((prev) => !prev)}
+                    tahun={String(branding?.tahun?.value || "0")}
+                    kode_opd={opd ?? ""}
+                />
             </div>
         </>
     )

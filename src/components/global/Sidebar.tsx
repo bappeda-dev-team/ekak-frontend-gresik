@@ -12,10 +12,7 @@ import {
   TbListDetails, TbAlertTriangle, TbDatabasePlus, TbCalendarPlus, TbDeviceImacDollar, 
   TbFocus2, TbHexagonLetterC, TbHexagonLetterO, TbHexagonLetterI,
   TbBuildingCottage, TbCalendarStar, TbChartPie, TbListTree,
-  TbBubble,
-  TbDatabaseLeak,
-  TbChefHat,
-  TbNotebook
+  TbBubble, TbDatabaseLeak, TbChefHat, TbNotebook
 } from "react-icons/tb";
 import Image from 'next/image';
 import { usePathname, useParams } from 'next/navigation';
@@ -87,6 +84,7 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
     //DATA MASTER OPD
     if (
       url === "/useropd" ||
+      url === "/usulanpokiropd" ||
       url === "/subkegiatanopd"
     ) {
       setDataMaster(false);

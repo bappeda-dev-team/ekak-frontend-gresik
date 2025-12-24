@@ -102,17 +102,17 @@ const Table = () => {
                             <tr className="bg-blue-500 text-white">
                                 <th rowSpan={2} className="border-r border-b px-6 py-3 text-center">No</th>
                                 <th rowSpan={2} className="border-r border-b px-6 py-3 min-w-[200px]">Dewan</th>
-                                <th rowSpan={2} className="border-r border-b px-6 py-3 min-w-[200px]">Nama Pokir</th>
                                 <th rowSpan={2} className="border-r border-b px-6 py-3 min-w-[200px]">Kamus Usulan</th>
+                                <th rowSpan={2} className="border-r border-b px-6 py-3 min-w-[200px]">Nama Pokir</th>
                                 <th colSpan={5} className="border-r border-b px-6 py-3 min-w-[500px]">Lokasi</th>
                                 <th rowSpan={2} className="border-r border-b px-6 py-3 min-w-[100px]">Keterangan</th>
                                 <th rowSpan={2} className="border-r border-b px-6 py-3 min-w-[50px]">Jumlah</th>
                                 <th rowSpan={2} className="border-r border-b px-6 py-3 min-w-[50px]">Satuan</th>
                                 <th rowSpan={2} className="border-r border-b px-6 py-3 min-w-[100px]">OPD</th>
-                                <th rowSpan={2} className="border-r border-b px-6 py-3 min-w-[100px]">Sub Kegiatan</th>
+                                <th rowSpan={2} className="border-r border-b px-6 py-3 min-w-[200px]">Sub Kegiatan</th>
                                 <th rowSpan={2} className="border-r border-b px-6 py-3 min-w-[100px]">Nama Pelaksana</th>
                                 <th rowSpan={2} className="border-r border-b px-6 py-3 min-w-[100px]">Pagu Sub Kegiatan</th>
-                                <th rowSpan={2} className="border-r border-b px-6 py-3 min-w-[100px]">Rekin</th>
+                                <th rowSpan={2} className="border-r border-b px-6 py-3 min-w-[250px]">Rekin</th>
                             </tr>
                             <tr className="bg-blue-700 text-white">
                                 <th className="border-r border-b px-2 py-1 w-[150px] text-center">Kecamatan</th>
@@ -161,8 +161,8 @@ const Table = () => {
                                                 <>-</>
                                             }
                                         </td>
-                                        <td className="border-x border-b border-blue-500 py-4 px-3">{item.usulan || "-"}</td>
                                         <td className="border-x border-b border-blue-500 py-4 px-3">{item.nama_kamus_usulan || "-"}</td>
+                                        <td className="border-x border-b border-blue-500 py-4 px-3">{item.usulan || "-"}</td>
                                         <td className="border-x border-b border-blue-500 py-4 px-3">{item.kecamatan || "-"}</td>
                                         <td className="border-x border-b border-blue-500 py-4 px-3">{item.kelurahan || "-"}</td>
                                         <td className="border-x border-b border-blue-500 py-4 px-3">{item.alamat || "-"}</td>
