@@ -105,8 +105,8 @@ const Table = () => {
                                 <th rowSpan={2} className="border-r border-b px-6 py-3 min-w-[200px]">Kamus Usulan</th>
                                 <th rowSpan={2} className="border-r border-b px-6 py-3 min-w-[200px]">Nama Usulan</th>
                                 <th colSpan={5} className="border-r border-b px-6 py-3 min-w-[500px]">Lokasi</th>
-                                <th rowSpan={2} className="border-r border-b px-6 py-3 min-w-[100px]">Keterangan</th>
-                                <th rowSpan={2} className="border-r border-b px-6 py-3 min-w-[50px]">Jumlah</th>
+                                <th rowSpan={2} className="border-r border-b px-6 py-3 min-w-[100px]">Permasalahan</th>
+                                <th rowSpan={2} className="border-r border-b px-6 py-3 min-w-[50px]">Jumlah/Volume</th>
                                 <th rowSpan={2} className="border-r border-b px-6 py-3 min-w-[50px]">Satuan</th>
                                 <th rowSpan={2} className="border-r border-b px-6 py-3 min-w-[100px]">OPD</th>
                                 <th rowSpan={2} className="border-r border-b px-6 py-3 min-w-[200px]">Sub Kegiatan</th>
@@ -116,7 +116,7 @@ const Table = () => {
                             </tr>
                             <tr className="bg-blue-700 text-white">
                                 <th className="border-r border-b px-2 py-1 w-[150px] text-center">Kecamatan</th>
-                                <th className="border-r border-b px-2 py-1 w-[150px] text-center">Kelurahan</th>
+                                <th className="border-r border-b px-2 py-1 w-[150px] text-center">Kelurahan/Desa</th>
                                 <th className="border-r border-b px-2 py-1 w-[150px] text-center">Alamat</th>
                                 <th className="border-r border-b px-2 py-1 w-[150px] text-center">RT</th>
                                 <th className="border-r border-b px-2 py-1 w-[150px] text-center">RW</th>
