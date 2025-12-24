@@ -7,47 +7,76 @@ import { TahunNull } from "@/components/global/OpdTahunNull";
 import { getToken } from "@/components/lib/Cookie";
 import { useBrandingContext } from "@/context/BrandingContext";
 
+interface UsulanResponse {
+    nip_pengusul: string;
+    nama_pengusul: string;
+    usulan: string;
+    uraian: string;
+    alamat: string;
+    kecamatan: string;
+    kelurahan: string;
+    rt: string;
+    rw: string;
+    kode_opd: string;
+    nama_opd: string;
+    rekin_id: string;
+    nama_rencana_kinerja: string;
+    id_kamus_usulan: number;
+    nama_kamus_usulan: string;
+    jumlah: string;
+    satuan: string;
+    anggaran: number; // int64 → number
+    kode_subkegiatan: string;
+    nama_subkegiatan: string;
+    tahun: string;
+};
+
 const Table = () => {
 
-    // const [Data, setData] = useState<Pokin[]>([]);
+    const [Data, setData] = useState<UsulanResponse[]>([]);
 
     const [Loading, setLoading] = useState<boolean | null>(null);
+    const [Error, setError] = useState<boolean | null>(null);
     const [Proses, setProses] = useState<boolean>(false);
     const token = getToken();
     const { branding } = useBrandingContext();
 
-    // useEffect(() => {
-    //     const API_URL = process.env.NEXT_PUBLIC_API_URL;
-    //     const fetchIkuOpd = async () => {
-    //         setLoading(true);
-    //         setError(false);
-    //         try {
-    //             const response = await fetch(`${API_URL}/pohon_kinerja_opd/leaderboard_pokin_opd/${tahun}`, {
-    //                 headers: {
-    //                     Authorization: `${token}`,
-    //                     'Content-Type': 'application/json',
-    //                 },
-    //             });
-    //             const result = await response.json();
-    //             if (result.code === 200) {
-    //                 setData(result.data);
-    //             } else if (result.code === 401) {
-    //                 window.location.href = "/login";
-    //             } else {
-    //                 setData([]);
-    //                 setError(true);
-    //             }
-    //         } catch (err) {
-    //             setError(true);
-    //             console.error(err)
-    //         } finally {
-    //             setLoading(false);
-    //         }
-    //     }
-    //     if (tahun != undefined) {
-    //         fetchIkuOpd();
-    //     }
-    // }, [token, tahun]);
+    useEffect(() => {
+        const fetchIkuOpd = async () => {
+            setLoading(true);
+            setError(false);
+            try {
+                const response = await fetch(`${branding?.api_perencanaan}/usulan_pokok_pikiran/laporan/${branding?.tahun?.value}`, {
+                    headers: {
+                        Authorization: `${token}`,
+                        'Content-Type': 'application/json',
+                    },
+                });
+                const result = await response.json();
+                if (result.code === 200) {
+                    setData(result.data);
+                } else if (result.code === 401) {
+                    window.location.href = "/login";
+                } else {
+                    setData([]);
+                    setError(true);
+                }
+            } catch (err) {
+                setError(true);
+                console.error(err)
+            } finally {
+                setLoading(false);
+            }
+        }
+        fetchIkuOpd();
+    }, [token, branding]);
+
+    function formatRupiah(angka: number) {
+        if (typeof angka !== 'number') {
+            return String(angka); // Jika bukan angka, kembalikan sebagai string
+        }
+        return angka.toLocaleString('id-ID'); // 'id-ID' untuk format Indonesia
+    }
 
     if (Loading) {
         return (
@@ -55,6 +84,12 @@ const Table = () => {
                 <LoadingClip className="mx-5 py-5" />
             </div>
         );
+    } else if (Error) {
+        return (
+            <div className="border p-5 rounded-xl shadow-xl">
+                <h1 className="text-red-500 font-bold mx-5 py-5">Periksa koneksi internet atau database server</h1>
+            </div>
+        )
     } else if (branding?.tahun?.value === undefined) {
         return <TahunNull />
     } else {
@@ -65,14 +100,14 @@ const Table = () => {
                         <thead>
                             <tr className="bg-blue-500 text-white">
                                 <th rowSpan={2} className="border-r border-b px-6 py-3 text-center">No</th>
-                                <th rowSpan={2} className="border-r border-b px-6 py-3 w-[350px]">Dewan</th>
+                                <th rowSpan={2} className="border-r border-b px-6 py-3 min-w-[200px]">Dewan</th>
                                 <th rowSpan={2} className="border-r border-b px-6 py-3 min-w-[200px]">Nama Pokir</th>
                                 <th colSpan={4} className="border-r border-b px-6 py-3 min-w-[500px]">Lokasi</th>
-                                <th rowSpan={2} className="border-r border-b px-6 py-3 w-[100px]">OPD</th>
-                                <th rowSpan={2} className="border-r border-b px-6 py-3 w-[100px]">Sub Kegiatan</th>
-                                <th rowSpan={2} className="border-r border-b px-6 py-3 w-[100px]">Nama Pelaksana</th>
-                                <th rowSpan={2} className="border-r border-b px-6 py-3 w-[100px]">Pagu Sub Kegiatan</th>
-                                <th rowSpan={2} className="border-r border-b px-6 py-3 w-[100px]">Rekin</th>
+                                <th rowSpan={2} className="border-r border-b px-6 py-3 min-w-[100px]">OPD</th>
+                                <th rowSpan={2} className="border-r border-b px-6 py-3 min-w-[100px]">Sub Kegiatan</th>
+                                <th rowSpan={2} className="border-r border-b px-6 py-3 min-w-[100px]">Nama Pelaksana</th>
+                                <th rowSpan={2} className="border-r border-b px-6 py-3 min-w-[100px]">Pagu Sub Kegiatan</th>
+                                <th rowSpan={2} className="border-r border-b px-6 py-3 min-w-[100px]">Rekin</th>
                             </tr>
                             <tr className="bg-blue-700 text-white">
                                 <th className="border-r border-b px-2 py-1 w-[150px] text-center">Kecamatan</th>
@@ -96,20 +131,45 @@ const Table = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td className="border-x border-b border-blue-500 py-4 px-3 text-center">1</td>
-                                <td className="border-x border-b border-blue-500 py-4 px-3"></td>
-                                <td className="border-x border-b border-blue-500 py-4 px-3"></td>
-                                <td className="border-x border-b border-blue-500 py-4 px-3"></td>
-                                <td className="border-x border-b border-blue-500 py-4 px-3"></td>
-                                <td className="border-x border-b border-blue-500 py-4 px-3"></td>
-                                <td className="border-x border-b border-blue-500 py-4 px-3"></td>
-                                <td className="border-x border-b border-blue-500 py-4 px-3"></td>
-                                <td className="border-x border-b border-blue-500 py-4 px-3"></td>
-                                <td className="border-x border-b border-blue-500 py-4 px-3"></td>
-                                <td className="border-x border-b border-blue-500 py-4 px-3"></td>
-                                <td className="border-x border-b border-blue-500 py-4 px-3"></td>
-                            </tr>
+                            {(!Data || Data.length === 0) ?
+                                <tr>
+                                    <td className="px-6 py-3" colSpan={30}>
+                                        Data Kosong / Belum Ditambahkan
+                                    </td>
+                                </tr>
+                                :
+                                Data.map((item: UsulanResponse, index: number) => (
+                                    <tr key={index}>
+                                        <td className="border-x border-b border-blue-500 py-4 px-3 text-center">{index + 1}</td>
+                                        <td className="border-x border-b border-blue-500 py-4 px-3">
+                                            {item.nip_pengusul ?
+                                                <>
+                                                    {item.nama_pengusul || "-"} ({item.nip_pengusul || ""})
+                                                </>
+                                                :
+                                                <>-</>
+                                            }
+                                        </td>
+                                        <td className="border-x border-b border-blue-500 py-4 px-3">{item.usulan || "-"}</td>
+                                        <td className="border-x border-b border-blue-500 py-4 px-3">{item.kecamatan || "-"}</td>
+                                        <td className="border-x border-b border-blue-500 py-4 px-3">{item.kelurahan || "-"}</td>
+                                        <td className="border-x border-b border-blue-500 py-4 px-3">{item.alamat || "-"}</td>
+                                        <td className="border-x border-b border-blue-500 py-4 px-3">-</td>
+                                        <td className="border-x border-b border-blue-500 py-4 px-3">{item.nama_opd || "-"}</td>
+                                        <td className="border-x border-b border-blue-500 py-4 px-3">
+                                            {item.kode_subkegiatan ? (
+                                                <>({item.kode_subkegiatan || "-"}) {item.nama_subkegiatan || "-"}</>
+                                            )
+                                                :
+                                                <></>
+                                            }
+                                        </td>
+                                        <td className="border-x border-b border-blue-500 py-4 px-3">-</td>
+                                        <td className="border-x border-b border-blue-500 py-4 px-3">Rp.{formatRupiah(item.anggaran || 0)}</td>
+                                        <td className="border-x border-b border-blue-500 py-4 px-3">-</td>
+                                    </tr>
+                                ))
+                            }
                         </tbody>
                     </table>
                 </div>

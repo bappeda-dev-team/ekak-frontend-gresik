@@ -60,10 +60,10 @@ interface modal {
 export const ModalPokirDewan: React.FC<modal> = ({ isOpen, onClose, onSuccess, jenis, Data }) => {
 
     const [Proses, setProses] = useState<boolean>(false);
-    
+
     const [OptionKamus, setOptionKamus] = useState<OptionType[]>([]);
     const [LoadingKamus, setLoadingKamus] = useState<boolean>(false);
-    
+
     const [OptionKecamatan, setOptionKecamatan] = useState<OptionTypeString[]>([]);
     const [Kecamatan, setKecamatan] = useState<OptionTypeString | null>(null);
 
@@ -71,16 +71,25 @@ export const ModalPokirDewan: React.FC<modal> = ({ isOpen, onClose, onSuccess, j
 
     const [LoadingKecamatan, setLoadingKecamatan] = useState<boolean>(false);
     const [LoadingKelurahan, setLoadingKelurahan] = useState<boolean>(false);
-    
+
     const { branding } = useBrandingContext();
     const token = getToken();
-    
-    const { control, reset, handleSubmit, formState: { errors } } = useForm<FormValue>({
+
+    const { control, reset, handleSubmit, watch, formState: { errors } } = useForm<FormValue>({
         defaultValues: {
-            kecamatan: null,
-            kelurahan: null,
+            kecamatan: {
+                value: Data?.kecamatan,
+                label: Data?.kecamatan,
+            },
+            kelurahan: {
+                value: Data?.kelurahan,
+                label: Data?.kelurahan,
+            },
             nip_pengusul: Data?.nip_pengusul ?? "",
-            id_kamus_usulan: null,
+            id_kamus_usulan: {
+                value: Data?.id_kamus_usulan,
+                label: Data?.nama_kamus_usulan,
+            },
             jumlah: Data?.jumlah,
             satuan: Data?.satuan,
             alamat: Data?.alamat,
@@ -91,6 +100,14 @@ export const ModalPokirDewan: React.FC<modal> = ({ isOpen, onClose, onSuccess, j
             tahun: String(branding?.tahun?.value),
         }
     });
+
+    const SelectedKecamatan = watch("kecamatan");
+
+    useEffect(() => {
+        if(SelectedKecamatan){
+            fetchKelurahan(SelectedKecamatan.value);
+        }
+    }, [SelectedKecamatan]);
 
     const fetchKamusUsulan = async () => {
         try {
@@ -297,6 +314,7 @@ export const ModalPokirDewan: React.FC<modal> = ({ isOpen, onClose, onSuccess, j
                                     <Select
                                         {...field}
                                         id="kecamatan"
+                                        isDisabled={jenis === "edit"}
                                         placeholder="pilih Kecamatan"
                                         isLoading={LoadingKecamatan}
                                         options={OptionKecamatan}
@@ -327,6 +345,7 @@ export const ModalPokirDewan: React.FC<modal> = ({ isOpen, onClose, onSuccess, j
                                 render={({ field }) => (
                                     <Select
                                         {...field}
+                                        isDisabled={jenis === "edit"}
                                         id="kelurahan"
                                         placeholder="pilih kelurahan"
                                         options={OptionKelurahan}
