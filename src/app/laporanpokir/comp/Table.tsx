@@ -21,6 +21,7 @@ interface UsulanResponse {
     nama_opd: string;
     rekin_id: string;
     nama_rencana_kinerja: string;
+    nama_pelaksana_rencana_kinerja: string;
     id_kamus_usulan: number;
     nama_kamus_usulan: string;
     jumlah: string;
@@ -102,7 +103,11 @@ const Table = () => {
                                 <th rowSpan={2} className="border-r border-b px-6 py-3 text-center">No</th>
                                 <th rowSpan={2} className="border-r border-b px-6 py-3 min-w-[200px]">Dewan</th>
                                 <th rowSpan={2} className="border-r border-b px-6 py-3 min-w-[200px]">Nama Pokir</th>
-                                <th colSpan={4} className="border-r border-b px-6 py-3 min-w-[500px]">Lokasi</th>
+                                <th rowSpan={2} className="border-r border-b px-6 py-3 min-w-[200px]">Kamus Usulan</th>
+                                <th colSpan={5} className="border-r border-b px-6 py-3 min-w-[500px]">Lokasi</th>
+                                <th rowSpan={2} className="border-r border-b px-6 py-3 min-w-[100px]">Keterangan</th>
+                                <th rowSpan={2} className="border-r border-b px-6 py-3 min-w-[50px]">Jumlah</th>
+                                <th rowSpan={2} className="border-r border-b px-6 py-3 min-w-[50px]">Satuan</th>
                                 <th rowSpan={2} className="border-r border-b px-6 py-3 min-w-[100px]">OPD</th>
                                 <th rowSpan={2} className="border-r border-b px-6 py-3 min-w-[100px]">Sub Kegiatan</th>
                                 <th rowSpan={2} className="border-r border-b px-6 py-3 min-w-[100px]">Nama Pelaksana</th>
@@ -113,7 +118,8 @@ const Table = () => {
                                 <th className="border-r border-b px-2 py-1 w-[150px] text-center">Kecamatan</th>
                                 <th className="border-r border-b px-2 py-1 w-[150px] text-center">Kelurahan</th>
                                 <th className="border-r border-b px-2 py-1 w-[150px] text-center">Alamat</th>
-                                <th className="border-r border-b px-2 py-1 w-[150px] text-center">Keterangan</th>
+                                <th className="border-r border-b px-2 py-1 w-[150px] text-center">RT</th>
+                                <th className="border-r border-b px-2 py-1 w-[150px] text-center">RW</th>
                             </tr>
                             <tr className="bg-blue-700 text-white">
                                 <th className="border-r border-b px-2 py-1 text-center">1</th>
@@ -128,6 +134,11 @@ const Table = () => {
                                 <th className="border-r border-b px-2 py-1 text-center">10</th>
                                 <th className="border-r border-b px-2 py-1 text-center">11</th>
                                 <th className="border-r border-b px-2 py-1 text-center">12</th>
+                                <th className="border-r border-b px-2 py-1 text-center">13</th>
+                                <th className="border-r border-b px-2 py-1 text-center">14</th>
+                                <th className="border-r border-b px-2 py-1 text-center">15</th>
+                                <th className="border-r border-b px-2 py-1 text-center">16</th>
+                                <th className="border-r border-b px-2 py-1 text-center">17</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -151,10 +162,15 @@ const Table = () => {
                                             }
                                         </td>
                                         <td className="border-x border-b border-blue-500 py-4 px-3">{item.usulan || "-"}</td>
+                                        <td className="border-x border-b border-blue-500 py-4 px-3">{item.nama_kamus_usulan || "-"}</td>
                                         <td className="border-x border-b border-blue-500 py-4 px-3">{item.kecamatan || "-"}</td>
                                         <td className="border-x border-b border-blue-500 py-4 px-3">{item.kelurahan || "-"}</td>
                                         <td className="border-x border-b border-blue-500 py-4 px-3">{item.alamat || "-"}</td>
-                                        <td className="border-x border-b border-blue-500 py-4 px-3">-</td>
+                                        <td className="border-x border-b border-blue-500 py-4 px-3">{item.rt || "-"}</td>
+                                        <td className="border-x border-b border-blue-500 py-4 px-3">{item.rw || "-"}</td>
+                                        <td className="border-x border-b border-blue-500 py-4 px-3">{item.uraian || "-"}</td>
+                                        <td className="border-x border-b border-blue-500 py-4 px-3">{item.jumlah || "-"}</td>
+                                        <td className="border-x border-b border-blue-500 py-4 px-3">{item.satuan || "-"}</td>
                                         <td className="border-x border-b border-blue-500 py-4 px-3">{item.nama_opd || "-"}</td>
                                         <td className="border-x border-b border-blue-500 py-4 px-3">
                                             {item.kode_subkegiatan ? (
@@ -164,9 +180,9 @@ const Table = () => {
                                                 <></>
                                             }
                                         </td>
-                                        <td className="border-x border-b border-blue-500 py-4 px-3">-</td>
+                                        <td className="border-x border-b border-blue-500 py-4 px-3">{item.nama_pelaksana_rencana_kinerja || '-'}</td>
                                         <td className="border-x border-b border-blue-500 py-4 px-3">Rp.{formatRupiah(item.anggaran || 0)}</td>
-                                        <td className="border-x border-b border-blue-500 py-4 px-3">-</td>
+                                        <td className="border-x border-b border-blue-500 py-4 px-3">{item.nama_rencana_kinerja || '-'}</td>
                                     </tr>
                                 ))
                             }
