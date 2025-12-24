@@ -135,7 +135,7 @@ export const ModalAddUsulan: React.FC<modal> = ({ isOpen, onClose, rekin_id, onS
                 throw new Error("terdapat kesalahan server ketika fetch data dropdown musrenbang");
             }
             const hasil = await response.json();
-            const data = hasil.usulan_pokok_pikiran;
+            const data = hasil.data;
             if (data.length != 0) {
                 const option = data.map((item: any) => ({
                     value: item.id,
@@ -145,6 +145,7 @@ export const ModalAddUsulan: React.FC<modal> = ({ isOpen, onClose, rekin_id, onS
                     tahun: item.tahun,
                 }))
                 setOptionPokir(option);
+                console.log("dropdown pokir ada");
             } else {
                 console.log('dropdown Pokok pikiran kosong');
             }

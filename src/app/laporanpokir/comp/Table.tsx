@@ -112,7 +112,8 @@ const Table = () => {
                                 <th rowSpan={2} className="border-r border-b px-6 py-3 min-w-[200px]">Sub Kegiatan</th>
                                 <th rowSpan={2} className="border-r border-b px-6 py-3 min-w-[100px]">Nama Pelaksana</th>
                                 <th rowSpan={2} className="border-r border-b px-6 py-3 min-w-[100px]">Pagu Sub Kegiatan</th>
-                                <th rowSpan={2} className="border-r border-b px-6 py-3 min-w-[250px]">Rekin</th>
+                                <th rowSpan={2} className="border-r border-b px-6 py-3 min-w-[250px]">Rencana Kinerja ASN</th>
+                                <th rowSpan={2} className="border-r border-b px-6 py-3 min-w-[250px]">Program Prioritas</th>
                             </tr>
                             <tr className="bg-blue-700 text-white">
                                 <th className="border-r border-b px-2 py-1 w-[150px] text-center">Kecamatan</th>
@@ -139,6 +140,7 @@ const Table = () => {
                                 <th className="border-r border-b px-2 py-1 text-center">15</th>
                                 <th className="border-r border-b px-2 py-1 text-center">16</th>
                                 <th className="border-r border-b px-2 py-1 text-center">17</th>
+                                <th className="border-r border-b px-2 py-1 text-center">18</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -183,6 +185,7 @@ const Table = () => {
                                         <td className="border-x border-b border-blue-500 py-4 px-3">{item.nama_pelaksana_rencana_kinerja || '-'}</td>
                                         <td className="border-x border-b border-blue-500 py-4 px-3">Rp.{formatRupiah(item.anggaran || 0)}</td>
                                         <td className="border-x border-b border-blue-500 py-4 px-3">{item.nama_rencana_kinerja || '-'}</td>
+                                        <td className="border-x border-b border-blue-500 py-4 px-3 italic">program kegiatan dalam pengembangan</td>
                                     </tr>
                                 ))
                             }
