@@ -40,6 +40,7 @@ const Table = () => {
     const token = getToken();
     const { branding } = useBrandingContext();
 
+
     // MODAL & TRIGGER
     const [ModalOpen, setModalOpen] = useState<boolean>(false);
     const [ModalOpdOpen, setModalOpdOpen] = useState<boolean>(false);
@@ -51,12 +52,19 @@ const Table = () => {
         const API_URL = process.env.NEXT_PUBLIC_API_URL;
         const fetchSubKegiatan = async () => {
             setLoading(true)
+            const payload = {
+                tahun: String(branding?.tahun?.value),
+                nip_pengusul: branding?.user?.nip,
+            }
             try {
-                const response = await fetch(`${API_URL}/usulan_pokok_pikiran/findall?tahun=${branding?.tahun?.value}`, {
+                setLoading(true);
+                const response = await fetch(`${branding?.api_perencanaan}/usulan_pokok_pikiran/findall_with_filter`, {
+                    method: "POST",
                     headers: {
                         Authorization: `${token}`,
                         'Content-Type': 'application/json',
                     },
+                    body: JSON.stringify(payload),
                 });
                 const result = await response.json();
                 const data = result.data;

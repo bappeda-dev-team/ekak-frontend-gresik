@@ -103,7 +103,7 @@ const Table = () => {
                                 <th rowSpan={2} className="border-r border-b px-6 py-3 text-center">No</th>
                                 <th rowSpan={2} className="border-r border-b px-6 py-3 min-w-[200px]">Dewan</th>
                                 <th rowSpan={2} className="border-r border-b px-6 py-3 min-w-[200px]">Kamus Usulan</th>
-                                <th rowSpan={2} className="border-r border-b px-6 py-3 min-w-[200px]">Nama Pokir</th>
+                                <th rowSpan={2} className="border-r border-b px-6 py-3 min-w-[200px]">Nama Usulan</th>
                                 <th colSpan={5} className="border-r border-b px-6 py-3 min-w-[500px]">Lokasi</th>
                                 <th rowSpan={2} className="border-r border-b px-6 py-3 min-w-[100px]">Keterangan</th>
                                 <th rowSpan={2} className="border-r border-b px-6 py-3 min-w-[50px]">Jumlah</th>

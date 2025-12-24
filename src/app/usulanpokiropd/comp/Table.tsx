@@ -48,11 +48,7 @@ const Table = () => {
         const fetchPokir = async () => {
             const payload = {
                 tahun: String(branding?.tahun?.value),
-                nip_pengusul: "",
                 kode_opd: opd,
-                rekin_id: "",
-                require_kode_opd: true,
-                require_rekin_id: false
             }
             try {
                 setLoading(true);
