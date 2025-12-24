@@ -161,13 +161,13 @@ const Table = () => {
                                         ))}
                                     </td>
                                     <td className="border-r border-b px-6 py-4 text-center">
-                                        {data.indikator.map((item: indikator) => (
+                                        {data.indikator.map((item: indikator, i_indikator: number) => (
                                             item.targets ? 
                                                 item.targets.map((t: target) => (
                                                     <p key={t.id_target}>{t.target} / {t.satuan}</p>
                                                 ))
                                                 :
-                                                <p>-</p>
+                                                <p key={i_indikator}>-</p>
                                             
                                         ))}
                                     </td>

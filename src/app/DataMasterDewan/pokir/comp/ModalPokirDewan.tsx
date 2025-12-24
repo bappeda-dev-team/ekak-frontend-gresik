@@ -207,6 +207,7 @@ export const ModalPokirDewan: React.FC<modal> = ({ isOpen, onClose, onSuccess, j
             usulan: data.usulan,
             rt: data.rt,
             rw: data.rw,
+            tahun: String(branding?.tahun?.value),
         };
         // console.log(formData);
         try {
