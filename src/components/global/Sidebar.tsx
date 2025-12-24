@@ -896,16 +896,18 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
 
 
           {/* LABEL LAPORAN */}
-          <li
-            onClick={() => setLaporan(Laporan ? false : true)}
-            className="flex justify-between font-medium items-center gap-x-2 cursor-pointer p-2 hover:bg-slate-500 rounded-xl transition-all duration-300 ease-in-out"
-          >
-            <div className="flex items-center gap-2">
-              <TbBook className="text-xl" />
-              <span className={`${!isOpen && 'hidden'} origin-left duration-200`}>Laporan</span>
-            </div>
-            <TbChevronRight className={`transition-all duration-200 ease-in-out ${Laporan ? "rotate-90" : ""}`} />
-          </li>
+          {User?.roles != "dewan" &&
+            <li
+              onClick={() => setLaporan(Laporan ? false : true)}
+              className="flex justify-between font-medium items-center gap-x-2 cursor-pointer p-2 hover:bg-slate-500 rounded-xl transition-all duration-300 ease-in-out"
+            >
+              <div className="flex items-center gap-2">
+                <TbBook className="text-xl" />
+                <span className={`${!isOpen && 'hidden'} origin-left duration-200`}>Laporan</span>
+              </div>
+              <TbChevronRight className={`transition-all duration-200 ease-in-out ${Laporan ? "rotate-90" : ""}`} />
+            </li>
+          }
           {/* SUB MENU LAPORAN */}
           <div className={`transition-all duration-300 ease-in-out ${Laporan ? 'px-3 py-2 flex flex-col border-l-2 border-white rounded-b-xl ml-2  max-h-screen opacity-100' : 'max-h-0 opacity-0 pointer-events-none'}`}>
 

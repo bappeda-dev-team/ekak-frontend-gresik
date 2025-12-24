@@ -215,6 +215,9 @@ const Header = () => {
                 {user?.roles == "reviewer" &&
                     <button className="border border-white text-white px-3 py-2 mx-1 min-w-20 max-h-[37.5px] rounded-lg hover:bg-white hover:text-gray-800">Reviewer</button>
                 }
+                {user?.roles == "dewan" &&
+                    <button className="border border-white text-white px-3 py-2 mx-1 min-w-20 max-h-[37.5px] rounded-lg hover:bg-white hover:text-gray-800">Dewan</button>
+                }
                 {user?.roles == undefined &&
                     <button className="border border-white text-white px-3 py-2 mx-1 min-w-20 max-h-[37.5px] rounded-lg hover:bg-white hover:text-gray-800">Loading</button>
                 }
