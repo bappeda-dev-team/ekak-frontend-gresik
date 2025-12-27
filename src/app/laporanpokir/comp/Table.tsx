@@ -1,11 +1,15 @@
 'use client'
 
-import { AlertNotification, AlertQuestion } from "@/components/global/Alert";
 import React, { useEffect, useState } from "react";
 import { LoadingClip } from "@/components/global/Loading";
 import { TahunNull } from "@/components/global/OpdTahunNull";
 import { getToken } from "@/components/lib/Cookie";
 import { useBrandingContext } from "@/context/BrandingContext";
+
+interface LaporanPokir {
+    usulans: UsulanResponse[];
+    total_anggaran: number;
+}
 
 interface UsulanResponse {
     nip_pengusul: string;
@@ -30,11 +34,12 @@ interface UsulanResponse {
     kode_subkegiatan: string;
     nama_subkegiatan: string;
     tahun: string;
+    program_prioritas: string;
 };
 
 const Table = () => {
 
-    const [Data, setData] = useState<UsulanResponse[]>([]);
+    const [Data, setData] = useState<LaporanPokir | null>(null);
 
     const [Loading, setLoading] = useState<boolean | null>(null);
     const [Error, setError] = useState<boolean | null>(null);
@@ -59,7 +64,7 @@ const Table = () => {
                 } else if (result.code === 401) {
                     window.location.href = "/login";
                 } else {
-                    setData([]);
+                    setData(null);
                     setError(true);
                 }
             } catch (err) {
@@ -144,14 +149,14 @@ const Table = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            {(!Data || Data.length === 0) ?
+                            {(!Data) ?
                                 <tr>
                                     <td className="px-6 py-3" colSpan={30}>
                                         Data Kosong / Belum Ditambahkan
                                     </td>
                                 </tr>
                                 :
-                                Data.map((item: UsulanResponse, index: number) => (
+                                Data.usulans.map((item: UsulanResponse, index: number) => (
                                     <tr key={index}>
                                         <td className="border-x border-b border-blue-500 py-4 px-3 text-center">{index + 1}</td>
                                         <td className="border-x border-b border-blue-500 py-4 px-3">
@@ -185,10 +190,14 @@ const Table = () => {
                                         <td className="border-x border-b border-blue-500 py-4 px-3">{item.nama_pelaksana_rencana_kinerja || '-'}</td>
                                         <td className="border-x border-b border-blue-500 py-4 px-3">Rp.{formatRupiah(item.anggaran || 0)}</td>
                                         <td className="border-x border-b border-blue-500 py-4 px-3">{item.nama_rencana_kinerja || '-'}</td>
-                                        <td className="border-x border-b border-blue-500 py-4 px-3 italic">program kegiatan dalam pengembangan</td>
+                                        <td className="border-x border-b border-blue-500 py-4 px-3">{item.program_prioritas || "-"}</td>
                                     </tr>
                                 ))
                             }
+                            <tr>
+                                <td colSpan={15} className="py-4 px-3 bg-blue-300 border border-blue-500 text-white font-bold">Total Anggaran</td>
+                                <td colSpan={3} className="py-4 px-3 bg-blue-300 border border-blue-500 text-white font-bold">Rp.{formatRupiah(Data?.total_anggaran || 0)}</td>
+                            </tr>
                         </tbody>
                     </table>
                 </div>
