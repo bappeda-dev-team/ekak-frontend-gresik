@@ -127,8 +127,8 @@ const Table = () => {
                         <tr className="bg-blue-500 text-white">
                             <th className="border-r border-b px-6 py-3 min-w-[50px] text-center">No</th>
                             <th className="border-l border-b px-6 py-3 min-w-[300px]">Dapil</th>
-                            <th className="border-l border-b px-6 py-3 min-w-[200px]">Kecamatan</th>
-                            <th className="border-r border-b px-6 py-3 min-w-[300px]">Nama Dewan</th>
+                            <th className="border-r border-b px-6 py-3 min-w-[200px]">Kecamatan</th>
+                            <th className="border-r border-b px-6 py-3 min-w-[300px]">Nama Dewan (Username)</th>
                             <th className="border-l border-b px-6 py-3 w-[100px]">Aksi</th>
                         </tr>
                         <tr className="bg-blue-500 text-white">
@@ -147,33 +147,60 @@ const Table = () => {
                                 </td>
                             </tr>
                             :
-                            <tr>
-                                <td className="border-r border-b px-6 py-4 text-center">1</td>
-                                <td className="border-r border-b px-6 py-4">Dapil</td>
-                                <td className="border-r border-b px-6 py-4">Kecamatan</td>
-                                <td className="border-r border-b px-6 py-4">Nama Dewan</td>
-                                <td className="border-r border-b px-6 py-4">
-                                    <div className="flex flex-col items-center gap-1">
-                                        <ButtonSky className="w-full flex items-center gap-1">
-                                            <TbPencil />
-                                            Edit
-                                        </ButtonSky>
-                                        <ButtonRed
-                                            className="w-full *:flex items-center gap-1"
-                                            onClick={() => {
-                                                AlertQuestion("Hapus?", "Hapus Dewan yang dipilih?", "question", "Hapus", "Batal").then((result) => {
-                                                    if (result.isConfirmed) {
-                                                        // hapusSubKegiatan(data.id);
-                                                    }
-                                                });
-                                            }}
-                                        >
-                                            <TbTrash />
-                                            Hapus
-                                        </ButtonRed>
-                                    </div>
-                                </td>
-                            </tr>
+                            Data.map((item: Dapil, index: number) => (
+                                <tr key={index}>
+                                    <td className="border-r border-b px-6 py-4 text-center">{index + 1}</td>
+                                    <td className="border-r border-b px-6 py-4">
+                                        <div className="flex flex-col gap-1">
+                                            <p>({item.kode_dapil || "-"})</p>
+                                            <p>{item.nama_dapil || "-"}</p>
+                                        </div>
+                                    </td>
+                                    {item.kecamatan.length > 0 ?
+                                        <td className="border-r border-b px-6 py-4">
+                                            <div className="flex flex-col gap-1">
+                                                {item.kecamatan.map((k: Kecamatan, k_index: number) => (
+                                                    <p key={k_index} className="border p-2 rounded-lg border-blue-500">({k.kode_kecamatan || ""}) {k.nama_kecamatan || "-"}</p>
+                                                ))}
+                                            </div>
+                                        </td>
+                                        :
+                                        <td className="border-r border-b px-6 py-4">-</td>
+                                    }
+                                    {item.dewan.length > 0 ?
+                                        <td className="border-r border-b px-6 py-4">
+                                            <div className="flex flex-col gap-1">
+                                                {item.dewan.map((d: Dewan, d_index: number) => (
+                                                    <p key={d_index} className="border p-2 border-blue-500 rounded-lg">{d.nama_pegawai || "-"} ({d.nip || "-"})</p>
+                                                ))}
+                                            </div>
+                                        </td>
+                                        :
+                                        <td className="border-r border-b px-6 py-4">-</td>
+                                    }
+                                    <td className="border-r border-b px-6 py-4">
+                                        <div className="flex flex-col items-center gap-1">
+                                            <ButtonSky className="w-full flex items-center gap-1">
+                                                <TbPencil />
+                                                Edit
+                                            </ButtonSky>
+                                            <ButtonRed
+                                                className="w-full *:flex items-center gap-1"
+                                                onClick={() => {
+                                                    AlertQuestion("Hapus?", "Hapus Dewan yang dipilih?", "question", "Hapus", "Batal").then((result) => {
+                                                        if (result.isConfirmed) {
+                                                            // hapusSubKegiatan(data.id);
+                                                        }
+                                                    });
+                                                }}
+                                            >
+                                                <TbTrash />
+                                                Hapus
+                                            </ButtonRed>
+                                        </div>
+                                    </td>
+                                </tr>
+                            ))
                         }
                     </tbody>
                 </table>
