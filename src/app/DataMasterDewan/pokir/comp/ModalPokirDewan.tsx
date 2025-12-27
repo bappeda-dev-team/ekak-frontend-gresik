@@ -104,7 +104,7 @@ export const ModalPokirDewan: React.FC<modal> = ({ isOpen, onClose, onSuccess, j
     const SelectedKecamatan = watch("kecamatan");
 
     useEffect(() => {
-        if(SelectedKecamatan){
+        if (SelectedKecamatan) {
             fetchKelurahan(SelectedKecamatan.value);
         }
     }, [SelectedKecamatan]);
@@ -305,6 +305,23 @@ export const ModalPokirDewan: React.FC<modal> = ({ isOpen, onClose, onSuccess, j
                         </div>
                         <div className="flex flex-col py-3">
                             <label className="uppercase text-xs font-bold text-gray-700 my-2">
+                                Usulan:
+                            </label>
+                            <Controller
+                                name="usulan"
+                                control={control}
+                                render={({ field }) => (
+                                    <textarea
+                                        {...field}
+                                        id="usulan"
+                                        className="border px-4 py-2 rounded-lg"
+                                        placeholder="masukkan usulan"
+                                    />
+                                )}
+                            />
+                        </div>
+                        <div className="flex flex-col py-3">
+                            <label className="uppercase text-xs font-bold text-gray-700 my-2">
                                 Kecamatan:
                             </label>
                             <Controller
@@ -370,24 +387,6 @@ export const ModalPokirDewan: React.FC<modal> = ({ isOpen, onClose, onSuccess, j
                         </div>
                         <div className="flex flex-col py-3">
                             <label className="uppercase text-xs font-bold text-gray-700 my-2">
-                                Jumlah:
-                            </label>
-                            <Controller
-                                name="jumlah"
-                                control={control}
-                                render={({ field }) => (
-                                    <input
-                                        {...field}
-                                        id="jumlah"
-                                        type="text"
-                                        className="border px-4 py-2 rounded-lg"
-                                        placeholder="masukkan jumlah"
-                                    />
-                                )}
-                            />
-                        </div>
-                        <div className="flex flex-col py-3">
-                            <label className="uppercase text-xs font-bold text-gray-700 my-2">
                                 Satuan:
                             </label>
                             <Controller
@@ -417,40 +416,6 @@ export const ModalPokirDewan: React.FC<modal> = ({ isOpen, onClose, onSuccess, j
                                         id="alamat"
                                         className="border px-4 py-2 rounded-lg"
                                         placeholder="masukkan alamat"
-                                    />
-                                )}
-                            />
-                        </div>
-                        <div className="flex flex-col py-3">
-                            <label className="uppercase text-xs font-bold text-gray-700 my-2">
-                                Uraian:
-                            </label>
-                            <Controller
-                                name="uraian"
-                                control={control}
-                                render={({ field }) => (
-                                    <textarea
-                                        {...field}
-                                        id="uraian"
-                                        className="border px-4 py-2 rounded-lg"
-                                        placeholder="masukkan uraian"
-                                    />
-                                )}
-                            />
-                        </div>
-                        <div className="flex flex-col py-3">
-                            <label className="uppercase text-xs font-bold text-gray-700 my-2">
-                                Usulan:
-                            </label>
-                            <Controller
-                                name="usulan"
-                                control={control}
-                                render={({ field }) => (
-                                    <textarea
-                                        {...field}
-                                        id="usulan"
-                                        className="border px-4 py-2 rounded-lg"
-                                        placeholder="masukkan usulan"
                                     />
                                 )}
                             />
@@ -492,6 +457,41 @@ export const ModalPokirDewan: React.FC<modal> = ({ isOpen, onClose, onSuccess, j
                                     )}
                                 />
                             </div>
+                        </div>
+                        <div className="flex flex-col py-3">
+                            <label className="uppercase text-xs font-bold text-gray-700 my-2">
+                                Permasalahan:
+                            </label>
+                            <Controller
+                                name="uraian"
+                                control={control}
+                                render={({ field }) => (
+                                    <textarea
+                                        {...field}
+                                        id="uraian"
+                                        className="border px-4 py-2 rounded-lg"
+                                        placeholder="masukkan Pemasalahan"
+                                    />
+                                )}
+                            />
+                        </div>
+                        <div className="flex flex-col py-3">
+                            <label className="uppercase text-xs font-bold text-gray-700 my-2">
+                                Volume:
+                            </label>
+                            <Controller
+                                name="jumlah"
+                                control={control}
+                                render={({ field }) => (
+                                    <input
+                                        {...field}
+                                        id="jumlah"
+                                        type="text"
+                                        className="border px-4 py-2 rounded-lg"
+                                        placeholder="masukkan volume"
+                                    />
+                                )}
+                            />
                         </div>
                         <ButtonSky className="w-full my-3" type="submit" disabled={Proses}>
                             {Proses ?
