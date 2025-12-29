@@ -163,12 +163,12 @@ const Table = () => {
                             <th className="border-r border-b px-6 py-3 min-w-[200px]">Kamus Usulan</th>
                             <th className="border-r border-b px-6 py-3 min-w-[200px]">OPD</th>
                             <th className="border-l border-b px-6 py-3 min-w-[300px]">Kecamatan</th>
-                            <th className="border-l border-b px-6 py-3 min-w-[200px]">Kelurahan</th>
+                            <th className="border-l border-b px-6 py-3 min-w-[200px]">Kelurahan/Desa</th>
                             <th className="border-l border-b px-6 py-3 min-w-[200px]">Pengusul</th>
-                            <th className="border-l border-b px-6 py-3 min-w-[200px]">Jumlah</th>
+                            <th className="border-l border-b px-6 py-3 min-w-[200px]">Jumlah/Volume</th>
                             <th className="border-l border-b px-6 py-3 min-w-[200px]">Satuan</th>
                             <th className="border-l border-b px-6 py-3 min-w-[200px]">Alamat</th>
-                            <th className="border-l border-b px-6 py-3 min-w-[200px]">Uraian</th>
+                            <th className="border-l border-b px-6 py-3 min-w-[200px]">Permasalahan</th>
                             <th className="border-l border-b px-6 py-3 min-w-[200px]">Usulan</th>
                             <th className="border-l border-b px-6 py-3 min-w-[100px]">Aksi</th>
                         </tr>
