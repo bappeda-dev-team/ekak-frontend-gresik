@@ -12,7 +12,7 @@ import {
   TbListDetails, TbAlertTriangle, TbDatabasePlus, TbCalendarPlus, TbDeviceImacDollar, 
   TbFocus2, TbHexagonLetterC, TbHexagonLetterO, TbHexagonLetterI,
   TbBuildingCottage, TbCalendarStar, TbChartPie, TbListTree,
-  TbBubble, TbDatabaseLeak, TbChefHat, TbNotebook
+  TbBubble, TbDatabaseLeak, TbChefHat, TbNotebook, TbMessageForward
 } from "react-icons/tb";
 import Image from 'next/image';
 import { usePathname, useParams } from 'next/navigation';
@@ -411,6 +411,12 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
                 <li className={`flex items-center gap-x-2 cursor-pointer p-2 rounded-xl transition-all duration-300 ease-in-out ${url === "/DataMaster/master-kamus-usulan" ? "bg-white text-gray-800" : "hover:bg-slate-500"}`}>
                   <TbNotebook className="text-xl" />
                   <span className={`${!isOpen && 'hidden'} origin-left duration-200`}>Master Kamus Usulan</span>
+                </li>
+              </Link>
+              <Link href="/DataMaster/usulan-kamus">
+                <li className={`flex items-center gap-x-2 cursor-pointer p-2 rounded-xl transition-all duration-300 ease-in-out ${url === "/DataMaster/usulan-kamus" ? "bg-white text-gray-800" : "hover:bg-slate-500"}`}>
+                  <TbMessageForward className="text-xl" />
+                  <span className={`${!isOpen && 'hidden'} origin-left duration-200`}>Usulan Kamus</span>
                 </li>
               </Link>
               {/* LABEL MASTER PROGRAM KEGIATAN */}
