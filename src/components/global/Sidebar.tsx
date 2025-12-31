@@ -416,7 +416,7 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
               <Link href="/DataMaster/usulan-kamus">
                 <li className={`flex items-center gap-x-2 cursor-pointer p-2 rounded-xl transition-all duration-300 ease-in-out ${url === "/DataMaster/usulan-kamus" ? "bg-white text-gray-800" : "hover:bg-slate-500"}`}>
                   <TbMessageForward className="text-xl" />
-                  <span className={`${!isOpen && 'hidden'} origin-left duration-200`}>Usulan Kamus</span>
+                  <span className={`${!isOpen && 'hidden'} origin-left duration-200`}>Nama Usulan</span>
                 </li>
               </Link>
               {/* LABEL MASTER PROGRAM KEGIATAN */}

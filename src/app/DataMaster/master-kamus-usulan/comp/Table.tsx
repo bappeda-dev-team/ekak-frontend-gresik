@@ -13,6 +13,7 @@ interface KamusUsulan {
     id: number,
     nama_kamus_usulan: string;
     kode_kamus_usulan: string;
+    tahun: number;
 }
 
 const Table = () => {
@@ -34,7 +35,7 @@ const Table = () => {
         const fetchKamus = async () => {
             setLoading(true)
             try {
-                const response = await fetch(`${API_URL}/kamus_usulan/findall`, {
+                const response = await fetch(`${API_URL}/kamus_usulan/findall?tahun=${branding?.tahun?.value}`, {
                     headers: {
                         Authorization: `${token}`,
                         'Content-Type': 'application/json',

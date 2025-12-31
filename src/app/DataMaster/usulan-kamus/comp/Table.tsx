@@ -115,7 +115,7 @@ const Table = () => {
         <div className="mt-3 rounded-xl shadow-lg border">
             <div className="flex items-center justify-between border-b px-5 py-5">
                 <div className="flex flex-col items-end">
-                    <h1 className="uppercase font-bold">Usulan Kamus</h1>
+                    <h1 className="uppercase font-bold">Nama Usulan</h1>
                 </div>
                 <div className="flex flex-col">
                     <ButtonSky
@@ -123,7 +123,7 @@ const Table = () => {
                         onClick={() => handleModal(null, "tambah")}
                     >
                         <TbCirclePlus className="mr-1" />
-                        Tambah Kamus Usulan
+                        Tambah Nama Usulan
                     </ButtonSky>
                 </div>
             </div>
