@@ -7,12 +7,15 @@ import { getToken } from "@/components/lib/Cookie";
 import { AlertNotification, AlertQuestion } from "@/components/global/Alert";
 import { TbCirclePlus, TbPencil, TbTrash } from "react-icons/tb";
 import { useBrandingContext } from "@/context/BrandingContext";
-import { ModalKamusUsulan } from "./ModalKamusUsulan";
+import { ModalUsulanKamus } from "./ModalKamusUsulan";
 
 interface KamusUsulan {
     id: number,
-    nama_kamus_usulan: string;
     kode_kamus_usulan: string;
+    nama_kamus_usulan: string;
+    nama_usulan: string;
+    keterangan: string;
+    last_update_by: string;
     tahun: number;
 }
 
@@ -35,7 +38,7 @@ const Table = () => {
         const fetchKamus = async () => {
             setLoading(true)
             try {
-                const response = await fetch(`${API_URL}/kamus_usulan/findall?tahun=${branding?.tahun?.value}`, {
+                const response = await fetch(`${API_URL}/master_usulan_baru?tahun=${branding?.tahun?.value}`, {
                     headers: {
                         Authorization: `${token}`,
                         'Content-Type': 'application/json',
@@ -74,25 +77,25 @@ const Table = () => {
         }
     }
 
-    // const hapusKamus = async (id: any) => {
-    //     const API_URL = process.env.NEXT_PUBLIC_API_URL;
-    //     try {
-    //         const response = await fetch(`${API_URL}/subkegiatanopd/delete/${id}`, {
-    //             method: "DELETE",
-    //             headers: {
-    //                 Authorization: `${token}`,
-    //                 'Content-Type': 'application/json',
-    //             },
-    //         })
-    //         if (!response.ok) {
-    //             alert("cant fetch data")
-    //         }
-    //         setData(Data.filter((data) => (data.id !== id)))
-    //         AlertNotification("Berhasil", "Data Kamus Usulan Berhasil Di hapus", "success", 1000);
-    //     } catch (err) {
-    //         AlertNotification("Gagal", "cek koneksi internet atau database server", "error", 2000);
-    //     }
-    // };
+    const hapusData = async (id: any) => {
+        const API_URL = process.env.NEXT_PUBLIC_API_URL;
+        try {
+            const response = await fetch(`${API_URL}/master_usulan_baru/delete/${id}`, {
+                method: "DELETE",
+                headers: {
+                    Authorization: `${token}`,
+                    'Content-Type': 'application/json',
+                },
+            })
+            if (!response.ok) {
+                alert("cant fetch data")
+            }
+            setData(Data.filter((data) => (data.id !== id)))
+            AlertNotification("Berhasil", "Data Usulan Kamus Berhasil Di hapus", "success", 1000);
+        } catch (err) {
+            AlertNotification("Gagal", "cek koneksi internet atau database server", "error", 2000);
+        }
+    };
 
     if (Loading) {
         return (
@@ -112,7 +115,7 @@ const Table = () => {
         <div className="mt-3 rounded-xl shadow-lg border">
             <div className="flex items-center justify-between border-b px-5 py-5">
                 <div className="flex flex-col items-end">
-                    <h1 className="uppercase font-bold">Master Kamus Usulan</h1>
+                    <h1 className="uppercase font-bold">Nama Usulan</h1>
                 </div>
                 <div className="flex flex-col">
                     <ButtonSky
@@ -120,7 +123,7 @@ const Table = () => {
                         onClick={() => handleModal(null, "tambah")}
                     >
                         <TbCirclePlus className="mr-1" />
-                        Tambah Kamus Usulan
+                        Tambah Nama Usulan
                     </ButtonSky>
                 </div>
             </div>
@@ -129,8 +132,9 @@ const Table = () => {
                     <thead>
                         <tr className="bg-blue-500 text-white">
                             <th className="border-r border-b px-6 py-3 min-w-[50px] text-center">No</th>
-                            <th className="border-r border-b px-6 py-3 min-w-[200px]">Nama Kamus Usulan</th>
-                            <th className="border-l border-b px-6 py-3 min-w-[300px]">Kode Kamus Usulan</th>
+                            <th className="border-r border-b px-6 py-3 min-w-[300px]">Kode Kamus Usulan</th>
+                            <th className="border-r border-b px-6 py-3 min-w-[200px]">Nama Usulan</th>
+                            <th className="border-r border-b px-6 py-3 min-w-[200px]">Keterangan</th>
                             <th className="border-l border-b px-6 py-3 w-[100px]">Aksi</th>
                         </tr>
                         <tr className="bg-blue-500 text-white">
@@ -138,10 +142,11 @@ const Table = () => {
                             <th className="border-r border-b px-6 py-3 text-center">2</th>
                             <th className="border-l border-b px-6 py-3 text-center">3</th>
                             <th className="border-l border-b px-6 py-3 text-center">4</th>
+                            <th className="border-l border-b px-6 py-3 text-center">5</th>
                         </tr>
                     </thead>
                     <tbody>
-                        {Data === null ?
+                        {Data.length === 0 ?
                             <tr>
                                 <td className="px-6 py-3 uppercase" colSpan={5}>
                                     Data Kosong / Belum Ditambahkan
@@ -151,8 +156,9 @@ const Table = () => {
                             Data.map((item: KamusUsulan, index: number) => (
                                 <tr key={index}>
                                     <td className="border-r border-b px-6 py-4 text-center">{index + 1}</td>
-                                    <td className="border-r border-b px-6 py-4">{item.nama_kamus_usulan ?? "-"}</td>
                                     <td className="border-r border-b px-6 py-4">{item.kode_kamus_usulan ?? "-"}</td>
+                                    <td className="border-r border-b px-6 py-4">{item.nama_usulan ?? "-"}</td>
+                                    <td className="border-r border-b px-6 py-4">{item.keterangan ?? "-"}</td>
                                     <td className="border-r border-b px-6 py-4">
                                         <div className="flex flex-col items-center gap-1">
                                             <ButtonSky
@@ -165,9 +171,9 @@ const Table = () => {
                                             <ButtonRed
                                                 className="w-full *:flex items-center gap-1"
                                                 onClick={() => {
-                                                    AlertQuestion("Hapus?", "Hapus Kamus Usulan yang dipilih?", "question", "Hapus", "Batal").then((result) => {
+                                                    AlertQuestion("Hapus?", "Hapus Usulan Kamus yang dipilih?", "question", "Hapus", "Batal").then((result) => {
                                                         if (result.isConfirmed) {
-                                                            // hapusSubKegiatan(data.id);
+                                                            hapusData(item.id);
                                                         }
                                                     });
                                                 }}
@@ -183,7 +189,7 @@ const Table = () => {
                     </tbody>
                 </table>
                 {ModalOpen &&
-                    <ModalKamusUsulan
+                    <ModalUsulanKamus
                         isOpen={ModalOpen}
                         onClose={() => handleModal(null, "tambah")}
                         onSuccess={() => setfetchTrigger((prev) => !prev)}

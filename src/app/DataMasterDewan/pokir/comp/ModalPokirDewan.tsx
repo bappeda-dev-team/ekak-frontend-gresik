@@ -322,6 +322,42 @@ export const ModalPokirDewan: React.FC<modal> = ({ isOpen, onClose, onSuccess, j
                         </div>
                         <div className="flex flex-col py-3">
                             <label className="uppercase text-xs font-bold text-gray-700 my-2">
+                                Volume:
+                            </label>
+                            <Controller
+                                name="jumlah"
+                                control={control}
+                                render={({ field }) => (
+                                    <input
+                                        {...field}
+                                        id="jumlah"
+                                        type="text"
+                                        className="border px-4 py-2 rounded-lg"
+                                        placeholder="masukkan volume"
+                                    />
+                                )}
+                            />
+                        </div>
+                        <div className="flex flex-col py-3">
+                            <label className="uppercase text-xs font-bold text-gray-700 my-2">
+                                Satuan:
+                            </label>
+                            <Controller
+                                name="satuan"
+                                control={control}
+                                render={({ field }) => (
+                                    <input
+                                        {...field}
+                                        id="satuan"
+                                        type="text"
+                                        className="border px-4 py-2 rounded-lg"
+                                        placeholder="masukkan satuan"
+                                    />
+                                )}
+                            />
+                        </div>
+                        <div className="flex flex-col py-3">
+                            <label className="uppercase text-xs font-bold text-gray-700 my-2">
                                 Kecamatan:
                             </label>
                             <Controller
@@ -381,24 +417,6 @@ export const ModalPokirDewan: React.FC<modal> = ({ isOpen, onClose, onSuccess, j
                                                 ...base, zIndex: 9999
                                             })
                                         }}
-                                    />
-                                )}
-                            />
-                        </div>
-                        <div className="flex flex-col py-3">
-                            <label className="uppercase text-xs font-bold text-gray-700 my-2">
-                                Satuan:
-                            </label>
-                            <Controller
-                                name="satuan"
-                                control={control}
-                                render={({ field }) => (
-                                    <input
-                                        {...field}
-                                        id="satuan"
-                                        type="text"
-                                        className="border px-4 py-2 rounded-lg"
-                                        placeholder="masukkan satuan"
                                     />
                                 )}
                             />
@@ -471,24 +489,6 @@ export const ModalPokirDewan: React.FC<modal> = ({ isOpen, onClose, onSuccess, j
                                         id="uraian"
                                         className="border px-4 py-2 rounded-lg"
                                         placeholder="masukkan Pemasalahan"
-                                    />
-                                )}
-                            />
-                        </div>
-                        <div className="flex flex-col py-3">
-                            <label className="uppercase text-xs font-bold text-gray-700 my-2">
-                                Volume:
-                            </label>
-                            <Controller
-                                name="jumlah"
-                                control={control}
-                                render={({ field }) => (
-                                    <input
-                                        {...field}
-                                        id="jumlah"
-                                        type="text"
-                                        className="border px-4 py-2 rounded-lg"
-                                        placeholder="masukkan volume"
                                     />
                                 )}
                             />

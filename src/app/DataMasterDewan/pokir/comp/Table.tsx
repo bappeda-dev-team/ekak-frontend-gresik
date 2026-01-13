@@ -161,6 +161,7 @@ const Table = () => {
                         <tr className="bg-blue-500 text-white">
                             <th className="border-r border-b px-6 py-3 min-w-[50px] text-center">No</th>
                             <th className="border-r border-b px-6 py-3 min-w-[200px]">Kamus Usulan</th>
+                            <th className="border-l border-b px-6 py-3 min-w-[200px]">Usulan</th>
                             <th className="border-r border-b px-6 py-3 min-w-[200px]">OPD</th>
                             <th className="border-l border-b px-6 py-3 min-w-[300px]">Kecamatan</th>
                             <th className="border-l border-b px-6 py-3 min-w-[200px]">Kelurahan/Desa</th>
@@ -169,7 +170,6 @@ const Table = () => {
                             <th className="border-l border-b px-6 py-3 min-w-[200px]">Satuan</th>
                             <th className="border-l border-b px-6 py-3 min-w-[200px]">Alamat</th>
                             <th className="border-l border-b px-6 py-3 min-w-[200px]">Permasalahan</th>
-                            <th className="border-l border-b px-6 py-3 min-w-[200px]">Usulan</th>
                             <th className="border-l border-b px-6 py-3 min-w-[100px]">Aksi</th>
                         </tr>
                         <tr className="bg-blue-500 text-white">
@@ -199,6 +199,7 @@ const Table = () => {
                                 <tr key={index}>
                                     <td className="border-r border-b px-6 py-4 text-center">{index + 1}</td>
                                     <td className="border-r border-b px-6 py-4">{item.nama_kamus_usulan || "-"}</td>
+                                    <td className="border-r border-b px-6 py-4">{item.usulan || "-"}</td>
                                     <td className="border-r border-b px-6 py-4">{item.nama_opd || "-"}</td>
                                     <td className="border-r border-b px-6 py-4">{item.kecamatan || "-"}</td>
                                     <td className="border-r border-b px-6 py-4">{item.kelurahan || "-"}</td>
@@ -207,7 +208,6 @@ const Table = () => {
                                     <td className="border-r border-b px-6 py-4 text-center">{item.satuan || "-"}</td>
                                     <td className="border-r border-b px-6 py-4">{item.alamat || "-"}</td>
                                     <td className="border-r border-b px-6 py-4">{item.uraian || "-"}</td>
-                                    <td className="border-r border-b px-6 py-4">{item.usulan || "-"}</td>
                                     <td className="border-r border-b px-6 py-4">
                                         <div className="flex flex-col items-center gap-1">
                                             {(branding?.user.roles == "super_admin" && item.kode_opd === null) &&
