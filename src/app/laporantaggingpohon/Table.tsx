@@ -8,31 +8,24 @@ interface Table {
     tahun: number;
 }
 
-interface PohonKinerja {
-    id_pohon: number;
-    tahun: number;
-    nama_pohon: string;
-    kode_opd: string;
-    nama_opd: string;
-    jenis_pohon: string;
-    keterangan_tagging: string;
-    status: string;
-    pelaksanas: Pelaksana[];
-}
 interface RencanaKinerja {
     id_rekin: string;
     rencana_kinerja: string;
     nama_pelaksana: string;
     nip_pelaksana: string;
+    kode_bidang_urusan: string;
+    nama_bidang_urusan: string;
+    kode_program: string;
+    nama_program: string;
     kode_subkegiatan: string;
     nama_subkegiatan: string;
     pagu: number;
     keterangan: string;
     tahapan_pelaksanaan: {
-        tw_1: number,
-        tw_2: number,
-        tw_3: number,
-        tw_4: number,
+        tw_1: number;
+        tw_2: number;
+        tw_3: number;
+        tw_4: number;
     };
 }
 
@@ -43,15 +36,31 @@ interface Pelaksana {
 }
 
 interface TaggingData {
+    kode_program_unggulan: string;
+    nama_program_unggulan: string;
+    rencana_implementasi: string;
+    id_pohon: number;
+    tahun: number;
+    nama_pohon: string;
+    kode_opd: string;
+    nama_opd: string;
+    jenis_pohon: string;
+    keterangan_tagging: string;
+    status: string;
+    pelaksanas: Pelaksana[];
+    keterangan: string;
+}
+
+interface Data {
     nama_tagging: string;
     tahun: number;
-    pohon_kinerjas: PohonKinerja[];
+    pohon_kinerjas: TaggingData[];
 }
 
 export const Table: React.FC<Table> = ({ tahun }) => {
 
 
-    const [DataTagging, setDataTagging] = useState<TaggingData | null>(null);
+    const [DataTagging, setDataTagging] = useState<Data | null>(null);
 
     const [NamaTagging, setNamaTagging] = useState<string>('');
     const [Loading, setLoading] = useState<boolean>(false);
@@ -141,7 +150,7 @@ export const Table: React.FC<Table> = ({ tahun }) => {
                         <thead>
                             <tr className="bg-emerald-500 text-white">
                                 <th rowSpan={2} className="border-r border-b px-6 py-3 w-[50px]">No</th>
-                                <th rowSpan={2} className="border-l border-b px-6 py-3 min-w-[200px]">{DataTagging?.nama_tagging || "Tagging"}</th>
+                                <th rowSpan={2} className="border-r border-b px-6 py-3 min-w-[200px]">{DataTagging?.nama_tagging || "Tagging"}</th>
                                 <th rowSpan={2} className="border-r border-b px-6 py-3 min-w-[100px]">Perangkat Daerah</th>
                                 <th rowSpan={2} className="border-r border-b px-6 py-3 min-w-[200px]">Nama Pohon</th>
                                 <th rowSpan={2} className="border-r border-b px-6 py-3 min-w-[100px]">Level Pohon</th>
@@ -168,15 +177,15 @@ export const Table: React.FC<Table> = ({ tahun }) => {
                                     </td>
                                 </tr>
                                 :
-                                DataTagging?.pohon_kinerjas.map((p: PohonKinerja, index: number) => {
+                                DataTagging?.pohon_kinerjas.map((p: TaggingData, index: number) => {
 
                                     const TotalRow = p.pelaksanas?.reduce((total, item) => total + (item.rencana_kinerjas.length == 0 ? 1 : item.rencana_kinerjas.length), 0) + p.pelaksanas?.length + 1;
-                                    
-                                    return(
+
+                                    return (
                                         <React.Fragment key={index}>
                                             <tr>
                                                 <td rowSpan={p.pelaksanas ? TotalRow : 2} className="border-r border-b px-6 py-4">{index + 1}</td>
-                                                <td rowSpan={p.pelaksanas ? TotalRow : 2} className="border-r border-b px-6 py-4">{p.keterangan_tagging || "-"}</td>
+                                                <td rowSpan={p.pelaksanas ? TotalRow : 2} className="border-r border-b px-6 py-4">{p.nama_program_unggulan || "-"}</td>
                                                 <td rowSpan={p.pelaksanas ? TotalRow : 2} className="border-r border-b px-6 py-4">{p.nama_opd || "-"}</td>
                                                 <td rowSpan={p.pelaksanas ? TotalRow : 2} className="border-r border-b px-6 py-4">
                                                     <p>{p.nama_pohon || "-"} </p>
@@ -199,12 +208,12 @@ export const Table: React.FC<Table> = ({ tahun }) => {
                                                             p.rencana_kinerjas.map((rk: RencanaKinerja, subs_index: number) => (
                                                                 <tr key={subs_index}>
                                                                     <td key={index} className="border-r border-b px-6 py-4 h-[200px]">{rk.rencana_kinerja || "-"}</td>
-                                                                    {rk.kode_subkegiatan ? 
-                                                                    <>
-                                                                        <td className="border-r border-b px-6 py-4 h-[200px]">({rk.kode_subkegiatan || 0}) {rk.nama_subkegiatan || "-"}</td>
-                                                                        <td className="border-r border-b px-6 py-4 h-[200px]">{rk.pagu || "-"}</td>
-                                                                    </>
-                                                                    :
+                                                                    {rk.kode_subkegiatan ?
+                                                                        <>
+                                                                            <td className="border-r border-b px-6 py-4 h-[200px]">({rk.kode_subkegiatan || 0}) {rk.nama_subkegiatan || "-"}</td>
+                                                                            <td className="border-r border-b px-6 py-4 h-[200px]">{rk.pagu || "-"}</td>
+                                                                        </>
+                                                                        :
                                                                         <td colSpan={2} className="border-r border-b px-6 py-4 bg-red-400 text-white italic h-[200px]">*Sub Kegiatan Belum Di Pilih</td>
                                                                     }
                                                                     <td className="border-r border-b px-6 py-4 h-[200px]">{rk.tahapan_pelaksanaan.tw_1 || 0}</td>
@@ -213,8 +222,8 @@ export const Table: React.FC<Table> = ({ tahun }) => {
                                                                     <td className="border-r border-b px-6 py-4 h-[200px]">{rk.tahapan_pelaksanaan.tw_4 || 0}</td>
                                                                     <td className="border-r border-b px-6 py-4 h-[200px]">{rk.keterangan || "-"}</td>
                                                                 </tr>
-                                                            )) 
-                                                        :
+                                                            ))
+                                                            :
                                                             <tr>
                                                                 <td colSpan={8} className="border-r border-b px-6 py-4 italic bg-red-400 text-white">*Rencana Kinerja belum di buat</td>
                                                             </tr>
