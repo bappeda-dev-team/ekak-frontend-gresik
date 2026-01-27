@@ -6,8 +6,9 @@ import { LoadingClip } from "@/components/global/Loading";
 import { useState, useEffect } from "react";
 import { getToken } from "@/components/lib/Cookie";
 import Select from 'react-select';
-import { TbUsers } from "react-icons/tb";
+import { TbUsers, TbSearch } from "react-icons/tb";
 import { useRouter } from "next/navigation";
+import { useBrandingContext } from "@/context/BrandingContext";
 
 interface OptionTypeString {
     value: string;
@@ -28,16 +29,36 @@ interface roles {
 
 const Table = () => {
 
+    const { branding } = useBrandingContext();
     const [User, setUser] = useState<User[]>([]);
+    const [searchQuery, setSearchQuery] = useState<string>("");
     const [Opd, setOpd] = useState<OptionTypeString | null>(null);
     const [LevelUser, setLevelUser] = useState<string>('');
     const [OpdOption, setOpdOption] = useState<OptionTypeString[]>([]);
     const [error, setError] = useState<boolean | null>(null);
     const [Loading, setLoading] = useState<boolean | null>(null);
     const [IsLoading, setIsLoading] = useState<boolean>(false);
+    const [LoadingOpd, setLoadingOpd] = useState<boolean>(false);
     const [DataNull, setDataNull] = useState<boolean | null>(null);
     const token = getToken();
     const router = useRouter();
+
+    useEffect(() => {
+        if (branding?.opd?.value != undefined) {
+            try {
+                setLoadingOpd(true);
+                const opd = {
+                    value: branding?.opd?.value,
+                    label: branding?.opd?.label,
+                }
+                setOpd(opd);
+            } catch (err) {
+                console.log("error parsing opd branding ke opd halaman");
+            } finally {
+                setLoadingOpd(false);
+            }
+        }
+    }, [branding])
 
     useEffect(() => {
         const API_URL = process.env.NEXT_PUBLIC_API_URL;
@@ -75,6 +96,14 @@ const Table = () => {
         }
         fetchUrusan();
     }, [token, Opd]);
+
+    const FilteredData = User?.filter((item: User) => {
+        const params = searchQuery.toLowerCase();
+        return (
+            item.nama_pegawai.toLowerCase().includes(params) ||
+            item.nip.toLowerCase().includes(params)
+        )
+    });
 
     const fetchOpd = async () => {
         const API_URL = process.env.NEXT_PUBLIC_API_URL;
@@ -123,7 +152,7 @@ const Table = () => {
         }
     };
 
-    if (Loading) {
+    if (Loading || LoadingOpd) {
         return (
             <div className="border p-5 rounded-xl shadow-xl">
                 <LoadingClip className="mx-5 py-5" />
@@ -181,39 +210,40 @@ const Table = () => {
 
     return (
         <>
-            <div className="flex flex-wrap gap-2 items-center justify-between px-3 py-2">
-                <div className="uppercase">
-                    <Select
-                        styles={{
-                            control: (baseStyles) => ({
-                                ...baseStyles,
-                                borderRadius: '8px',
-                                minWidth: '320px',
-                                maxWidth: '700px',
-                                minHeight: '30px'
-                            })
-                        }}
-                        onChange={(option) => setOpd(option)}
-                        options={OpdOption}
-                        placeholder="Filter by OPD"
-                        isClearable
-                        value={Opd}
-                        isLoading={IsLoading}
-                        isSearchable
-                        onMenuOpen={() => {
-                            if (OpdOption.length == 0) {
-                                fetchOpd();
-                            }
-                        }}
+            <div className="flex flex-wrap gap-2 items-center px-3 py-2">
+                <Select
+                    styles={{
+                        control: (baseStyles) => ({
+                            ...baseStyles,
+                            borderRadius: '8px',
+                            minWidth: '320px',
+                            maxWidth: '700px',
+                            minHeight: '30px'
+                        })
+                    }}
+                    onChange={(option) => setOpd(option)}
+                    options={OpdOption}
+                    placeholder="Filter by OPD"
+                    isClearable
+                    value={Opd}
+                    isLoading={IsLoading}
+                    isSearchable
+                    onMenuOpen={() => {
+                        if (OpdOption.length == 0) {
+                            fetchOpd();
+                        }
+                    }}
+                />
+                <div className="flex px-2 items-center">
+                    <TbSearch className="absolute ml-4 text-slate-500" />
+                    <input
+                        type="text"
+                        placeholder="Cari nama pegawai / NIP"
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        className="py-2 pl-10 pr-2 border rounded-lg border-gray-300"
                     />
                 </div>
-                <ButtonBlack
-                    className="flex items-center gap-1"
-                    onClick={() => router.push("/DataMaster/masteruser/user-admin-opd")}
-                >
-                    <TbUsers />
-                    Daftar Admin OPD
-                </ButtonBlack>
             </div>
             <div className="overflow-auto m-2 rounded-t-xl border">
                 <table className="w-full">
@@ -229,14 +259,14 @@ const Table = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        {DataNull ?
+                        {DataNull || FilteredData.length === 0 ?
                             <tr>
                                 <td className="px-6 py-3 uppercase" colSpan={13}>
                                     Tidak ada User / Belum Ditambahkan
                                 </td>
                             </tr>
                             :
-                            User.map((data, index) => (
+                            FilteredData.map((data, index) => (
                                 <tr key={data.id}>
                                     <td className="border-r border-b px-6 py-4 text-center">{index + 1}</td>
                                     <td className="border-r border-b px-6 py-4">{data.nama_pegawai ? data.nama_pegawai : "-"}</td>

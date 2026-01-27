@@ -24,9 +24,9 @@ const MasterUser = () => {
                         </h1>
                         <h1>
                             {(branding?.user?.roles == "super_admin" || branding?.user?.roles == "reviewer") ? 
-                                `${branding?.opd?.label}`
+                                `${branding?.opd?.label || ""}`
                                 :
-                                `${branding?.user?.nama_opd}`
+                                `${branding?.user?.nama_opd || ""}`
                             }
                         </h1>
                     </div>
