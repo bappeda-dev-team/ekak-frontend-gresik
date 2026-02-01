@@ -172,6 +172,37 @@ export const FormEditCascading: React.FC<{
         }
     };
 
+    const fetchPelaksana3dan4 = async () => {
+        const API_URL = process.env.NEXT_PUBLIC_API_URL;
+        setIsLoading(true);
+        try {
+            const url = user?.roles == 'super_admin' ? `user/findall?kode_opd=${SelectedOpd?.value}` : `user/findall?kode_opd=${user?.kode_opd}`
+            const response = await fetch(`${API_URL}/${url}`, {
+                method: 'GET',
+                headers: {
+                    Authorization: `${token}`,
+                    'Content-Type': 'application/json',
+                },
+            });
+            const data = await response.json();
+            const responseData = data.data;
+
+            const filteredPegawai = responseData
+                .filter((pegawai: any) => {
+                    return pegawai.role.some((r: any) => r.role === "level_3" || r.role === "level_4");
+                }).map((pegawai: any) => ({
+                    value: pegawai.nip,
+                    label: pegawai.nama_pegawai,
+                }));
+            console.log(filteredPegawai);
+            setPelaksanaOption(filteredPegawai);
+        } catch (err) {
+            console.log('gagal mendapatkan data opd');
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
     useEffect(() => {
         const API_URL = process.env.NEXT_PUBLIC_API_URL;
         const fetchStrategic = async () => {
@@ -199,7 +230,7 @@ export const FormEditCascading: React.FC<{
                 if (data.status) {
                     setStatus(data.status);
                 }
-                if (data.tagging){
+                if (data.tagging) {
                     setTagging(data.tagging);
                 }
                 reset({
@@ -337,7 +368,7 @@ export const FormEditCascading: React.FC<{
                                                             } else if (level === 5) {
                                                                 fetchPelaksana('level_2');
                                                             } else if (level === 6) {
-                                                                fetchPelaksana('level_3');
+                                                                fetchPelaksana3dan4();
                                                             } else if (level >= 7) {
                                                                 fetchPelaksana('level_4');
                                                             } else {
