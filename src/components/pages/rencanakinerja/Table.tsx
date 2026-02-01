@@ -304,7 +304,7 @@ export const TablePerencanaan = () => {
                                                     halaman_url={`/rencanakinerja/${data.id_rencana_kinerja}`}
                                                 >
                                                     <TbPencilDown className="mr-1" />
-                                                    {user?.roles == 'level_4' ?
+                                                    {(user?.roles == 'level_4' || user?.roles == 'level_2') ?
                                                         "Renaksi"
                                                         :
                                                         "Rincian"
