@@ -74,28 +74,28 @@ export const FormMasterPegawai = () => {
             kode_opd: data.kode_opd?.value,
         };
         // console.log(formData);
-          try{
-              setProses(true);
-              const response = await fetch(`${API_URL}/pegawai/create`, {
-                  method: "POST",
-                  headers: {
+        try {
+            setProses(true);
+            const response = await fetch(`${API_URL}/pegawai/create`, {
+                method: "POST",
+                headers: {
                     Authorization: `${token}`,
                     'Content-Type': 'application/json',
-                  },
-                  body: JSON.stringify(formData),
-              });
-              const result = await response.json();
-              if(result.code === 200 || result.code === 201){
-                  AlertNotification("Berhasil", "Berhasil menambahkan data master pegawai", "success", 1000);
-                  router.push("/DataMaster/masterpegawai");
-              } else {
-                  AlertNotification("Gagal", `${result.data}`, "error", 2000);
-              }
-          } catch(err){
-              AlertNotification("Gagal", "cek koneksi internet/terdapat kesalahan pada database server", "error", 2000);
-          } finally {
+                },
+                body: JSON.stringify(formData),
+            });
+            const result = await response.json();
+            if (result.code === 200 || result.code === 201) {
+                AlertNotification("Berhasil", "Berhasil menambahkan data master pegawai", "success", 1000);
+                router.push("/DataMaster/masterpegawai");
+            } else {
+                AlertNotification("Gagal", `${result.data}`, "error", 2000);
+            }
+        } catch (err) {
+            AlertNotification("Gagal", "cek koneksi internet/terdapat kesalahan pada database server", "error", 2000);
+        } finally {
             setProses(false);
-          }
+        }
     };
 
 
@@ -237,6 +237,7 @@ export const FormMasterPegawai = () => {
                         <Controller
                             name="kode_opd"
                             control={control}
+                            rules={{ required: "wajib terisi" }}
                             render={({ field }) => (
                                 <>
                                     <Select
@@ -264,6 +265,13 @@ export const FormMasterPegawai = () => {
                                             })
                                         }}
                                     />
+                                    {errors.kode_opd ?
+                                        <h1 className="text-red-500">
+                                            {errors.kode_opd.message}
+                                        </h1>
+                                        :
+                                        <h1 className="text-slate-300 text-xs">*OPD Harus Terisi</h1>
+                                    }
                                 </>
                             )}
                         />

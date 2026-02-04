@@ -285,6 +285,7 @@ export const FormPohonOpd: React.FC<{
                                     <Controller
                                         name="nama_pohon"
                                         control={control}
+                                        rules={{ required: "nama pohon wajib terisi" }}
                                         render={({ field }) => (
                                             <input
                                                 {...field}
@@ -301,6 +302,13 @@ export const FormPohonOpd: React.FC<{
                                             />
                                         )}
                                     />
+                                    {errors.nama_pohon ?
+                                        <h1 className="text-red-500">
+                                            {errors.nama_pohon.message}
+                                        </h1>
+                                        :
+                                        <h1 className="text-slate-300 text-xs">*Nama Pohon Harus Terisi</h1>
+                                    }
                                 </div>
                                 {/* TAGGING */}
                                 <label className="uppercase text-xs font-bold text-gray-700 my-2">
@@ -967,6 +975,7 @@ export const FormEditPohon: React.FC<{
                             <Controller
                                 name="nama_pohon"
                                 control={control}
+                                rules={{ required: "wajib terisi" }}
                                 render={({ field }) => (
                                     <input
                                         {...field}
@@ -983,6 +992,13 @@ export const FormEditPohon: React.FC<{
                                     />
                                 )}
                             />
+                            {errors.nama_pohon ?
+                                <h1 className="text-red-500">
+                                    {errors.nama_pohon.message}
+                                </h1>
+                                :
+                                <h1 className="text-slate-300 text-xs">*Nama Pohon Harus Terisi</h1>
+                            }
                         </div>
                         {/* TAGGING */}
                         <label className="uppercase text-xs font-bold text-gray-700 my-2">
