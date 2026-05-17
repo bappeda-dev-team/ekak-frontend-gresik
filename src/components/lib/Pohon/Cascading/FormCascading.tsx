@@ -266,7 +266,7 @@ export const FormEditCascading: React.FC<{
     const onSubmit: SubmitHandler<FormValue> = async (data) => {
         const API_URL = process.env.NEXT_PUBLIC_API_URL;
         const pelaksanaIds = Pelaksana?.map((pelaksana) => ({
-            pegawai_id: pelaksana.value, // Ubah `value` menjadi `pegawai_id`
+            pegawai_id: String(pelaksana.value), // Ubah `value` menjadi `pegawai_id`
         })) || [];
         const formData = {
             //key : value
