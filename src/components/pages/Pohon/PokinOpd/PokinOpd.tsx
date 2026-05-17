@@ -14,6 +14,7 @@ import { ModalTujuanOpd } from '../../tujuanopd/ModalTujuanOpd';
 import { ModalClone } from '../ModalClone';
 import html2canvas from 'html2canvas';
 import { AlertNotification, AlertQuestion2 } from '@/components/global/Alert';
+import { useBrandingContext } from '@/context/BrandingContext';
 
 interface OptionType {
     value: number;
@@ -51,6 +52,9 @@ interface TujuanOpd {
 }
 
 const PokinOpd = () => {
+    const { branding } = useBrandingContext();
+    const nama_opd = branding?.user?.roles == "super_admin" ? branding?.opd?.label : branding?.user?.nama_opd;
+    const kode_opd = branding?.user?.roles == "super_admin" ? branding?.opd?.value : branding?.user?.kode_opd;
 
     const [User, setUser] = useState<any>(null);
     const [Tahun, setTahun] = useState<any>(null);
@@ -77,7 +81,7 @@ const PokinOpd = () => {
     const [StrategicPemdaLength, setStrategicPemdaLenght] = useState<number>(0);
     const [TacticalPemdaLength, setTacticalPemdaLenght] = useState<number>(0);
     const [OperationalPemdaLength, setOperationalPemdaLenght] = useState<number>(0);
-    
+
     //pohon cross opd lain
     const [LoadingTotalCrosscutting, setLoadingTotalCrosscutting] = useState<boolean>(false);
     const [PohonCrosscutting, setPohonCrosscutting] = useState<boolean>(false);
@@ -560,10 +564,10 @@ const PokinOpd = () => {
                                     </tbody>
                                 </table>
                             </div>
-                            <ModalPohonPemda 
-                                isOpen={PohonPemda} 
-                                isLevel={LevelPemda} 
-                                onClose={() => { handleModalPohonPemda(4) }} 
+                            <ModalPohonPemda
+                                isOpen={PohonPemda}
+                                isLevel={LevelPemda}
+                                onClose={() => { handleModalPohonPemda(4) }}
                                 onSuccess={handleTriggerAfterPokinOutside}
                             />
                         </div>
@@ -588,9 +592,9 @@ const PokinOpd = () => {
                                             </td>
                                             <td className='border-r border-t px-2 py-1 bg-white text-center rounded-tr-lg w-full'>
                                                 <h1 className="font-semibold">
-                                                    {LoadingTotalCrosscutting ? 
+                                                    {LoadingTotalCrosscutting ?
                                                         <LoadingButtonClip2 />
-                                                    :
+                                                        :
                                                         CrossDitolak ? CrossDitolak : 0
                                                     }
                                                 </h1>
@@ -609,9 +613,9 @@ const PokinOpd = () => {
                                             </td>
                                             <td className='border-r border-b px-2 py-1 bg-white text-center rounded-br-lg w-full'>
                                                 <h1 className="font-semibold">
-                                                    {LoadingTotalCrosscutting ? 
+                                                    {LoadingTotalCrosscutting ?
                                                         <LoadingButtonClip2 />
-                                                    :
+                                                        :
                                                         CrossPending ? CrossPending : 0
                                                     }
                                                 </h1>
@@ -620,14 +624,18 @@ const PokinOpd = () => {
                                     </tbody>
                                 </table>
                             </div>
-                            <ButtonSkyBorder className="w-full" onClick={handleModalCrosscutting}>
+                            <ButtonSkyBorder
+                                className="w-full"
+                                onClick={handleModalCrosscutting}
+                                // onClick={() => AlertNotification("Dalam Pengembangan", "", "info", 2000)}
+                            >
                                 <TbSettings className='mr-1' />
                                 Edit
                             </ButtonSkyBorder>
-                            <ModalPohonCrosscutting 
+                            <ModalPohonCrosscutting
                                 isOpen={PohonCrosscutting}
-                                onClose={handleModalCrosscutting} 
-                                onSuccess={handleTriggerAfterPokinOutside} 
+                                onClose={handleModalCrosscutting}
+                                onSuccess={handleTriggerAfterPokinOutside}
                             />
                         </div>
                     </div>
@@ -717,13 +725,13 @@ const PokinOpd = () => {
                                             <TbCirclePlus className="mr-1" />
                                             Tambah Tujuan OPD
                                         </ButtonSkyBorder>
-                                        {/* <ButtonBlack
+                                        <ButtonBlack
                                             className='flex flex-wrap items-center justify-center gap-1'
                                             onClick={() => setClone(true)}
                                         >
                                             <TbCopy className='mr-1' />
                                             Clone Pohon Kinerja
-                                        </ButtonBlack> */}
+                                        </ButtonBlack>
                                         <ButtonSky
                                             className='flex flex-wrap items-center justify-center gap-1'
                                             onClick={() => {
@@ -740,15 +748,17 @@ const PokinOpd = () => {
                                             <TbPrinter className='mr-1' />
                                             Cetak Penuh Pohon Kinerja
                                         </ButtonSky>
-                                        {/* <ModalClone
-                                            isOpen={Clone}
-                                            onClose={() => setClone(false)}
-                                            jenis='opd'
-                                            tahun={Tahun?.value}
-                                            nama_opd={SelectedOpd?.label}
-                                            kode_opd={SelectedOpd?.value}
-                                            onSuccess={() => setTriggerAfterPokinOutside((prev) => !prev)}
-                                        /> */}
+                                        {Clone &&
+                                            <ModalClone
+                                                isOpen={Clone}
+                                                onClose={() => setClone(false)}
+                                                jenis='opd'
+                                                tahun={Tahun?.value}
+                                                nama_opd={nama_opd}
+                                                kode_opd={kode_opd}
+                                                onSuccess={() => setTriggerAfterPokinOutside((prev) => !prev)}
+                                            />
+                                        }
                                     </div>
                                 }
                                 {/* BUTTON HEADER POKIN */}
@@ -793,7 +803,7 @@ const PokinOpd = () => {
                                                 onCancel={() => setFormList(formList.filter((id) => id !== formId))}
                                                 deleteTrigger={() => setDeleted((prev) => !prev)}
                                                 fetchTrigger={() => setTriggerAfterPokinOutside((prev) => !prev)}
-                                                />
+                                            />
                                         </React.Fragment>
                                     ))}
                                 </ul>
