@@ -5,6 +5,7 @@ import { LoadingClip } from "@/components/global/Loading";
 import { OpdNull, TahunNull } from "@/components/global/OpdTahunNull";
 import { getToken } from "@/components/lib/Cookie";
 import { useBrandingContext } from "@/context/BrandingContext";
+import TableTema from "./Table-Tema";
 
 interface Table {
     kode_opd: string;
@@ -40,6 +41,12 @@ interface PokinTotal {
 interface Pokin {
     data: PokinLevel[] | null;
     total: PokinTotal;
+    tematik: Tema[];
+}
+
+interface Tema {
+    nama: string;
+    child: Tema[];
 }
 
 const Table: React.FC<Table> = ({ kode_opd, tahun }) => {
@@ -102,7 +109,10 @@ const Table: React.FC<Table> = ({ kode_opd, tahun }) => {
         return <OpdNull />
     } else {
         return (
-            <>
+            <div className="flex flex-col items-center gap-1 w-full">
+                {Data?.tematik &&
+                    <TableTema Data={Data?.tematik || []}/>
+                }
                 <div className="overflow-auto m-2 rounded-t-xl border w-full">
                     <table className="w-full">
                         <thead>
@@ -231,7 +241,7 @@ const Table: React.FC<Table> = ({ kode_opd, tahun }) => {
                         </tbody>
                     </table>
                 </div>
-            </>
+            </div>
         )
     }
 }
