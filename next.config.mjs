@@ -55,7 +55,13 @@ const nextConfig = {
         ]
     },
     images: {
-        domains: ['logo.kertaskerja.cc'],
+        remotePatterns: [
+            {
+                protocol: 'https',
+                hostname: 'logo.kertaskerja.cc',
+                pathname: '**'
+            }
+        ]
     },
     output: "standalone",
 };
