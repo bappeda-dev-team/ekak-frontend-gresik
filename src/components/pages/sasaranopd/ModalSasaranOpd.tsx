@@ -110,7 +110,7 @@ export const ModalSasaranOpd: React.FC<modal> = ({ isOpen, onClose, id, id_pohon
                 if (hasil.nama_sasaran_opd) {
                     setSasaranOpd(hasil.nama_sasaran_opd);
                 }
-                if(hasil.id_tujuan_opd){
+                if (hasil.id_tujuan_opd) {
                     const tujuan = {
                         value: hasil.id_tujuan_opd,
                         label: hasil.nama_tujuan_opd
@@ -121,23 +121,44 @@ export const ModalSasaranOpd: React.FC<modal> = ({ isOpen, onClose, id, id_pohon
                     indikator: hasil.indikator?.map((item: indikator) => ({
                         id: item.id,
                         indikator: item.indikator,
+                        // definisi_operasional: item.definisi_operasional,
                         rumus_perhitungan: item.rumus_perhitungan,
                         sumber_data: item.sumber_data,
-                        target: item.target.map((t: target) => ({
-                            target: t.target,
-                            satuan: t.satuan,
-                        })),
+                        target: item.target.length === 0
+                            ? tahun_list.map((t: string) => ({
+                                target: "",
+                                satuan: "",
+                                tahun: t,
+                            }))
+                            : item.target.map((t: target) => ({
+                                target: t.target,
+                                satuan: t.satuan,
+                                tahun: t.tahun, // opsional, tambahkan jika memang ada
+                            })),
                     })),
                 });
 
                 // Replace the fields to avoid duplication
-                replace(hasil.indikator.map((item: indikator) => ({
-                    id: item.id,
-                    indikator: item.indikator,
-                    rumus_perhitungan: item.rumus_perhitungan,
-                    sumber_data: item.sumber_data,
-                    target: item.target,
-                })));
+                replace(
+                    hasil.indikator.map((item: indikator) => ({
+                        id: item.id,
+                        indikator: item.indikator,
+                        // definisi_operasional: item.definisi_operasional,
+                        rumus_perhitungan: item.rumus_perhitungan,
+                        sumber_data: item.sumber_data,
+                        target: item.target.length === 0
+                            ? tahun_list.map((t: string) => ({
+                                target: "",
+                                satuan: "",
+                                tahun: t,
+                            }))
+                            : item.target.map((t: target) => ({
+                                target: t.target,
+                                satuan: t.satuan,
+                                tahun: t.tahun,
+                            })),
+                    }))
+                );
             } catch (err) {
                 console.log(err);
             } finally {
