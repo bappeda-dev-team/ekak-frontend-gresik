@@ -18,7 +18,7 @@ interface Periode {
     tahun_list: string[];
 }
 
-const MasterProgramUnggulan = () => {
+const MasterProgramPrioritasPusat = () => {
 
     const [Periode, setPeriode] = useState<Periode | null>(null);
     const [PeriodeOption, setPeriodeOption] = useState<Periode[]>([]);
@@ -75,12 +75,12 @@ const MasterProgramUnggulan = () => {
             <div className="flex items-center">
                 <a href="/" className="mr-1"><FiHome /></a>
                 <p className="mr-1">/ Data Master</p>
-                <p className="mr-1">/ Program Prioritas Daerah</p>
+                <p className="mr-1">/ Program Prioritas Pusat</p>
             </div>
             <div className="mt-3 rounded-xl shadow-lg border">
                 <div className="flex items-center justify-between border-b px-5 py-5">
                     <div className="flex flex-wrap items-end">
-                        <h1 className="uppercase font-bold">Daftar Program Prioritas Daerah</h1>
+                        <h1 className="uppercase font-bold">Daftar Program Prioritas Pusat</h1>
                         <h1 className="uppercase font-bold ml-1">(Periode {Periode?.tahun_awal} - {Periode?.tahun_akhir})</h1>
                     </div>
                     <Select
@@ -122,4 +122,4 @@ const MasterProgramUnggulan = () => {
     )
 }
 
-export default MasterProgramUnggulan;
+export default MasterProgramPrioritasPusat;

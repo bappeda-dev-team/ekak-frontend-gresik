@@ -1,5 +1,6 @@
 'use client'
 
+// @ts-ignore: allow side-effect CSS import without type declarations
 import '@/components/pages/Pohon/treeflex.css'
 import React, { useState, useEffect, useRef } from 'react';
 import { TbPencil, TbCheck, TbCircleLetterXFilled, TbCirclePlus, TbHandStop, TbPointer, TbSettings, TbHourglass, TbCopy, TbEye, TbPrinter } from 'react-icons/tb';

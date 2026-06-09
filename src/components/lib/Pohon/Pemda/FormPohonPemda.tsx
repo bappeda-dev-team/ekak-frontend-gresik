@@ -381,9 +381,9 @@ export const FormPohonPemda: React.FC<{
                                                             className="w-[20px] h-[20px] border border-black rounded-full"
                                                         ></button>
                                                     }
-                                                    <p onClick={() => setUnggulanBupati((prev) => !prev)} className={`cursor-pointer ${UnggulanBupati && 'text-emerald-500'}`}>Program Bupati</p>
+                                                    <p onClick={() => setUnggulanBupati((prev) => !prev)} className={`cursor-pointer ${UnggulanBupati && 'text-emerald-500'}`}>Program Daerah</p>
                                                 </div>
-                                                <div className="flex flex-col items-center">
+                                                {/* <div className="flex flex-col items-center">
                                                     {HariKerja ?
                                                         <button
                                                             type="button"
@@ -400,7 +400,7 @@ export const FormPohonPemda: React.FC<{
                                                         ></button>
                                                     }
                                                     <p onClick={() => setHariKerja((prev) => !prev)} className={`cursor-pointer ${HariKerja && 'text-emerald-500'}`}>100 Hari Kerja Bupati</p>
-                                                </div>
+                                                </div> */}
                                                 <div className="flex flex-col items-center">
                                                     {UnggulanPusat ?
                                                         <button
@@ -427,7 +427,7 @@ export const FormPohonPemda: React.FC<{
                                                     render={({ field }) => (
                                                         <div className="flex flex-col py-3 border border-emerald-500 mt-1 px-2 rounded-lg">
                                                             <label className="uppercase text-xs font-bold text-gray-700 mb-1">
-                                                                Keterangan Program Unggulan Bupati :
+                                                                Keterangan Program Prioritas Daerah :
                                                             </label>
                                                             <Select
                                                                 {...field}
@@ -503,7 +503,7 @@ export const FormPohonPemda: React.FC<{
                                                     render={({ field }) => (
                                                         <div className="flex flex-col py-3">
                                                             <label className="uppercase text-xs font-bold text-gray-700 mb-2">
-                                                                Keterangan Program Unggulan Pemerintah Pusat :
+                                                                Keterangan Program Prioritas Pusat :
                                                             </label>
                                                             <Select
                                                                 {...field}
@@ -1506,7 +1506,7 @@ export const FormEditPohon: React.FC<{
                                         }
                                         <p onClick={() => setUnggulanBupati((prev) => !prev)} className={`cursor-pointer ${UnggulanBupati && 'text-emerald-500'}`}>Program Bupati</p>
                                     </div>
-                                    <div className="flex flex-col items-center">
+                                    {/* <div className="flex flex-col items-center">
                                         {HariKerja ?
                                             <button
                                                 type="button"
@@ -1523,7 +1523,7 @@ export const FormEditPohon: React.FC<{
                                             ></button>
                                         }
                                         <p onClick={() => setHariKerja((prev) => !prev)} className={`cursor-pointer ${HariKerja && 'text-emerald-500'}`}>100 Hari Kerja Bupati</p>
-                                    </div>
+                                    </div> */}
                                     <div className="flex flex-col items-center">
                                         {UnggulanPusat ?
                                             <button
@@ -1550,7 +1550,7 @@ export const FormEditPohon: React.FC<{
                                         render={({ field }) => (
                                             <div className="flex flex-col py-3">
                                                 <label className="uppercase text-xs font-bold text-gray-700 mb-2">
-                                                    Keterangan Program Unggulan Bupati :
+                                                    Keterangan Program Prioritas Daerah :
                                                 </label>
                                                 <Select
                                                     {...field}
@@ -1626,7 +1626,7 @@ export const FormEditPohon: React.FC<{
                                         render={({ field }) => (
                                             <div className="flex flex-col py-3">
                                                 <label className="uppercase text-xs font-bold text-gray-700 mb-2">
-                                                    Keterangan Program Unggulan Pemerintah Pusat :
+                                                    Keterangan Program Prioritas Pusat :
                                                 </label>
                                                 <Select
                                                     {...field}

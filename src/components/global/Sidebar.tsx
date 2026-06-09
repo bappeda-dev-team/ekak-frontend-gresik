@@ -9,7 +9,7 @@ import {
   TbBuildingEstate, TbFileChart, TbFileDots, TbFileCode, TbFileCode2, TbUsers,
   TbUser, TbHexagonLetterR, TbBinaryTree2, TbTarget, TbMapPin, TbChartBar, TbCalendarShare,
   TbCalendar, TbHexagonLetterV, TbHexagonLetterM, TbClipboardText, TbZoomExclamation,
-  TbListDetails, TbAlertTriangle, TbDatabasePlus, TbCalendarPlus, TbDeviceImacDollar, 
+  TbListDetails, TbAlertTriangle, TbDatabasePlus, TbCalendarPlus, TbDeviceImacDollar,
   TbFocus2, TbHexagonLetterC, TbHexagonLetterO, TbHexagonLetterI,
   TbBuildingCottage, TbCalendarStar, TbChartPie, TbListTree,
   TbBubble, TbDatabaseLeak, TbChefHat, TbNotebook, TbMessageForward
@@ -17,6 +17,7 @@ import {
 import Image from 'next/image';
 import { usePathname, useParams } from 'next/navigation';
 import Link from 'next/link';
+// @ts-ignore: allow side-effect CSS import without type declarations
 import "@/app/globals.css";
 import { logout, getUser } from '../lib/Cookie';
 import { useBrandingContext } from '@/context/BrandingContext';
@@ -390,9 +391,15 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
                 </li>
               </Link>
               <Link href="/DataMaster/programunggulan">
-                <li className={`flex items-center gap-x-2 cursor-pointer p-2 rounded-xl transition-all duration-300 ease-in-out ${url === "/DataMaster/programunggulan" ? "bg-white text-gray-800" : "hover:bg-slate-500"}`}>
-                  <TbChartPie className="text-xl" />
-                  <span className={`${!isOpen && 'hidden'} origin-left duration-200`}>Program Unggulan</span>
+                <li className={`flex items-center gap-x-2 cursor-pointer text-sm p-2 rounded-xl transition-all duration-300 ease-in-out ${url === "/DataMaster/programunggulan" ? "bg-white text-gray-800" : "hover:bg-slate-500"}`}>
+                  <TbChartPie className="text-2xl" />
+                  <button type="button" title="Program Prioritas Daerah" className={`${!isOpen && 'hidden'} text-left duration-200`}>Program Prioritas Daerah</button>
+                </li>
+              </Link>
+              <Link href="/DataMaster/program-prioritas-pusat">
+                <li className={`flex items-center gap-x-2 cursor-pointer text-sm p-2 rounded-xl transition-all duration-300 ease-in-out ${url === "/DataMaster/program-prioritas-pusat" ? "bg-white text-gray-800" : "hover:bg-slate-500"}`}>
+                  <TbChartPie className="text-2xl" />
+                  <button type="button" title="Program Prioritas Pusat" className={`${!isOpen && 'hidden'} text-left duration-200`}>Program Prioritas Pusat</button>
                 </li>
               </Link>
               <Link href="/DataMaster/master-dapil">

@@ -1,6 +1,7 @@
 'use client'
 
 import { Poppins } from "next/font/google";
+// @ts-ignore: allow side-effect CSS import without type declarations
 import "./globals.css";
 import { Sidebar } from "@/components/global/Sidebar";
 import Header from "@/components/global/Header";
