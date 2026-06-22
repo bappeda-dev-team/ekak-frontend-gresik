@@ -13,6 +13,7 @@ interface IKU {
     sumber: string;
     asal_iku: string;
     iku_active: boolean;
+    definisi_operasional: string;
     rumus_perhitungan: string;
     sumber_data: string;
     is_active: boolean;
@@ -171,6 +172,7 @@ const TableOpd: React.FC<table> = ({ kode_opd, tahun_awal, tahun_akhir, jenis, t
                         <tr className={`${TableAktif ? "bg-emerald-500" : "bg-orange-500"} text-white`}>
                             <th rowSpan={2} className="border-r border-b px-6 py-3 text-center">No</th>
                             <th rowSpan={2} colSpan={2} className="border-r border-b px-6 py-3 min-w-[400px]">Indikator Utama</th>
+                            <th rowSpan={2} className="border-r border-b px-6 py-3 min-w-[200px]">Definisi Operasional</th>
                             <th rowSpan={2} className="border-r border-b px-6 py-3 min-w-[200px]">Rumus Perhitungan</th>
                             <th rowSpan={2} className="border-r border-b px-6 py-3 min-w-[200px]">Sumber Data</th>
                             {tahun_list.map((item: any) => (
@@ -237,6 +239,9 @@ const TableOpd: React.FC<table> = ({ kode_opd, tahun_awal, tahun_akhir, jenis, t
                                                 }
                                             </ButtonBlackBorder>
                                         </div>
+                                    </td>
+                                    <td className={`border-r border-b ${TableAktif ? "border-emerald-500" : "border-orange-500"} px-6 py-4`}>
+                                        {item.definisi_operasional || "-"}
                                     </td>
                                     <td className={`border-r border-b ${TableAktif ? "border-emerald-500" : "border-orange-500"} px-6 py-4`}>
                                         {item.rumus_perhitungan || "-"}
