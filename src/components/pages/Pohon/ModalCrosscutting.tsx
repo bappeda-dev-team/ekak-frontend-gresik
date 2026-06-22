@@ -17,7 +17,7 @@ interface modal {
     id?: number | null;
     level?: number;
     nama_pohon: string;
-    // onSuccess: () => void;
+    onSuccess: (data: CrosscuttingDikirim) => void;
 }
 interface FormValue {
     id: number;
@@ -32,6 +32,14 @@ interface FormValue {
     pelaksana: OptionTypeString[];
     indikator: indikator[];
 }
+interface CrosscuttingDikirim {
+    id_crosscutting: number;
+    keterangan_crosscutting: string;
+    nama_pohon_tujuan: string;
+    kode_opd_tujuan: string;
+    nama_opd_tujuan: string;
+    status: string;
+}
 interface indikator {
     nama_indikator: string;
     targets: target[];
@@ -41,13 +49,13 @@ type target = {
     satuan: string;
 };
 
-export const ModalAddCrosscutting: React.FC<modal> = ({isOpen, onClose, id, nama_pohon}) => {
+export const ModalAddCrosscutting: React.FC<modal> = ({ isOpen, onClose, onSuccess, id, nama_pohon }) => {
 
     const {
-      control,
-      handleSubmit,
-      formState: { errors },
-      reset
+        control,
+        handleSubmit,
+        formState: { errors },
+        reset
     } = useForm<FormValue>();
     const [KodeOpd, setKodeOpd] = useState<OptionTypeString | null>(null);
     const [Parent, setParent] = useState<string>('');
@@ -59,24 +67,24 @@ export const ModalAddCrosscutting: React.FC<modal> = ({isOpen, onClose, id, nama
     const [IsLoading, setIsLoading] = useState<boolean>(false);
     const [SelectedOpd, setSelectedOpd] = useState<any>(null);
     const token = getToken();
-    
+
     useEffect(() => {
         const data = getOpdTahun();
-        if(data.tahun){
+        if (data.tahun) {
             const tahun = {
                 value: data.tahun.value,
                 label: data.tahun.label,
             }
             setTahun(tahun);
         }
-        if(data.opd){
+        if (data.opd) {
             const opd = {
                 value: data.opd.value,
                 label: data.opd.label,
             }
             setSelectedOpd(opd);
         }
-    },[]);
+    }, []);
 
     const { replace } = useFieldArray({
         control,
@@ -85,26 +93,26 @@ export const ModalAddCrosscutting: React.FC<modal> = ({isOpen, onClose, id, nama
 
     useEffect(() => {
         const API_URL = process.env.NEXT_PUBLIC_API_URL;
-        const fetchPohonIdUntukCross = async() => {
-            try{
+        const fetchPohonIdUntukCross = async () => {
+            try {
                 const response = await fetch(`${API_URL}/pohon_kinerja_opd/detail/${id}`, {
                     headers: {
-                      Authorization: `${token}`,
-                      'Content-Type': 'application/json',
+                        Authorization: `${token}`,
+                        'Content-Type': 'application/json',
                     },
                 });
-                if(!response.ok){
+                if (!response.ok) {
                     throw new Error('terdapat kesalahan di koneksi backend');
                 }
                 const result = await response.json();
                 const data = result.data;
-                if(data.parent){
+                if (data.parent) {
                     setParent(data.parent);
                 }
-                if(data.jenis_pohon){
+                if (data.jenis_pohon) {
                     setJenisPohon(data.jenis_pohon);
                 }
-                if(data.level_pohon){
+                if (data.level_pohon) {
                     setLevelPohon(data.level_pohon);
                 }
                 reset({
@@ -120,188 +128,188 @@ export const ModalAddCrosscutting: React.FC<modal> = ({isOpen, onClose, id, nama
                         })),
                     })),
                 });
-            } catch(err) {
+            } catch (err) {
                 console.error(err, 'gagal mengambil data sesuai id pohon')
             }
         }
-        if(isOpen){
+        if (isOpen) {
             fetchPohonIdUntukCross();
         }
-    },[id, reset, token, replace, isOpen]);
-    
-    const fetchOpd = async() => {
-      const API_URL = process.env.NEXT_PUBLIC_API_URL;
-      setIsLoading(true);
-      try{ 
-        const response = await fetch(`${API_URL}/opd/findall`,{
-          method: 'GET',
-          headers: {
-            Authorization: `${token}`,
-            'Content-Type': 'application/json',
-          },
-        });
-        if(!response.ok){
-          throw new Error('cant fetch data opd');
+    }, [id, reset, token, replace, isOpen]);
+
+    const fetchOpd = async () => {
+        const API_URL = process.env.NEXT_PUBLIC_API_URL;
+        setIsLoading(true);
+        try {
+            const response = await fetch(`${API_URL}/opd/findall`, {
+                method: 'GET',
+                headers: {
+                    Authorization: `${token}`,
+                    'Content-Type': 'application/json',
+                },
+            });
+            if (!response.ok) {
+                throw new Error('cant fetch data opd');
+            }
+            const data = await response.json();
+            const opd = data.data.map((item: any) => ({
+                value: item.kode_opd,
+                label: item.nama_opd,
+            }));
+            setOpdOption(opd);
+        } catch (err) {
+            console.log('gagal mendapatkan data opd');
+        } finally {
+            setIsLoading(false);
         }
-        const data = await response.json();
-        const opd = data.data.map((item: any) => ({
-          value : item.kode_opd,
-          label : item.nama_opd,
-        }));
-        setOpdOption(opd);
-      } catch (err){
-        console.log('gagal mendapatkan data opd');
-      } finally {
-        setIsLoading(false);
-      }
     };
 
     const handleClose = () => {
-      reset(); // Mereset seluruh form
-      setKodeOpd(null);
-      setKeterangan('');
-      onClose();
+        reset(); // Mereset seluruh form
+        setKodeOpd(null);
+        setKeterangan('');
+        onClose();
     };
 
     const onSubmit: SubmitHandler<FormValue> = async (data) => {
         const API_URL = process.env.NEXT_PUBLIC_API_URL;
         const formData = {
             //key : value
-            Keterangan : data.keterangan,
+            Keterangan: data.keterangan,
             kode_opd: KodeOpd?.value,
             tahun: Tahun?.value?.toString(),
         };
-        if(KodeOpd?.value == null || undefined){
+        if (KodeOpd?.value == null || undefined) {
             AlertNotification("pilih opd terlebih dahulu", "", "warning", 1000);
         } else {
             // console.log(formData);
-            try{
+            try {
                 const response = await fetch(`${API_URL}/crosscutting_opd/create/${id}`, {
                     method: "POST",
                     headers: {
                         Authorization: `${token}`,
-                        "Content-Type" : "application/json",
+                        "Content-Type": "application/json",
                     },
                     body: JSON.stringify(formData),
                 });
-                if(response.ok){
+                const result = await response.json();
+                if (response.ok) {
                     AlertNotification("Berhasil", "Berhasil menambahkan crosscutting", "success", 1000);
                     onClose();
+                    onSuccess(result.data);
                 } else {
-                    AlertNotification("Gagal", "terdapat kesalahan pada backend / database server", "error", 2000);
+                    AlertNotification("Gagal", `${result.data}`, "error", 2000);
                 }
-            } catch(err){
+            } catch (err) {
                 AlertNotification("Gagal", "cek koneksi internet/terdapat kesalahan pada database server", "error", 2000);
                 console.error(err);
             }
         }
-      };
+    };
 
-    if(!isOpen){
+    if (!isOpen) {
         return null;
     } else {
 
-    return(
-        <div className="fixed inset-0 flex items-center justify-center z-50">
-            <div className={`fixed inset-0 bg-black opacity-30`} onClick={handleClose}></div>
-            <div className={`bg-white rounded-lg p-8 z-10 w-3/5 text-start`}>
-                <form
-                    onSubmit={handleSubmit(onSubmit)}
-                >
-                    <div className="w-max-[500px] py-2 border-b text-center">
-                       Cross Cutting
-                    </div>
-                    <div className="flex flex-col py-3">
-                        <label
-                            className="uppercase text-xs font-bold text-gray-700 my-2"
-                        >
-                            Pohon :
-                        </label>
-                        <div className="border px-4 py-2 rounded-lg">{nama_pohon || "-"}</div>
-                    </div>
-                    <div className="flex flex-col py-3">
-                        <label
-                            className="uppercase text-xs font-bold text-gray-700 my-2"
-                            htmlFor="kode_opd"
-                        >
-                            Perangkat Daerah
-                        </label>
-                        <Controller
-                            name="kode_opd"
-                            control={control}
-                            render={({ field }) => (
-                            <>
-                                <Select
-                                    {...field}
-                                    placeholder="Masukkan Perangkat Daerah"
-                                    value={KodeOpd}
-                                    options={OpdOption}
-                                    isLoading={IsLoading}
-                                    isSearchable
-                                    isClearable
-                                    onMenuOpen={() => {
-                                        if (OpdOption.length === 0) {
-                                            fetchOpd();
+        return (
+            <div className="fixed inset-0 flex items-center justify-center z-50">
+                <div className={`fixed inset-0 bg-black opacity-30`} onClick={handleClose}></div>
+                <div className={`bg-white rounded-lg p-8 z-10 w-3/5 text-start`}>
+                    <form
+                        onSubmit={handleSubmit(onSubmit)}
+                    >
+                        <div className="w-max-[500px] py-2 border-b text-center">
+                            Cross Cutting
+                        </div>
+                        <div className="flex flex-col py-3">
+                            <label className="uppercase text-xs font-bold text-gray-700 my-2">
+                                Pohon :
+                            </label>
+                            <div className="border px-4 py-2 rounded-lg">{nama_pohon || "-"}</div>
+                        </div>
+                        <div className="flex flex-col py-3">
+                            <label
+                                className="uppercase text-xs font-bold text-gray-700 my-2"
+                                htmlFor="kode_opd"
+                            >
+                                Perangkat Daerah
+                            </label>
+                            <Controller
+                                name="kode_opd"
+                                control={control}
+                                render={({ field }) => (
+                                    <>
+                                        <Select
+                                            {...field}
+                                            placeholder="Masukkan Perangkat Daerah"
+                                            value={KodeOpd}
+                                            options={OpdOption}
+                                            isLoading={IsLoading}
+                                            isSearchable
+                                            isClearable
+                                            onMenuOpen={() => {
+                                                if (OpdOption.length === 0) {
+                                                    fetchOpd();
+                                                }
+                                            }}
+                                            onChange={(option) => {
+                                                field.onChange(option);
+                                                setKodeOpd(option);
+                                            }}
+                                            styles={{
+                                                control: (baseStyles) => ({
+                                                    ...baseStyles,
+                                                    borderRadius: '8px',
+                                                    textAlign: 'start',
+                                                })
+                                            }}
+                                        />
+                                    </>
+                                )}
+                            />
+                        </div>
+                        <div className="flex flex-col py-3">
+                            <label
+                                className="uppercase text-xs font-bold text-gray-700 my-2"
+                                htmlFor="keterangan"
+                            >
+                                Keterangan:
+                            </label>
+                            <Controller
+                                name="keterangan"
+                                control={control}
+                                rules={{ required: "Keterangan harus terisi" }}
+                                render={({ field }) => (
+                                    <>
+                                        <textarea
+                                            {...field}
+                                            className="border px-4 py-2 rounded-lg"
+                                            id="keterangan"
+                                            placeholder="masukkan keterangan kebutuhan crosscutting ke OPD lain"
+                                            value={field.value || Keterangan}
+                                            onChange={(e) => {
+                                                field.onChange(e);
+                                                setKeterangan(e.target.value);
+                                            }}
+                                        />
+                                        {errors.keterangan ?
+                                            <h1 className="text-red-500">{errors.keterangan.message}</h1>
+                                            :
+                                            <h1 className="text-slate-300 text-xs">*Keternagan Harus Terisi</h1>
                                         }
-                                    }}
-                                    onChange={(option) => {
-                                        field.onChange(option);
-                                        setKodeOpd(option);
-                                    }}
-                                    styles={{
-                                        control: (baseStyles) => ({
-                                        ...baseStyles,
-                                        borderRadius: '8px',
-                                        textAlign: 'start',
-                                        })
-                                    }}
-                                />
-                            </>
-                            )}
-                        />
-                    </div>
-                    <div className="flex flex-col py-3">
-                        <label
-                            className="uppercase text-xs font-bold text-gray-700 my-2"
-                            htmlFor="keterangan"
-                        >
-                            Keterangan:
-                        </label>
-                        <Controller
-                            name="keterangan"
-                            control={control}
-                            rules={{ required: "Keterangan harus terisi" }}
-                            render={({ field }) => (
-                                <>
-                                    <textarea
-                                        {...field}
-                                        className="border px-4 py-2 rounded-lg"
-                                        id="keterangan"
-                                        placeholder="masukkan keterangan kebutuhan crosscutting ke OPD lain"
-                                        value={field.value || Keterangan}
-                                        onChange={(e) => {
-                                            field.onChange(e);
-                                            setKeterangan(e.target.value);
-                                        }}
-                                    />
-                                    {errors.keterangan ?
-                                        <h1 className="text-red-500">{errors.keterangan.message}</h1>
-                                        :
-                                        <h1 className="text-slate-300 text-xs">*Keternagan Harus Terisi</h1>
-                                    }
-                                </>
-                            )}
-                        />
-                    </div>
-                    <ButtonSky type="submit" className="w-full my-3">
-                        Simpan
-                    </ButtonSky>
-                    <ButtonRed className="w-full my-3" onClick={handleClose}>
-                        Batal
-                    </ButtonRed>
-                </form>
+                                    </>
+                                )}
+                            />
+                        </div>
+                        <ButtonSky type="submit" className="w-full my-3">
+                            Simpan
+                        </ButtonSky>
+                        <ButtonRed className="w-full my-3" onClick={handleClose}>
+                            Batal
+                        </ButtonRed>
+                    </form>
+                </div>
             </div>
-        </div>
-    )
+        )
     }
 }
