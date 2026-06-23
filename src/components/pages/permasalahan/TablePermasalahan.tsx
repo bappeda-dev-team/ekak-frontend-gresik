@@ -249,6 +249,7 @@ export const Childs: React.FC<Childs> = ({ roles, data, rowSpan, tahun }) => {
     if (Edit) {
         return (
             <FormPermasalahan
+                roles={roles}
                 data={data}
                 rowSpan={rowSpan}
                 editing={() => handleEdit("")}

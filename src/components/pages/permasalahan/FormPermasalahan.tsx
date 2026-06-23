@@ -8,6 +8,7 @@ import { AlertNotification } from "@/components/global/Alert"
 import { Childs } from "./TablePermasalahan"
 
 interface FormPermasalahan {
+    roles: string;
     data?: Childs;
     rowSpan: number;
     jenis: "edit" | "baru" | "";
@@ -35,7 +36,7 @@ interface FormValue {
     tahun: string;
 }
 
-export const FormPermasalahan: React.FC<FormPermasalahan> = ({ data, jenis, rowSpan, editing }) => {
+export const FormPermasalahan: React.FC<FormPermasalahan> = ({ roles, data, jenis, rowSpan, editing }) => {
 
     const { branding } = useBrandingContext();
     const branding_tahun = branding?.tahun ? branding?.tahun?.value : 0;
@@ -112,6 +113,7 @@ export const FormPermasalahan: React.FC<FormPermasalahan> = ({ data, jenis, rowS
         <React.Fragment>
             {Success && DataResult ?
                 <Childs
+                    roles={roles}
                     data={DataResult}
                     rowSpan={rowSpan}
                     tahun={branding_tahun}
