@@ -233,7 +233,7 @@ const Table: React.FC<table> = ({ tipe, id_periode, tahun_awal, tahun_akhir, jen
 
     return (
         <div>
-            {tipe === 'opd' &&
+            {(tipe === 'opd' && User?.roles != "reviewer") &&
                 <div className="flex items-center justify-between px-5 py-2">
                     <ButtonSky onClick={() => handleModalNewTujuan()}>
                         <TbCirclePlus className="mr-1" />
@@ -248,7 +248,7 @@ const Table: React.FC<table> = ({ tipe, id_periode, tahun_awal, tahun_akhir, jen
                             <th rowSpan={2} className="border-r border-b px-6 py-3 min-w-[50px] text-center">No</th>
                             <th rowSpan={2} className="border-r border-b px-6 py-3 min-w-[400px]">Urusan & Bidang Urusan</th>
                             <th rowSpan={2} className="border-r border-b px-6 py-3 min-w-[300px]">Tujuan OPD</th>
-                            {tipe === 'opd' &&
+                            {(tipe === 'opd' && User?.roles != "reviewer") &&
                                 <th rowSpan={2} className="border-r border-b px-6 py-3 min-w-[100px]">Aksi</th>
                             }
                             <th rowSpan={2} className="border-r border-b px-6 py-3 min-w-[200px]">Indikator</th>
@@ -300,7 +300,7 @@ const Table: React.FC<table> = ({ tipe, id_periode, tahun_awal, tahun_akhir, jen
                                                             {item.tujuan || "-"}
                                                         </p>
                                                     </td>
-                                                    {tipe === 'opd' &&
+                                                    {(tipe === 'opd' && User?.roles != "reviewer") &&
                                                         <td className="border-x border-b border-emerald-500 px-6 py-6" rowSpan={item.indikator.length !== 0 ? item.indikator.length + 1 : 2}>
                                                             <div className="flex flex-col justify-center items-center gap-2">
                                                                 <ButtonGreen

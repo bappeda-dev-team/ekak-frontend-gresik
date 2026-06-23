@@ -10,10 +10,12 @@ import { LoadingButtonClip2, LoadingClip } from "@/components/global/Loading";
 import { ModalIndikator2 } from "../Pohon/ModalIndikator";
 
 interface Table {
+    roles: string;
     kode_opd: string;
     tahun: number;
 }
 interface RekinAsn {
+    roles: string;
     kode_opd: string;
     tahun: number;
     token: string;
@@ -79,7 +81,7 @@ interface Rekin {
     rencana_kinerja: RencanaKinerja[];
 }
 
-export const Table: React.FC<Table> = ({ kode_opd, tahun }) => {
+export const Table: React.FC<Table> = ({ roles, kode_opd, tahun }) => {
 
     const [SasaranOpd, setSasaranOpd] = useState<Sasaran[]>([]);
 
@@ -139,23 +141,23 @@ export const Table: React.FC<Table> = ({ kode_opd, tahun }) => {
     if (Loading) {
         return (
             <div className="w-full overflow-auto">
-               <LoadingClip className="mx-5 py-5" />     
+                <LoadingClip className="mx-5 py-5" />
             </div>
         )
     }
     if (Error) {
         return (
             <div className="w-full overflow-auto">
-               <h1 className="text-red-500 font-bold mx-5 py-5">Periksa koneksi internet atau database server</h1>   
+                <h1 className="text-red-500 font-bold mx-5 py-5">Periksa koneksi internet atau database server</h1>
             </div>
         )
     }
 
     return (
         <div className="overflow-auto">
-            {DataNull ? 
+            {DataNull ?
                 <h1 className="font-bold mx-5 py-5">Sasaran OPD belum di tambahkan di RENSTRA</h1>
-            :
+                :
                 SasaranOpd.map((data: Sasaran, index: number) => (
                     <div className="my-2" key={data.id || index}>
                         <div
@@ -174,6 +176,7 @@ export const Table: React.FC<Table> = ({ kode_opd, tahun }) => {
                         </div>
                         <div className={`transition-all duration-300 ease-in-out mx-2 p-2 border-x border-b border-emerald-500`}>
                             <RekinAsn
+                                roles={roles}
                                 id={data.id}
                                 sasaran={data.nama_sasaran_opd}
                                 indikator={data.indikator}
@@ -195,7 +198,7 @@ export const Table: React.FC<Table> = ({ kode_opd, tahun }) => {
     )
 }
 
-export const RekinAsn: React.FC<RekinAsn> = ({ id, sasaran, indikator, tahun, token, kode_opd }) => {
+export const RekinAsn: React.FC<RekinAsn> = ({ roles, id, sasaran, indikator, tahun, token, kode_opd }) => {
 
     const [Data, setData] = useState<Rekin[]>([]);
 
@@ -344,13 +347,15 @@ export const RekinAsn: React.FC<RekinAsn> = ({ id, sasaran, indikator, tahun, to
 
     return (
         <div className="flex flex-col">
-            <ButtonSkyBorder
-                onClick={() => handleModalTambah(id, sasaran, indikator)}
-                className="flex items-center justify-center gap-1 w-full mb-2"
-            >
-                <TbCirclePlus />
-                Tambah Rencana Aksi OPD
-            </ButtonSkyBorder>
+            {roles != "reviewer" &&
+                <ButtonSkyBorder
+                    onClick={() => handleModalTambah(id, sasaran, indikator)}
+                    className="flex items-center justify-center gap-1 w-full mb-2"
+                >
+                    <TbCirclePlus />
+                    Tambah Rencana Aksi OPD
+                </ButtonSkyBorder>
+            }
             <div className="overflow-auto rounded-t-xl border">
                 <table className="w-full">
                     <thead>
@@ -362,7 +367,9 @@ export const RekinAsn: React.FC<RekinAsn> = ({ id, sasaran, indikator, tahun, to
                             <td rowSpan={2} className="border-r border-b px-6 py-3 min-w-[200px] text-center">Nama Pemilik</td>
                             <td colSpan={4} className="border-r border-b px-6 py-3 min-w-[100px] text-center">Jadwal Pelaksanaan</td>
                             <td rowSpan={2} className="border-r border-b px-6 py-3 min-w-[100px] text=center">Keterangan</td>
-                            <td rowSpan={2} className="border-r border-b px-6 py-3 min-w-[100px] text-center">Aksi</td>
+                            {roles != "reviewer" &&
+                                <td rowSpan={2} className="border-r border-b px-6 py-3 min-w-[100px] text-center">Aksi</td>
+                            }
                         </tr>
                         <tr className="text-sm bg-emerald-500 text-white">
                             <td rowSpan={2} className="border-r border-b px-6 py-3 min-w-[50px] text-center">TW1</td>
@@ -401,36 +408,38 @@ export const RekinAsn: React.FC<RekinAsn> = ({ id, sasaran, indikator, tahun, to
                                             <td className="border-r border-b px-6 py-4 text-center">{rk.tw3}</td>
                                             <td className="border-r border-b px-6 py-4 text-center">{rk.tw4}</td>
                                             <td className="border-r border-b px-6 py-4">{rk.keterangan || "-"}</td>
-                                            <td className="border-r border-b px-6 py-4">
-                                                <div className="flex flex-col justify-center items-center gap-2">
-                                                    <ButtonSkyBorder
-                                                        className="w-full"
-                                                        onClick={() => syncRenaksiOpd(rk.rekin_id)}
-                                                    >
-                                                        <TbRefresh className="mr-1" />
-                                                        Sync
-                                                    </ButtonSkyBorder>
-                                                    <ButtonGreen
-                                                        className="w-full"
-                                                        onClick={() => handleModalEdit(rk.id_renaksiopd, rk.nama_rencana_kinerja, indikator)}
-                                                    >
-                                                        <TbPencil className="mr-1" />
-                                                        Edit
-                                                    </ButtonGreen>
-                                                    <ButtonRed className="w-full"
-                                                        onClick={() => {
-                                                            AlertQuestion("Hapus?", "Hapus Renaksi OPD yang dipilih?", "question", "Hapus", "Batal").then((result) => {
-                                                                if (result.isConfirmed) {
-                                                                    hapusRenaksiOpd(rk.id_renaksiopd);
-                                                                }
-                                                            });
-                                                        }}
-                                                    >
-                                                        <TbTrash className="mr-1" />
-                                                        Hapus
-                                                    </ButtonRed>
-                                                </div>
-                                            </td>
+                                            {roles != "reviewer" &&
+                                                <td className="border-r border-b px-6 py-4">
+                                                    <div className="flex flex-col justify-center items-center gap-2">
+                                                        <ButtonSkyBorder
+                                                            className="w-full"
+                                                            onClick={() => syncRenaksiOpd(rk.rekin_id)}
+                                                        >
+                                                            <TbRefresh className="mr-1" />
+                                                            Sync
+                                                        </ButtonSkyBorder>
+                                                        <ButtonGreen
+                                                            className="w-full"
+                                                            onClick={() => handleModalEdit(rk.id_renaksiopd, rk.nama_rencana_kinerja, indikator)}
+                                                        >
+                                                            <TbPencil className="mr-1" />
+                                                            Edit
+                                                        </ButtonGreen>
+                                                        <ButtonRed className="w-full"
+                                                            onClick={() => {
+                                                                AlertQuestion("Hapus?", "Hapus Renaksi OPD yang dipilih?", "question", "Hapus", "Batal").then((result) => {
+                                                                    if (result.isConfirmed) {
+                                                                        hapusRenaksiOpd(rk.id_renaksiopd);
+                                                                    }
+                                                                });
+                                                            }}
+                                                        >
+                                                            <TbTrash className="mr-1" />
+                                                            Hapus
+                                                        </ButtonRed>
+                                                    </div>
+                                                </td>
+                                            }
                                         </tr>
                                     ))}
                                 </React.Fragment>

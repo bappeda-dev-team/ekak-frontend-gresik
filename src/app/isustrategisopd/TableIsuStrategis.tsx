@@ -10,6 +10,7 @@ import { useBrandingContext } from "@/context/BrandingContext";
 import { IsuStrategis, DataDukung, TargetJumlahData, PermasalahanOpd } from "@/types";
 
 interface table {
+    roles: string;
     id_periode: number;
     tahun_awal: string;
     tahun_akhir: string;
@@ -17,7 +18,7 @@ interface table {
     tahun_list: string[];
 }
 
-const TableIsuStrategis: React.FC<table> = ({ id_periode, tahun_awal, tahun_akhir, jenis, tahun_list }) => {
+const TableIsuStrategis: React.FC<table> = ({ roles, id_periode, tahun_awal, tahun_akhir, jenis, tahun_list }) => {
 
     const { branding } = useBrandingContext();
     const [Isu, setIsu] = useState<IsuStrategis[]>([]);
@@ -111,16 +112,18 @@ const TableIsuStrategis: React.FC<table> = ({ id_periode, tahun_awal, tahun_akhi
 
     return (
         <>
-            <div className="flex items-center justify-between my-3 mx-3">
-                <p className="text-gray-400 text-sm italic">*data isu strategis berdasarkan periode {tahun_awal} - {tahun_akhir}</p>
-                <ButtonGreenBorder
-                    className="flex items-center gap-1"
-                    onClick={() => handleModal("baru", null)}
-                >
-                    <TbCirclePlus />
-                    Tambah Isu Strategis
-                </ButtonGreenBorder>
-            </div>
+            {roles != "reviewer" &&
+                <div className="flex items-center justify-between my-3 mx-3">
+                    <p className="text-gray-400 text-sm italic">*data isu strategis berdasarkan periode {tahun_awal} - {tahun_akhir}</p>
+                    <ButtonGreenBorder
+                        className="flex items-center gap-1"
+                        onClick={() => handleModal("baru", null)}
+                    >
+                        <TbCirclePlus />
+                        Tambah Isu Strategis
+                    </ButtonGreenBorder>
+                </div>
+            }
             <div className="overflow-auto m-2 rounded-t-xl border">
                 <table className="w-full">
                     <thead>
@@ -166,28 +169,30 @@ const TableIsuStrategis: React.FC<table> = ({ id_periode, tahun_awal, tahun_akhi
                                             <td rowSpan={i.permasalahan_opd ? TotalRow : 2} className="border-r border-b border-emerald-500 px-6 py-4">{i.kode_bidang_urusan || "no code"} - {i.nama_bidang_urusan || "-"}</td>
                                             <td rowSpan={i.permasalahan_opd ? TotalRow : 2} className="border-r border-b border-emerald-500 px-6 py-4">{i.isu_strategis || "-"}</td>
                                             <td rowSpan={i.permasalahan_opd ? TotalRow : 2} className="border-r border-b border-emerald-500 px-6 py-4">
-                                                <div className="flex flex-col jutify-center items-center gap-2">
-                                                    <ButtonSkyBorder
-                                                        className="flex items-center gap-1 w-full"
-                                                        onClick={() => handleModal("edit", i)}
-                                                    >
-                                                        <TbPencil />
-                                                        Edit
-                                                    </ButtonSkyBorder>
-                                                    <ButtonRedBorder
-                                                        className="flex items-center gap-1 w-full"
-                                                        onClick={() => {
-                                                            AlertQuestion("Hapus?", "Data Isu Strategis akan di hapus?", "question", "Hapus", "Batal").then((result) => {
-                                                                if (result.isConfirmed) {
-                                                                    hapusIsu(i.id);
-                                                                }
-                                                            });
-                                                        }}
-                                                    >
-                                                        <TbTrash />
-                                                        Hapus
-                                                    </ButtonRedBorder>
-                                                </div>
+                                                {roles != "reviewer" &&
+                                                    <div className="flex flex-col jutify-center items-center gap-2">
+                                                        <ButtonSkyBorder
+                                                            className="flex items-center gap-1 w-full"
+                                                            onClick={() => handleModal("edit", i)}
+                                                        >
+                                                            <TbPencil />
+                                                            Edit
+                                                        </ButtonSkyBorder>
+                                                        <ButtonRedBorder
+                                                            className="flex items-center gap-1 w-full"
+                                                            onClick={() => {
+                                                                AlertQuestion("Hapus?", "Data Isu Strategis akan di hapus?", "question", "Hapus", "Batal").then((result) => {
+                                                                    if (result.isConfirmed) {
+                                                                        hapusIsu(i.id);
+                                                                    }
+                                                                });
+                                                            }}
+                                                        >
+                                                            <TbTrash />
+                                                            Hapus
+                                                        </ButtonRedBorder>
+                                                    </div>
+                                                }
                                             </td>
                                         </tr>
                                         {!i.permasalahan_opd || i.permasalahan_opd.length === 0 ?
