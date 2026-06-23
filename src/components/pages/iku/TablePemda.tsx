@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import { ButtonBlackBorder } from "@/components/global/Button";
 import { TbMistOff, TbCircleCheck, TbCircleX, TbMist } from "react-icons/tb";
 import { LoadingClip } from "@/components/global/Loading";
-import { getToken } from "@/components/lib/Cookie";
+import { getToken, getUser } from "@/components/lib/Cookie";
 import { AlertNotification, AlertQuestion } from "@/components/global/Alert";
 import { useBrandingContext } from "@/context/BrandingContext";
 
@@ -45,10 +45,18 @@ const TablePemda: React.FC<table> = ({ id_periode, tahun_awal, tahun_akhir, jeni
     
     const [Error, setError] = useState<boolean | null>(null);
     const [DataNull, setDataNull] = useState<boolean | null>(null);
+    const [User, setUser] = useState<any>(null)
     
     const [Loading, setLoading] = useState<boolean | null>(null);
     const [Proses, setProses] = useState<boolean>(false);
     const token = getToken();
+
+    useEffect(() => {
+        const data = getUser();
+        if(data){
+            setUser(data.user);
+        }
+    }, [])
 
     useEffect(() => {
         const API_URL = process.env.NEXT_PUBLIC_API_URL;
@@ -204,39 +212,41 @@ const TablePemda: React.FC<table> = ({ id_periode, tahun_awal, tahun_akhir, jeni
                                         <p className={`text-red-500 text-xs`}>{item.is_active === false ? "(Tematik tidak aktif)" : ""}</p>
                                     </td>
                                     <td className={`border-r border-b ${TableAktif ? "border-emerald-500" : "border-orange-500"} pr-6`}>
-                                        <div className={`flex flex-col justify-center items-center gap-2`}>
-                                            <ButtonBlackBorder
-                                                disabled={Proses}
-                                                className={`flex items-center gap-1 w-full text-sm`}
-                                                onClick={() => {
-                                                    if (TableAktif) {
-                                                        AlertQuestion("Non Aktifkan IKU?", "", "question", "NonAktifkan", "Batal").then((result) => {
-                                                            if (result.isConfirmed) {
-                                                                UpdateStatusIku(item.indikator_id);
-                                                            }
-                                                        });
-                                                    } else {
-                                                        AlertQuestion("Aktifkan IKU?", "", "question", "Aktifkan", "Batal").then((result) => {
-                                                            if (result.isConfirmed) {
-                                                                UpdateStatusIku(item.indikator_id);
-                                                            }
-                                                        });
+                                        {User?.roles != "reviewer" &&
+                                            <div className={`flex flex-col justify-center items-center gap-2`}>
+                                                <ButtonBlackBorder
+                                                    disabled={Proses}
+                                                    className={`flex items-center gap-1 w-full text-sm`}
+                                                    onClick={() => {
+                                                        if (TableAktif) {
+                                                            AlertQuestion("Non Aktifkan IKU?", "", "question", "NonAktifkan", "Batal").then((result) => {
+                                                                if (result.isConfirmed) {
+                                                                    UpdateStatusIku(item.indikator_id);
+                                                                }
+                                                            });
+                                                        } else {
+                                                            AlertQuestion("Aktifkan IKU?", "", "question", "Aktifkan", "Batal").then((result) => {
+                                                                if (result.isConfirmed) {
+                                                                    UpdateStatusIku(item.indikator_id);
+                                                                }
+                                                            });
+                                                        }
+                                                    }}
+                                                >
+                                                    {TableAktif ?
+                                                        <>
+                                                            <TbMistOff />
+                                                            NonAktifkan
+                                                        </>
+                                                        :
+                                                        <>
+                                                            <TbMist />
+                                                            Aktifkan
+                                                        </>
                                                     }
-                                                }}
-                                            >
-                                                {TableAktif ?
-                                                    <>
-                                                        <TbMistOff />
-                                                        NonAktifkan
-                                                    </>
-                                                    :
-                                                    <>
-                                                        <TbMist />
-                                                        Aktifkan
-                                                    </>
+                                                </ButtonBlackBorder>
+                                            </div>
                                                 }
-                                            </ButtonBlackBorder>
-                                        </div>
                                     </td>
                                     <td className={`border-r border-b ${TableAktif ? "border-emerald-500" : "border-orange-500"} px-6 py-4`}>
                                         {item.rumus_perhitungan || "-"}

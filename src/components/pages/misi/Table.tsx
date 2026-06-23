@@ -74,7 +74,7 @@ const Table = () => {
     ];
 
     useEffect(() => {
-        if(JenisPeriode != null){
+        if (JenisPeriode != null) {
             fetchMisi(JenisPeriode ? JenisPeriode?.value : "RPJMD");
         }
     }, [FetchTrigger, JenisPeriode])
@@ -212,7 +212,7 @@ const Table = () => {
                     value={JenisPeriode}
                     isSearchable
                 />
-                {JenisPeriode &&
+                {(JenisPeriode && User?.roles != "reviewer") &&
                     <ButtonSky onClick={() => handleModalNewMisi()}>
                         <TbCirclePlus className="mr-1" />
                         Tambah Misi
@@ -230,7 +230,9 @@ const Table = () => {
                                 <th className="border-r border-b px-6 py-3 min-w-[300px]">Visi / Misi</th>
                                 <th className="border-r border-b px-6 py-3 min-w-[300px]">Periode</th>
                                 <th className="border-r border-b px-6 py-3 min-w-[100px]">keterangan</th>
-                                <th className="border-r border-b px-6 py-3 min-w-[200px]">Aksi</th>
+                                {User?.roles != "reviewer" &&
+                                    <th className="border-r border-b px-6 py-3 min-w-[200px]">Aksi</th>
+                                }
                             </tr>
                         </thead>
                         <tbody>
@@ -252,31 +254,33 @@ const Table = () => {
                                             {data.misi_pemda.map((item: MisiPemda) => (
                                                 <React.Fragment key={item.id}>
                                                     <tr>
-                                                        <td className="border border-emerald-500 px-4 py-4 text-center">{index +1}.{item.urutan}</td>
+                                                        <td className="border border-emerald-500 px-4 py-4 text-center">{index + 1}.{item.urutan}</td>
                                                         <td className="border-x border-b border-emerald-500 px-6 py-4">{item.misi}</td>
                                                         <td className="border-x border-b border-emerald-500 px-6 py-4 text-center">{item.tahun_akhir_periode ? `${item.tahun_awal_periode} - ${item.tahun_akhir_periode} (${item.jenis_periode})` : "-"}</td>
                                                         <td className="border-x border-b border-emerald-500 px-6 py-4">{item.keterangan || "-"}</td>
-                                                        <td className="border-x border-b border-emerald-500 px-6 py-4">
-                                                            <div className="flex flex-col justify-center items-center gap-2">
-                                                                <ButtonGreen
-                                                                    className="flex items-center gap-1 w-full"
-                                                                    onClick={() => handleModalEditMisi(item.id)}
-                                                                >
-                                                                    <TbPencil />
-                                                                    Edit
-                                                                </ButtonGreen>
-                                                                <ButtonRed className="flex items-center gap-1 w-full" onClick={() => {
-                                                                    AlertQuestion("Hapus?", "Hapus Tujuan Pemda yang dipilih?", "question", "Hapus", "Batal").then((result) => {
-                                                                        if (result.isConfirmed) {
-                                                                            hapusMisi(item.id);
-                                                                        }
-                                                                    });
-                                                                }}>
-                                                                    <TbTrash />
-                                                                    Hapus
-                                                                </ButtonRed>
-                                                            </div>
-                                                        </td>
+                                                        {User?.roles != "reviewer" &&
+                                                            <td className="border-x border-b border-emerald-500 px-6 py-4">
+                                                                <div className="flex flex-col justify-center items-center gap-2">
+                                                                    <ButtonGreen
+                                                                        className="flex items-center gap-1 w-full"
+                                                                        onClick={() => handleModalEditMisi(item.id)}
+                                                                    >
+                                                                        <TbPencil />
+                                                                        Edit
+                                                                    </ButtonGreen>
+                                                                    <ButtonRed className="flex items-center gap-1 w-full" onClick={() => {
+                                                                        AlertQuestion("Hapus?", "Hapus Tujuan Pemda yang dipilih?", "question", "Hapus", "Batal").then((result) => {
+                                                                            if (result.isConfirmed) {
+                                                                                hapusMisi(item.id);
+                                                                            }
+                                                                        });
+                                                                    }}>
+                                                                        <TbTrash />
+                                                                        Hapus
+                                                                    </ButtonRed>
+                                                                </div>
+                                                            </td>
+                                                        }
                                                     </tr>
                                                 </React.Fragment>
                                             ))}
