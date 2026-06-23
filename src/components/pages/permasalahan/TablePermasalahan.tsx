@@ -10,6 +10,7 @@ import { FormPermasalahan } from "./FormPermasalahan";
 import { useBrandingContext } from "@/context/BrandingContext";
 
 interface Table {
+    roles: string;
     kode_opd: string;
     tahun: string;
 }
@@ -30,13 +31,14 @@ interface Pohon {
     childs: Pohon[]
 }
 interface Childs {
+    roles: string;
     data?: Pohon;
     rowSpan: number;
     tahun: number;
     editing?: () => void;
 }
 
-export const TablePermasalahan: React.FC<Table> = ({ kode_opd, tahun }) => {
+export const TablePermasalahan: React.FC<Table> = ({ roles, kode_opd, tahun }) => {
 
     const { branding } = useBrandingContext();
     const branding_tahun = branding?.tahun ? branding?.tahun.value : 0;
@@ -143,6 +145,7 @@ export const TablePermasalahan: React.FC<Table> = ({ kode_opd, tahun }) => {
                                     <tr>
                                         <td rowSpan={p.childs ? calculatedTotalRow2 + 1 : 2} className="border-x border-b border-black px-3 py-4 text-center">{index + 1}</td>
                                         <Childs
+                                            roles={roles}
                                             data={p}
                                             rowSpan={p.childs ? calculatedTotalRow2 + 1 : 2}
                                             tahun={branding_tahun}
@@ -158,6 +161,7 @@ export const TablePermasalahan: React.FC<Table> = ({ kode_opd, tahun }) => {
                                             <React.Fragment key={t.id || sub_index}>
                                                 <tr>
                                                     <Childs
+                                                        roles={roles}
                                                         data={t}
                                                         rowSpan={t.childs ? t.childs.length + 1 : 2}
                                                         tahun={branding_tahun}
@@ -172,6 +176,7 @@ export const TablePermasalahan: React.FC<Table> = ({ kode_opd, tahun }) => {
                                                     t.childs.map((o: Pohon, subsub_index: number) => (
                                                         <tr key={o.id || subsub_index}>
                                                             <Childs
+                                                                roles={roles}
                                                                 data={o}
                                                                 rowSpan={1}
                                                                 tahun={branding_tahun}
@@ -193,7 +198,7 @@ export const TablePermasalahan: React.FC<Table> = ({ kode_opd, tahun }) => {
 
 }
 
-export const Childs: React.FC<Childs> = ({ data, rowSpan, tahun }) => {
+export const Childs: React.FC<Childs> = ({ roles, data, rowSpan, tahun }) => {
 
     const [Edit, setEdit] = useState<boolean>(false);
     const [JenisForm, setJenisForm] = useState<"baru" | "edit" | "">("");
@@ -273,46 +278,48 @@ export const Childs: React.FC<Childs> = ({ data, rowSpan, tahun }) => {
                         ${data?.level_pohon === 4 && 'bg-red-300'}
                         ${data?.level_pohon === 5 && 'bg-blue-200'}
                         ${data?.level_pohon === 6 && 'bg-emerald-200'}
-                    `}
-                >
-                    <div className="flex flex-col justify-center items-center gap-2">
-                        <ButtonSkyBorder
-                            className="w-full"
-                            onClick={() => {
-                                if (data?.is_permasalahan) {
-                                    handleEdit("edit");
-                                } else {
-                                    handleEdit("baru");
-                                }
-                            }}
+                        `}
                         >
-                            <TbPencil className="mr-1" />
-                            Edit
-                        </ButtonSkyBorder>
-                        {(data?.permasalahan_terpilih || Terpilih) &&
-                            <ButtonBlack className="cursor-not-allowed">
-                                Terpilih
-                            </ButtonBlack>
-                        }
-                        {(data?.is_permasalahan && !data?.permasalahan_terpilih && !Terpilih) &&
-                            <ButtonBlack className="w-full"
+                    {roles != "reviewer" &&
+                        <div className="flex flex-col justify-center items-center gap-2">
+                            <ButtonSkyBorder
+                                className="w-full"
                                 onClick={() => {
-                                    AlertQuestion("Pilih?", `${data?.nama_pohon}`, "question", "Pilih", "Batal").then((result) => {
-                                        if (result.isConfirmed) {
-                                            if (data?.id_permasalahan) {
-                                                handlePilih(data.id_permasalahan);
-                                            } else {
-                                                AlertNotification("ERROR", "ID permasalahan tidak ditemukan / kosong, hubungi tim developer", "error");
-                                            }
-                                        }
-                                    });
+                                    if (data?.is_permasalahan) {
+                                        handleEdit("edit");
+                                    } else {
+                                        handleEdit("baru");
+                                    }
                                 }}
                             >
-                                <TbCheckbox className="mr-1" />
-                                Pilih
-                            </ButtonBlack>
-                        }
-                    </div>
+                                <TbPencil className="mr-1" />
+                                Edit
+                            </ButtonSkyBorder>
+                            {(data?.permasalahan_terpilih || Terpilih) &&
+                                <ButtonBlack className="cursor-not-allowed">
+                                    Terpilih
+                                </ButtonBlack>
+                            }
+                            {(data?.is_permasalahan && !data?.permasalahan_terpilih && !Terpilih) &&
+                                <ButtonBlack className="w-full"
+                                    onClick={() => {
+                                        AlertQuestion("Pilih?", `${data?.nama_pohon}`, "question", "Pilih", "Batal").then((result) => {
+                                            if (result.isConfirmed) {
+                                                if (data?.id_permasalahan) {
+                                                    handlePilih(data.id_permasalahan);
+                                                } else {
+                                                    AlertNotification("ERROR", "ID permasalahan tidak ditemukan / kosong, hubungi tim developer", "error");
+                                                }
+                                            }
+                                        });
+                                    }}
+                                >
+                                    <TbCheckbox className="mr-1" />
+                                    Pilih
+                                </ButtonBlack>
+                            }
+                        </div>
+                    }
                 </td>
             </React.Fragment>
         )
