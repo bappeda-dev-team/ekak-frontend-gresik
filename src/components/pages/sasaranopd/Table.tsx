@@ -260,7 +260,7 @@ const Table: React.FC<table> = ({ tipe, id_periode, tahun_awal, tahun_akhir, jen
                             <th rowSpan={2} className="border-r border-b px-6 py-3 min-w-[300px]">Pemilik</th>
                             <th rowSpan={2} className="border-r border-b px-6 py-3 min-w-[300px]">Sasaran OPD</th>
                             <th rowSpan={2} className="border-r border-b px-6 py-3 min-w-[300px]">Tujuan OPD</th>
-                            {tipe === "opd" &&
+                            {(tipe === "opd" && User?.roles != "reviewer") &&
                                 <th rowSpan={2} className="border-r border-b px-6 py-3 min-w-[100px]">Aksi</th>
                             }
                             <th rowSpan={2} className="border-r border-b px-6 py-3 min-w-[200px]">Indikator</th>
@@ -303,7 +303,7 @@ const Table: React.FC<table> = ({ tipe, id_periode, tahun_awal, tahun_akhir, jen
                                             <td className="border-r border-b border-emerald-500 px-6 py-4" rowSpan={data.sasaran_opd.length === 0 ? 2 : TotalRow}>
                                                 <div className="flex flex-col gap-2">
                                                     {data.nama_pohon || "-"}
-                                                    {tipe === "opd" &&
+                                                    {(tipe === "opd" && User?.roles != "reviewer") &&
                                                         <div className="flex items center gap-1 border-t border-emerald-500 pt-3">
                                                             <div className="flex flex-col justify-between  gap-2 h-full w-full">
                                                                 <button
@@ -348,7 +348,7 @@ const Table: React.FC<table> = ({ tipe, id_periode, tahun_awal, tahun_akhir, jen
                                                                 <p className="italic text-red-300 font-thin">tujuan opd belum di pilih</p>
                                                             }
                                                         </td>
-                                                        {tipe === "opd" &&
+                                                        {(tipe === "opd" && User?.roles != "reviewer") &&
                                                             <td className="border-x border-b border-emerald-500 px-6 py-6" rowSpan={item.indikator.length !== 0 ? item.indikator.length + 1 : 2}>
                                                                 <div className="flex flex-col justify-center items-center gap-2">
                                                                     <ButtonGreen

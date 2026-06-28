@@ -194,7 +194,9 @@ const Table = () => {
                                 <th className="border-r border-b px-6 py-3 min-w-[300px]">Visi</th>
                                 <th className="border-r border-b px-6 py-3 min-w-[300px]">Periode</th>
                                 <th className="border-r border-b px-6 py-3 min-w-[100px]">keterangan</th>
-                                <th className="border-r border-b px-6 py-3 min-w-[200px]">Aksi</th>
+                                {User?.roles != "reviewer" &&
+                                    <th className="border-r border-b px-6 py-3 min-w-[200px]">Aksi</th>
+                                }
                             </tr>
                         </thead>
                         <tbody>
@@ -203,9 +205,9 @@ const Table = () => {
                                     <td className="px-6 py-3 flex flex-wrap items-center gap-5" colSpan={30}>
                                         <p>Data Kosong / Belum Ditambahkan</p>
                                         <ButtonSky
-                                        onClick={() => handleModalNewTujuan()}
+                                            onClick={() => handleModalNewTujuan()}
                                         >
-                                            <TbCirclePlus className="mr-1"/>
+                                            <TbCirclePlus className="mr-1" />
                                             Tambah Visi
                                         </ButtonSky>
                                     </td>
@@ -219,27 +221,29 @@ const Table = () => {
                                                 <td className="border-x border-b border-emerald-500 px-6 py-4">{data.visi || "-"}</td>
                                                 <td className="border-x border-b border-emerald-500 px-6 py-4 text-center">{data.tahun_akhir_periode ? `${data.tahun_awal_periode} - ${data.tahun_akhir_periode} (${data.jenis_periode})` : "-"}</td>
                                                 <td className="border-x border-b border-emerald-500 px-6 py-4">{data.keterangan || "-"}</td>
-                                                <td className="border-x border-b border-emerald-500 px-6 py-4">
-                                                    <div className="flex flex-col justify-center items-center gap-2">
-                                                        <ButtonGreen
-                                                            className="flex items-center gap-1 w-full"
-                                                            onClick={() => handleModalEditTujuan(data.id)}
-                                                        >
-                                                            <TbPencil />
-                                                            Edit
-                                                        </ButtonGreen>
-                                                        <ButtonRed className="flex items-center gap-1 w-full" onClick={() => {
-                                                            AlertQuestion("Hapus?", "Hapus Tujuan Pemda yang dipilih?", "question", "Hapus", "Batal").then((result) => {
-                                                                if (result.isConfirmed) {
-                                                                    hapusVisi(data.id);
-                                                                }
-                                                            });
-                                                        }}>
-                                                            <TbTrash />
-                                                            Hapus
-                                                        </ButtonRed>
-                                                    </div>
-                                                </td>
+                                                {User?.roles != "reviewer" &&
+                                                    <td className="border-x border-b border-emerald-500 px-6 py-4">
+                                                        <div className="flex flex-col justify-center items-center gap-2">
+                                                            <ButtonGreen
+                                                                className="flex items-center gap-1 w-full"
+                                                                onClick={() => handleModalEditTujuan(data.id)}
+                                                            >
+                                                                <TbPencil />
+                                                                Edit
+                                                            </ButtonGreen>
+                                                            <ButtonRed className="flex items-center gap-1 w-full" onClick={() => {
+                                                                AlertQuestion("Hapus?", "Hapus Tujuan Pemda yang dipilih?", "question", "Hapus", "Batal").then((result) => {
+                                                                    if (result.isConfirmed) {
+                                                                        hapusVisi(data.id);
+                                                                    }
+                                                                });
+                                                            }}>
+                                                                <TbTrash />
+                                                                Hapus
+                                                            </ButtonRed>
+                                                        </div>
+                                                    </td>
+                                                }
                                             </tr>
                                         </React.Fragment>
                                     );

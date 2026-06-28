@@ -70,7 +70,7 @@ interface table {
     tahun_list: string[];
 }
 
-const Table: React.FC<table> = ({id_periode, tahun_awal, tahun_akhir, jenis, tahun_list}) => {
+const Table: React.FC<table> = ({ id_periode, tahun_awal, tahun_akhir, jenis, tahun_list }) => {
 
     const [Data, setData] = useState<Sasaran[]>([]);
 
@@ -132,7 +132,7 @@ const Table: React.FC<table> = ({id_periode, tahun_awal, tahun_akhir, jenis, tah
                 if (data == null) {
                     setDataNull(true);
                     setData([]);
-                } else if(result.code == 200 || result.code == 201){
+                } else if (result.code == 200 || result.code == 201) {
                     setDataNull(false);
                     setData(data);
                     setError(false);
@@ -250,7 +250,7 @@ const Table: React.FC<table> = ({id_periode, tahun_awal, tahun_akhir, jenis, tah
                                 className={`flex justify-between border items-center p-5 rounded-xl text-emerald-500 cursor-pointer border-emerald-500 hover:bg-emerald-500 hover:text-white ${isShown ? "bg-emerald-500 text-white" : ""}`}
                                 onClick={() => handleShow(data.tematik_id)}
                             >
-                                {isActiveTematik ? 
+                                {isActiveTematik ?
                                     <h1 className="font-semibold">Tematik - {data.nama_tematik} ({data.tahun})</h1>
                                     :
                                     <h1 className="font-semibold text-red-400">Tematik - {data.nama_tematik} ({data.tahun}) - NON AKTIF</h1>
@@ -312,29 +312,36 @@ const Table: React.FC<table> = ({id_periode, tahun_awal, tahun_akhir, jenis, tah
                                                                     <p>{item.nama_subtematik} ({item.tahun})</p>
                                                                     <div className="flex flex-col justify-between gap-2 h-full">
                                                                         <p className="uppercase text-emerald-500 text-xs">{item.jenis_pohon}</p>
-                                                                        {item.is_active === false ? 
-                                                                                <button
-                                                                                    className="flex justify-between gap-1 rounded-full p-1 bg-red-500 text-white cursor-not-allowed"
-                                                                                    onClick={() => handleModalNewSasaran(item.subtematik_id, item.nama_subtematik, item.jenis_pohon)}
-                                                                                    disabled
-                                                                                >
-                                                                                    <div className="flex gap-1">
-                                                                                        <TbCirclePlus />
-                                                                                        <p className="text-xs">Tematik NON-AKTIF</p>
-                                                                                    </div>
-                                                                                    <TbArrowBadgeDownFilled className="-rotate-90" />
-                                                                                </button>
-                                                                        :
+                                                                        {item.is_active === false ?
                                                                             <button
-                                                                                className="flex justify-between gap-1 rounded-full p-1 bg-sky-500 text-white border border-sky-500 hover:bg-white hover:text-sky-500 hover:border hover:border-sky-500"
+                                                                                className="flex justify-between gap-1 rounded-full p-1 bg-red-500 text-white cursor-not-allowed"
                                                                                 onClick={() => handleModalNewSasaran(item.subtematik_id, item.nama_subtematik, item.jenis_pohon)}
+                                                                                disabled
                                                                             >
                                                                                 <div className="flex gap-1">
                                                                                     <TbCirclePlus />
-                                                                                    <p className="text-xs">Tambah Sasaran Baru</p>
+                                                                                    <p className="text-xs">Tematik NON-AKTIF</p>
                                                                                 </div>
                                                                                 <TbArrowBadgeDownFilled className="-rotate-90" />
                                                                             </button>
+                                                                            :
+                                                                            User?.roles != "reviewer" ?
+                                                                                <button
+                                                                                    className="flex justify-between gap-1 rounded-full p-1 bg-sky-500 text-white border border-sky-500 hover:bg-white hover:text-sky-500 hover:border hover:border-sky-500"
+                                                                                    onClick={() => handleModalNewSasaran(item.subtematik_id, item.nama_subtematik, item.jenis_pohon)}
+                                                                                >
+                                                                                    <div className="flex gap-1">
+                                                                                        <TbCirclePlus />
+                                                                                        <p className="text-xs">Tambah Sasaran Baru</p>
+                                                                                    </div>
+                                                                                    <TbArrowBadgeDownFilled className="-rotate-90" />
+                                                                                </button>
+                                                                                :
+                                                                                <button
+                                                                                    className="flex justify-between gap-1 rounded-full p-1 bg-yellow-500 text-white border border-sky-500"
+                                                                                >
+                                                                                    <p className="text-xs px-2">❕Reviewer Only</p>
+                                                                                </button>
                                                                         }
                                                                     </div>
                                                                 </td>
@@ -348,30 +355,32 @@ const Table: React.FC<table> = ({id_periode, tahun_awal, tahun_akhir, jenis, tah
                                                                                 {s.sasaran_pemda || "-"}
                                                                             </td>
                                                                             <td className="border-b border-r border-emerald-500 px-6 py-4" rowSpan={s.indikator.length === 0 ? 2 : s.indikator.length + 1}>
-                                                                                <div className="flex flex-col justify-center items-center gap-1">
-                                                                                    <>
-                                                                                        <ButtonGreen
-                                                                                            className="flex items-center gap-1 w-full"
-                                                                                            onClick={() => handleModalEditSasaran(s.id_sasaran_pemda, item.subtematik_id, item.nama_subtematik, item.jenis_pohon)}
-                                                                                        >
-                                                                                            <TbPencil />
-                                                                                            Edit
-                                                                                        </ButtonGreen>
-                                                                                        <ButtonRed
-                                                                                            className="flex items-center gap-1 w-full"
-                                                                                            onClick={() => {
-                                                                                                AlertQuestion("Hapus?", "Hapus Tujuan Pemda yang dipilih?", "question", "Hapus", "Batal").then((result) => {
-                                                                                                    if (result.isConfirmed) {
-                                                                                                        hapusSasaranPemda(s.id_sasaran_pemda);
-                                                                                                    }
-                                                                                                });
-                                                                                            }}
-                                                                                        >
-                                                                                            <TbTrash />
-                                                                                            Delete
-                                                                                        </ButtonRed>
-                                                                                    </>
-                                                                                </div>
+                                                                                {User?.roles != "reviewer" &&
+                                                                                    <div className="flex flex-col justify-center items-center gap-1">
+                                                                                        <>
+                                                                                            <ButtonGreen
+                                                                                                className="flex items-center gap-1 w-full"
+                                                                                                onClick={() => handleModalEditSasaran(s.id_sasaran_pemda, item.subtematik_id, item.nama_subtematik, item.jenis_pohon)}
+                                                                                            >
+                                                                                                <TbPencil />
+                                                                                                Edit
+                                                                                            </ButtonGreen>
+                                                                                            <ButtonRed
+                                                                                                className="flex items-center gap-1 w-full"
+                                                                                                onClick={() => {
+                                                                                                    AlertQuestion("Hapus?", "Hapus Tujuan Pemda yang dipilih?", "question", "Hapus", "Batal").then((result) => {
+                                                                                                        if (result.isConfirmed) {
+                                                                                                            hapusSasaranPemda(s.id_sasaran_pemda);
+                                                                                                        }
+                                                                                                    });
+                                                                                                }}
+                                                                                            >
+                                                                                                <TbTrash />
+                                                                                                Delete
+                                                                                            </ButtonRed>
+                                                                                        </>
+                                                                                    </div>
+                                                                                }
                                                                             </td>
                                                                         </tr>
                                                                         {/* INDIKATOR */}

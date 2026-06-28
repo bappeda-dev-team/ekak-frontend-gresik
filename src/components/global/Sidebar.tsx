@@ -650,9 +650,7 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
           )}
 
           {/* LABEL DATA MASTER OPD */}
-          {(User?.roles == "super_admin" ||
-            User?.roles == "admin_opd" ||
-            User?.roles == "reviewer") && (
+          {(User?.roles == 'super_admin' || User?.roles == 'admin_opd') &&
             <li
               className={`flex justify-between items-center font-medium gap-x-2 cursor-pointer p-2 rounded-xl hover:bg-slate-500 transition-all duration-300 ease-in-out`}
               onClick={() => setDataMasterOpd(DataMasterOpd ? false : true)}
@@ -776,10 +774,8 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
                 />
               </li>
               {/* SUB MENU PERENCANAAN PEMDA */}
-              {User?.roles != "reviewer" ? (
-                <div
-                  className={`transition-all duration-300 ease-in-out ${PerencanaanKota ? "px-3 py-2 flex flex-col border-l-2 border-white rounded-b-xl ml-2  max-h-screen opacity-100" : "max-h-0 opacity-0 pointer-events-none"}`}
-                >
+              <div className={`transition-all duration-300 ease-in-out ${PerencanaanKota ? 'px-3 py-2 flex flex-col border-l-2 border-white rounded-b-xl ml-2  max-h-screen opacity-100' : 'max-h-0 opacity-0 pointer-events-none'}`}>
+                {User?.roles != "reviewer" &&
                   <Link href="/tematikpemda">
                     <li
                       className={`flex items-center text-sm gap-x-2 cursor-pointer p-2 rounded-xl ${url === "/tematikpemda" ? "bg-white text-gray-800" : "hover:bg-slate-500"}`}

@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import { LoadingClip } from "@/components/global/Loading";
-import { getToken } from "@/components/lib/Cookie";
+import { getToken, getUser } from "@/components/lib/Cookie";
 import { TbCircleX, TbCircleCheck, TbMistOff, TbMist } from "react-icons/tb";
 import { ButtonBlackBorder } from "@/components/global/Button";
 import { AlertQuestion, AlertNotification } from "@/components/global/Alert";
@@ -44,12 +44,20 @@ const TableOpd: React.FC<table> = ({ kode_opd, tahun_awal, tahun_akhir, jenis, t
 
     const [Error, setError] = useState<boolean | null>(null);
     const [DataNull, setDataNull] = useState<boolean | null>(null);
+    const [User, setUser] = useState<any>(null);
 
     const [Loading, setLoading] = useState<boolean | null>(null);
     const [Proses, setProses] = useState<boolean | null>(null);
     const token = getToken();
     const {branding} = useBrandingContext();
     const Tahun = branding?.tahun ? branding?.tahun?.value : 0;
+
+    useEffect(() => {
+        const data = getUser();
+        if(data){
+            setUser(data.user);
+        }
+    }, [])
 
     useEffect(() => {
         const API_URL = process.env.NEXT_PUBLIC_API_URL;
@@ -207,38 +215,40 @@ const TableOpd: React.FC<table> = ({ kode_opd, tahun_awal, tahun_akhir, jenis, t
                                         <p className={`text-red-500 text-xs`}>{item.is_active === false ? "(Tematik tidak aktif)" : ""}</p>
                                     </td>
                                     <td className={`border-r border-b ${TableAktif ? "border-emerald-500" : "border-orange-500"} pr-6`}>
-                                        <div className={`flex flex-col justify-center items-center gap-2`}>
-                                            <ButtonBlackBorder
-                                                className={`flex items-center gap-1 w-full text-sm`}
-                                                onClick={() => {
-                                                    if (TableAktif) {
-                                                        AlertQuestion("Non Aktifkan IKU?", "", "question", "NonAktifkan", "Batal").then((result) => {
-                                                            if (result.isConfirmed) {
-                                                                UpdateStatusIku(item.indikator_id);
-                                                            }
-                                                        });
-                                                    } else {
-                                                        AlertQuestion("Aktifkan IKU?", "", "question", "Aktifkan", "Batal").then((result) => {
-                                                            if (result.isConfirmed) {
-                                                                UpdateStatusIku(item.indikator_id);
-                                                            }
-                                                        });
+                                        {User?.roles != "reviewer" &&
+                                            <div className={`flex flex-col justify-center items-center gap-2`}>
+                                                <ButtonBlackBorder
+                                                    className={`flex items-center gap-1 w-full text-sm`}
+                                                    onClick={() => {
+                                                        if (TableAktif) {
+                                                            AlertQuestion("Non Aktifkan IKU?", "", "question", "NonAktifkan", "Batal").then((result) => {
+                                                                if (result.isConfirmed) {
+                                                                    UpdateStatusIku(item.indikator_id);
+                                                                }
+                                                            });
+                                                        } else {
+                                                            AlertQuestion("Aktifkan IKU?", "", "question", "Aktifkan", "Batal").then((result) => {
+                                                                if (result.isConfirmed) {
+                                                                    UpdateStatusIku(item.indikator_id);
+                                                                }
+                                                            });
+                                                        }
+                                                    }}
+                                                >
+                                                    {TableAktif ?
+                                                        <>
+                                                            <TbMistOff />
+                                                            NonAktifkan
+                                                        </>
+                                                        :
+                                                        <>
+                                                            <TbMist />
+                                                            Aktifkan
+                                                        </>
                                                     }
-                                                }}
-                                            >
-                                                {TableAktif ?
-                                                    <>
-                                                        <TbMistOff />
-                                                        NonAktifkan
-                                                    </>
-                                                    :
-                                                    <>
-                                                        <TbMist />
-                                                        Aktifkan
-                                                    </>
-                                                }
-                                            </ButtonBlackBorder>
-                                        </div>
+                                                </ButtonBlackBorder>
+                                            </div>
+                                        }
                                     </td>
                                     <td className={`border-r border-b ${TableAktif ? "border-emerald-500" : "border-orange-500"} px-6 py-4`}>
                                         {item.definisi_operasional || "-"}

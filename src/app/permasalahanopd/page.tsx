@@ -75,6 +75,7 @@ const PermasalahanaOpd = () => {
                 </div>
                 <div className="m-3">
                     <TablePermasalahan
+                        roles={User?.roles}
                         tahun={Tahun?.value}
                         kode_opd={(User?.roles == 'super_admin' || User?.roles == 'reviewer') ? SelectedOpd?.value : User?.kode_opd}
                     />

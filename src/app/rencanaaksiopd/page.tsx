@@ -59,6 +59,7 @@ const RencanaAksiOpd = () => {
                         <TahunNull />
                     :
                         <Table 
+                            roles={User?.roles}
                             tahun={Tahun?.value}
                             kode_opd={(User?.roles == 'super_admin' || User?.roles == 'reviewer') ? SelectedOpd?.value : User?.kode_opd}
                         />

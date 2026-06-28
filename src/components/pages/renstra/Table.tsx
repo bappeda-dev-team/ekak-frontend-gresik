@@ -1,6 +1,6 @@
 'use client'
 
-import { getToken } from "@/components/lib/Cookie";
+import { getToken, getUser } from "@/components/lib/Cookie";
 import React, { useEffect, useState } from "react";
 import { ButtonGreenBorder, ButtonSkyBorder } from "@/components/global/Button";
 import { TbPencil } from "react-icons/tb";
@@ -51,11 +51,13 @@ interface table {
     kode_opd: string;
 }
 interface Thead {
+    roles: string;
     jenis: "Urusan" | "Bidang Urusan" | "Program" | "Kegiatan" | "Sub Kegiatan";
     tahun_list: string[];
     type: "laporan" | "opd";
 }
 interface Tr {
+    roles: string;
     indikator: any[];
     nama: string;
     kode: string;
@@ -73,10 +75,18 @@ export const TableRenstra: React.FC<table> = ({ jenis, tahun_awal, tahun_akhir, 
 
     const [Matrix, setMatrix] = useState<matrix[]>([]);
 
+    const [User, setUser] = useState<any>(null);
     const [Loading, setLoading] = useState<boolean>(false);
     const [DataNull, setDataNull] = useState<boolean>(false);
     const [FetchTrigger, setFetchTrigger] = useState<boolean>(false);
     const token = getToken();
+
+    useEffect(() => {
+        const data = getUser();
+        if(data){
+            setUser(data.user);
+        }
+    }, [])
 
     useEffect(() => {
         const API_URL = process.env.NEXT_PUBLIC_API_URL;
@@ -140,12 +150,14 @@ export const TableRenstra: React.FC<table> = ({ jenis, tahun_awal, tahun_akhir, 
                                 {item.urusan.map((u: renstra, u_index: number) => (
                                     <React.Fragment key={u_index}>
                                         <TheadMatrix
+                                            roles={User?.roles}
                                             tahun_list={tahun_list}
                                             jenis="Urusan"
                                             type={jenis}
                                         />
                                         <tbody>
                                             <TrMatrix
+                                                roles={User?.roles}
                                                 jenis="Urusan"
                                                 type={jenis}
                                                 indikator={u.indikator}
@@ -160,12 +172,14 @@ export const TableRenstra: React.FC<table> = ({ jenis, tahun_awal, tahun_akhir, 
                                                 {u.bidang_urusan.map((br: renstra, br_index: number) => (
                                                     <React.Fragment key={br_index}>
                                                         <TheadMatrix
+                                                            roles={User?.roles}
                                                             tahun_list={tahun_list}
                                                             jenis="Bidang Urusan"
                                                             type={jenis}
                                                         />
                                                         <tbody>
                                                             <TrMatrix
+                                                                roles={User?.roles}
                                                                 jenis="Bidang Urusan"
                                                                 type={jenis}
                                                                 indikator={br.indikator}
@@ -180,12 +194,14 @@ export const TableRenstra: React.FC<table> = ({ jenis, tahun_awal, tahun_akhir, 
                                                                 {br.program.map((p: renstra, p_index: number) => (
                                                                     <React.Fragment key={p_index}>
                                                                         <TheadMatrix
+                                                                            roles={User?.roles}
                                                                             tahun_list={tahun_list}
                                                                             jenis="Program"
                                                                             type={jenis}
                                                                         />
                                                                         <tbody>
                                                                             <TrMatrix
+                                                                                roles={User?.roles}
                                                                                 jenis="Program"
                                                                                 type={jenis}
                                                                                 indikator={p.indikator}
@@ -200,12 +216,14 @@ export const TableRenstra: React.FC<table> = ({ jenis, tahun_awal, tahun_akhir, 
                                                                                 {p.kegiatan.map((k: renstra, k_index: number) => (
                                                                                     <React.Fragment key={k_index}>
                                                                                         <TheadMatrix
+                                                                                            roles={User?.roles}
                                                                                             tahun_list={tahun_list}
                                                                                             jenis="Kegiatan"
                                                                                             type={jenis}
                                                                                         />
                                                                                         <tbody>
                                                                                             <TrMatrix
+                                                                                                roles={User?.roles}
                                                                                                 jenis="Kegiatan"
                                                                                                 type={jenis}
                                                                                                 indikator={k.indikator}
@@ -218,6 +236,7 @@ export const TableRenstra: React.FC<table> = ({ jenis, tahun_awal, tahun_akhir, 
                                                                                         {k.subkegiatan &&
                                                                                             <React.Fragment>
                                                                                                 <TheadMatrix
+                                                                                                    roles={User?.roles}
                                                                                                     tahun_list={tahun_list}
                                                                                                     jenis="Sub Kegiatan"
                                                                                                     type={jenis}
@@ -226,6 +245,7 @@ export const TableRenstra: React.FC<table> = ({ jenis, tahun_awal, tahun_akhir, 
                                                                                                     <React.Fragment key={sk_index}>
                                                                                                         <tbody>
                                                                                                             <TrMatrix
+                                                                                                                roles={User?.roles}
                                                                                                                 jenis="Sub Kegiatan"
                                                                                                                 type={jenis}
                                                                                                                 indikator={sk.indikator}
@@ -261,7 +281,7 @@ export const TableRenstra: React.FC<table> = ({ jenis, tahun_awal, tahun_akhir, 
         </>
     )
 }
-export const TheadMatrix: React.FC<Thead> = ({ jenis, type, tahun_list }) => {
+export const TheadMatrix: React.FC<Thead> = ({ roles, jenis, type, tahun_list }) => {
     return (
         <thead>
             <tr className={` 
@@ -298,7 +318,7 @@ export const TheadMatrix: React.FC<Thead> = ({ jenis, type, tahun_list }) => {
                             <td className="border-l border-b px-6 py-3 min-w-[50px]">Target</td>
                             <td className="border-l border-b px-6 py-3 min-w-[50px]">Satuan</td>
                             <td className="border-l border-b px-6 py-3 min-w-[200px] text-center">Pagu</td>
-                            {type === "opd" &&
+                            {(type === "opd" && roles != "reviewer") &&
                                 <td className="border-l border-b px-6 py-3 min-w-[50px] text-center">Aksi</td>
                             }
                         </React.Fragment>
@@ -308,7 +328,7 @@ export const TheadMatrix: React.FC<Thead> = ({ jenis, type, tahun_list }) => {
         </thead>
     )
 }
-export const TrMatrix: React.FC<Tr> = ({ jenis, type, kode_opd, kode, nama, indikator, fetchTrigger }) => {
+export const TrMatrix: React.FC<Tr> = ({ roles, jenis, type, kode_opd, kode, nama, indikator, fetchTrigger }) => {
 
     const [ModalTambah, setModalTambah] = useState<boolean>(false);
     const [ModalEdit, setModalEdit] = useState<boolean>(false);
@@ -357,7 +377,7 @@ export const TrMatrix: React.FC<Tr> = ({ jenis, type, kode_opd, kode, nama, indi
                             <td className={`border-b px-6 py-4 w-full text-center`}></td>
                             <td className={`border-r border-b px-6 py-4 w-full text-center`}></td>
                             <td className={`border-b px-6 py-4 w-full`}>Rp.{formatRupiah(i.pagu_anggaran)}</td>
-                            {type === "opd" &&
+                            {(type === "opd" && roles != "reviewer") &&
                                 <td className={`border-r border-b px-6 py-4 w-full`}></td>
                             }
                         </React.Fragment>
@@ -377,7 +397,7 @@ export const TrMatrix: React.FC<Tr> = ({ jenis, type, kode_opd, kode, nama, indi
                                 </React.Fragment>
                             ))}
                             <td className={`border-r border-b px-6 py-4 w-full`}>Rp.{formatRupiah(i.pagu_anggaran)}</td>
-                            {type === "opd" &&
+                            {(type === "opd" && roles != "reviewer") &&
                                 <td className={`border-r border-b px-6 py-4 w-full`}>
                                     {i.id !== "" ?
                                         <ButtonGreenBorder
