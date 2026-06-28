@@ -790,8 +790,8 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
                       </span>
                     </li>
                   </Link>
-                )}
-                {/* <li
+                  {/* LABEL TEMATIK (CSF, Outcome, intermediate) */}
+                  {/* <li
                     className={`flex justify-between items-center font-medium gap-x-2 cursor-pointer p-2 rounded-xl hover:bg-slate-500 transition-all duration-300 ease-in-out`}
                     onClick={() => setTematikKota(TematikKota ? false : true)}
                   >
