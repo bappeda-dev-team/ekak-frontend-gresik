@@ -109,7 +109,7 @@ const Table = () => {
         const API_URL = process.env.NEXT_PUBLIC_API_URL;
         setIsLoading(true);
         try {
-            const response = await fetch(`${API_URL}/opd/findall`, {
+            const response = await fetch(`${API_URL}/opd/options`, {
                 method: 'GET',
                 headers: {
                     Authorization: `${token}`,
