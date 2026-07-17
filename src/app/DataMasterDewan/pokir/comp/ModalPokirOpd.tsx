@@ -105,7 +105,7 @@ export const ModalPokirOpd: React.FC<modal> = ({ isOpen, onClose, onSuccess, Dat
         const fetchOpd = async () => {
             setLoadingOption(true);
             try {
-                const response = await fetch(`${branding?.api_perencanaan}/opd/findall`, {
+                const response = await fetch(`${branding?.api_perencanaan}/opd/options`, {
                     method: 'GET',
                     headers: {
                         Authorization: `${token}`,

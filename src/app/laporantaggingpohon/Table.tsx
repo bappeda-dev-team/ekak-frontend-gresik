@@ -3,62 +3,14 @@
 import React, { useEffect, useState } from "react";
 import { LoadingClip } from "@/components/global/Loading";
 import { TbCircleCheckFilled } from "react-icons/tb";
+import { Data, Pelaksana, RencanaKinerja, TaggingData } from "./types"
+import { api } from "./service"
 
 interface Table {
     tahun: number;
 }
 
-interface RencanaKinerja {
-    id_rekin: string;
-    rencana_kinerja: string;
-    nama_pelaksana: string;
-    nip_pelaksana: string;
-    kode_bidang_urusan: string;
-    nama_bidang_urusan: string;
-    kode_program: string;
-    nama_program: string;
-    kode_subkegiatan: string;
-    nama_subkegiatan: string;
-    pagu: number;
-    keterangan: string;
-    tahapan_pelaksanaan: {
-        tw_1: number;
-        tw_2: number;
-        tw_3: number;
-        tw_4: number;
-    };
-}
-
-interface Pelaksana {
-    nama_pelaksana: string;
-    nip_pelaksana: string;
-    rencana_kinerjas: RencanaKinerja[];
-}
-
-interface TaggingData {
-    kode_program_unggulan: string;
-    nama_program_unggulan: string;
-    rencana_implementasi: string;
-    id_pohon: number;
-    tahun: number;
-    nama_pohon: string;
-    kode_opd: string;
-    nama_opd: string;
-    jenis_pohon: string;
-    keterangan_tagging: string;
-    status: string;
-    pelaksanas: Pelaksana[];
-    keterangan: string;
-}
-
-interface Data {
-    nama_tagging: string;
-    tahun: number;
-    pohon_kinerjas: TaggingData[];
-}
-
 export const Table: React.FC<Table> = ({ tahun }) => {
-
 
     const [DataTagging, setDataTagging] = useState<Data | null>(null);
 
@@ -67,39 +19,30 @@ export const Table: React.FC<Table> = ({ tahun }) => {
     const [Error, setError] = useState<boolean>(false);
 
     useEffect(() => {
-        const fetchDataTagging = async () => {
-            setLoading(true)
-            const API_URL_TAGGING = process.env.NEXT_PUBLIC_API_URL_TAGGING;
-            console.log("nama tagging nya : ", NamaTagging);
-            try {
-                const response = await fetch(`${API_URL_TAGGING}/laporan/tagging_pokin?nama_tagging=${encodeURIComponent(NamaTagging)}&tahun=${tahun}`, {
-                    // const response = await fetch(`${API_URL_TAGGING}/laporan/tagging_pokin?nama_tagging=Program%20Unggulan%20Bupati&tahun=2025 `, {
-                    method: 'GET',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                });
+        if (!NamaTagging) {
+            setDataTagging(null);
+            return;
+        }
 
-                const result = await response.json();
-                const data = result.data[0];
-                if (result.status === 200 || result.status === 201) {
-                    setDataTagging(data);
-                    console.log(data);
-                    setError(false);
-                } else {
-                    setError(true);
-                    setDataTagging(null);
-                }
+        const fetchDataTagging = async () => {
+            setLoading(true);
+
+            try {
+                const data = await api.laporan.tagging_pokin(NamaTagging, tahun);
+
+                setDataTagging(data ?? null);
+                setError(false);
             } catch (err) {
+                console.error(err);
+
+                setDataTagging(null);
                 setError(true);
-                console.error(err)
             } finally {
                 setLoading(false);
             }
-        }
-        if (NamaTagging) {
-            fetchDataTagging();
-        }
+        };
+
+        fetchDataTagging();
     }, [tahun, NamaTagging]);
 
     if (Loading) {
@@ -111,7 +54,7 @@ export const Table: React.FC<Table> = ({ tahun }) => {
     } else if (Error) {
         return (
             <div className="border p-5 rounded-xl shadow-xl">
-                <h1 className="text-red-500 mx-5 py-5">Error, Periksa koneksi internet atau database server</h1>
+                <h1 className="text-red-500 mx-5 py-5">Periksa koneksi internet atau database server</h1>
             </div>
         )
     }
@@ -127,14 +70,14 @@ export const Table: React.FC<Table> = ({ tahun }) => {
                     <TbCircleCheckFilled />
                     Program Prioritas Daerah
                 </button>
-                {/* <button
+                <button
                     className={`flex items-center gap-1 p-2 border ${NamaTagging === "RB" ? 'bg-sky-500 text-white' : 'border-sky-500 text-sky-500'} rounded-lg hover:bg-sky-500 hover:text-white
                         `}
                     onClick={() => setNamaTagging("RB")}
                 >
                     <TbCircleCheckFilled />
                     RB
-                </button> */}
+                </button>
                 <button
                     className={`flex items-center gap-1 p-2 border ${NamaTagging === "Program Unggulan Pemerintah Pusat" ? 'bg-sky-500 text-white' : 'border-sky-500 text-sky-500'} rounded-lg hover:bg-sky-500 hover:text-white
                         `}
@@ -153,13 +96,16 @@ export const Table: React.FC<Table> = ({ tahun }) => {
                             <tr className="bg-emerald-500 text-white">
                                 <th rowSpan={2} className="border-r border-b px-6 py-3 w-[50px]">No</th>
                                 <th rowSpan={2} className="border-r border-b px-6 py-3 min-w-[200px]">{namaTagging(DataTagging?.nama_tagging || "") || "Tagging"}</th>
+                                <th rowSpan={2} className="border-r border-b px-6 py-3 min-w-[200px]">Rencana Implementasi</th>
                                 <th rowSpan={2} className="border-r border-b px-6 py-3 min-w-[100px]">Perangkat Daerah</th>
                                 <th rowSpan={2} className="border-r border-b px-6 py-3 min-w-[200px]">Nama Pohon</th>
                                 <th rowSpan={2} className="border-r border-b px-6 py-3 min-w-[100px]">Level Pohon</th>
 
                                 <th rowSpan={2} className="border-r border-b px-6 py-3 min-w-[100px]">Pelaksana</th>
                                 <th rowSpan={2} className="border-r border-b px-6 py-3 min-w-[100px]">Rencana Kinerja</th>
-                                <th rowSpan={2} className="border-r border-b px-6 py-3 min-w-[150px]">Urusan/Bidang Urusan/Kegiatan/Sub Kegiatan</th>
+                                <th rowSpan={2} className="border-r border-b px-6 py-3 min-w-[150px]">Program</th>
+                                <th rowSpan={2} className="border-r border-b px-6 py-3 min-w-[150px]">Indikator Program</th>
+                                <th rowSpan={2} className="border-r border-b px-6 py-3 min-w-[150px]">Sub Kegiatan</th>
                                 <th rowSpan={2} className="border-r border-b px-6 py-3 min-w-[100px]">Pagu Anggaran</th>
                                 <th colSpan={4} className="border-r border-b px-6 py-3 min-w-[100px]">Waktu Pelaksanaan</th>
                                 <th rowSpan={2} className="border-r border-b px-6 py-3 min-w-[100px]">Keterangan</th>
@@ -169,6 +115,12 @@ export const Table: React.FC<Table> = ({ tahun }) => {
                                 <th className="border-r border-b px-3 py-1 min-w-[100px]">TW II</th>
                                 <th className="border-r border-b px-3 py-1 min-w-[100px]">TW III</th>
                                 <th className="border-r border-b px-3 py-1 min-w-[100px]">TW IV</th>
+                            </tr>
+
+                            <tr className="bg-emerald-700 text-white">
+                                {[...Array(15)].map((_, index: number) => (
+                                    <th key={index} className="border-r border-b px-3 py-1 min-w-[100px]">{index + 1}</th>
+                                ))}
                             </tr>
                         </thead>
                         <tbody>
@@ -188,6 +140,7 @@ export const Table: React.FC<Table> = ({ tahun }) => {
                                             <tr>
                                                 <td rowSpan={p.pelaksanas ? TotalRow : 2} className="border-r border-b px-6 py-4">{index + 1}</td>
                                                 <td rowSpan={p.pelaksanas ? TotalRow : 2} className="border-r border-b px-6 py-4">{p.nama_program_unggulan || "-"}</td>
+                                                <td rowSpan={p.pelaksanas ? TotalRow : 2} className="border-r border-b px-6 py-4">Rencana Implementasi</td>
                                                 <td rowSpan={p.pelaksanas ? TotalRow : 2} className="border-r border-b px-6 py-4">{p.nama_opd || "-"}</td>
                                                 <td rowSpan={p.pelaksanas ? TotalRow : 2} className="border-r border-b px-6 py-4">
                                                     <p>{p.nama_pohon || "-"} </p>
@@ -212,6 +165,16 @@ export const Table: React.FC<Table> = ({ tahun }) => {
                                                                     <td key={index} className="border-r border-b px-6 py-4 h-[200px]">{rk.rencana_kinerja || "-"}</td>
                                                                     {rk.kode_subkegiatan ?
                                                                         <>
+                                                                            <td className="border-r border-b px-6 py-4 h-[200px]">({rk.kode_program}) {rk.nama_program}</td>
+                                                                            <td className="h-[200px] border-r border-b px-6 py-4 align-center">
+                                                                                <ul className="list-disc space-y-2 pl-5 text-sm leading-6 text-gray-700">
+                                                                                    {rk.indikator_programs.map((ind, id) => (
+                                                                                        <li key={id}>
+                                                                                            {ind.indikator_program}
+                                                                                        </li>
+                                                                                    ))}
+                                                                                </ul>
+                                                                            </td>
                                                                             <td className="border-r border-b px-6 py-4 h-[200px]">({rk.kode_subkegiatan || 0}) {rk.nama_subkegiatan || "-"}</td>
                                                                             <td className="border-r border-b px-6 py-4 h-[200px]">{rk.pagu || "-"}</td>
                                                                         </>

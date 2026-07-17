@@ -118,7 +118,7 @@ export const FormPohonPemda: React.FC<{
         const API_URL = process.env.NEXT_PUBLIC_API_URL;
         setIsLoading(true);
         try {
-            const response = await fetch(`${API_URL}/opd/findall`, {
+            const response = await fetch(`${API_URL}/opd/options`, {
                 method: 'GET',
                 headers: {
                     Authorization: `${token}`,
@@ -782,7 +782,7 @@ export const FormAmbilPohon: React.FC<{
         const API_URL = process.env.NEXT_PUBLIC_API_URL;
         setIsLoading(true);
         try {
-            const response = await fetch(`${API_URL}/opd/findall`, {
+            const response = await fetch(`${API_URL}/opd/options`, {
                 method: 'GET',
                 headers: {
                     Authorization: `${token}`,
@@ -1129,7 +1129,7 @@ export const FormEditPohon: React.FC<{
         const API_URL = process.env.NEXT_PUBLIC_API_URL;
         setIsLoading(true);
         try {
-            const response = await fetch(`${API_URL}/opd/findall`, {
+            const response = await fetch(`${API_URL}/opd/options`, {
                 method: 'GET',
                 headers: {
                     Authorization: `${token}`,

@@ -1,20 +1,26 @@
-'use client'
-
 import { FiHome } from 'react-icons/fi';
-import Maintenance from '@/components/global/Maintenance';
 import { TahunNull } from '@/components/global/OpdTahunNull';
 import { Table } from './Table';
-import { useBrandingContext } from '@/context/BrandingContext';
+import { cookies } from "next/headers";
 
-const LaporanTaggingPohon = () => {
+async function getTahun() {
+    const cookieStore = await cookies();
 
-    const { branding } = useBrandingContext();
-    const tahun = branding?.tahun ? branding?.tahun.value : 0;
+    const tahunCookie = cookieStore.get("tahun")?.value;
 
-    if(tahun === 0 || tahun === undefined){
-        return(
-            <TahunNull />
-        )
+    const tahun = tahunCookie
+        ? JSON.parse(tahunCookie).value
+        : null;
+
+    return { tahun };
+}
+
+export default async function Page() {
+
+    const { tahun } = await getTahun()
+
+    if (!tahun) {
+        return <TahunNull />;
     }
 
     return (
@@ -35,5 +41,3 @@ const LaporanTaggingPohon = () => {
         </>
     )
 }
-
-export default LaporanTaggingPohon;
