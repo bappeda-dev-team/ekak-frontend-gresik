@@ -131,14 +131,19 @@ export const ModalIsu: React.FC<modal> = ({ isOpen, onClose, Data, metode, tahun
     }, [tahun_list]);
 
     const fetchBidangUrusanOption = async () => {
-        const API_URL = process.env.NEXT_PUBLIC_API_URL;
+        let url = "";
+        if (branding?.user?.roles == "super_admin") {
+            url = `bidang_urusan_opd/findall/${branding?.opd?.value}`;
+        } else {
+            url = `bidang_urusan_opd/findall/${User?.kode_opd}`;
+        }
         try {
             setLoadingOption(true);
-            const response = await fetch(`${API_URL}/bidang_urusan/findall/${branding?.opd?.value}`, {
+            const response = await fetch(`${branding?.api_perencanaan}/${url}`, {
                 headers: {
-                    'Content-Type': 'application/json',
-                    Authorization: `${token}`
-                }
+                    "Content-Type": "application/json",
+                    Authorization: `${token}`,
+                },
             });
             const result = await response.json();
             if (result.code === 200 || result.code === 201) {
@@ -146,7 +151,7 @@ export const ModalIsu: React.FC<modal> = ({ isOpen, onClose, Data, metode, tahun
                     value: item.kode_bidang_urusan,
                     label: `(${item.kode_bidang_urusan}) ${item.nama_bidang_urusan}`,
                     kode_bidang_urusan: item.kode_bidang_urusan,
-                    nama_bidang_urusan: item.nama_bidang_urusan
+                    nama_bidang_urusan: item.nama_bidang_urusan,
                 }));
                 setBidangUrusanOption(data);
             } else {
@@ -159,7 +164,7 @@ export const ModalIsu: React.FC<modal> = ({ isOpen, onClose, Data, metode, tahun
         } finally {
             setLoadingOption(false);
         }
-    }
+    };
     const fetchPermasalahanOption = async () => {
         const API_URL = process.env.NEXT_PUBLIC_API_URL_PERMASALAHAN;
         try {
@@ -488,7 +493,7 @@ export const ModalIsu: React.FC<modal> = ({ isOpen, onClose, Data, metode, tahun
                                 rules={{ required: "Isu Strategis Wajib Diisi" }}
                                 control={control}
                                 render={({ field }) => {
-                                    return(
+                                    return (
                                         <>
                                             <textarea
                                                 {...field}
