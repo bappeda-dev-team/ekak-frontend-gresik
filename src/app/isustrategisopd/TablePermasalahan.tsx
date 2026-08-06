@@ -8,7 +8,6 @@ import { LoadingBeat } from "@/components/global/Loading";
 import { PerangkatDaerah } from "@/types";
 
 interface table {
-    roles: string;
     tahun: number;
     kode_opd: string;
 }
@@ -22,7 +21,7 @@ interface PohonData {
     jenis_masalah: string;
 }
 
-const TablePermasalahan: React.FC<table> = ({ roles, tahun, kode_opd }) => {
+const TablePermasalahan: React.FC<table> = ({ tahun, kode_opd }) => {
 
     const [Data, setData] = useState<PohonData[]>([]);
     const [Loading, setLoading] = useState<boolean>(false);
@@ -59,25 +58,25 @@ const TablePermasalahan: React.FC<table> = ({ roles, tahun, kode_opd }) => {
         }
     }, [tahun, kode_opd]);
 
-    const hapusPermasalahan = async (id: number) => {
+    const hapusPermasalahan = async(id: number) => {
         const API_URL = process.env.NEXT_PUBLIC_API_URL_PERMASALAHAN;
         console.log(id);
-        try {
+        try{
             const response = await fetch(`${API_URL}/permasalahan/${id}/hapus_permasalahan_terpilih`, {
                 method: "DELETE",
                 headers: {
-                    "Content-Type": "application/json",
+                    "Content-Type" : "application/json",
                 }
             });
             const result = await response.json();
-            if (result.code === 200) {
+            if(result.code === 200){
                 AlertNotification("Berhasil", "Data Permasalahan berhasil di hapus", "success", 2000, true);
                 setData(Data.filter((data) => (data.id !== id)));
             } else {
                 AlertNotification("Gagal", `${result.data}`, "error", 2000);
                 console.log(result.data);
             }
-        } catch (err) {
+        } catch(err){
             console.error(err);
         }
     }
@@ -88,8 +87,8 @@ const TablePermasalahan: React.FC<table> = ({ roles, tahun, kode_opd }) => {
                 Error data permasalahan, Periksa koneksi internet, jika error berlajut silakan hubungi tim developer
             </div>
         )
-    } else if (Loading) {
-        return (
+    } else if(Loading) {
+        return(
             <div className="border rounded-lg m-2">
                 <LoadingBeat />
             </div>
@@ -104,9 +103,7 @@ const TablePermasalahan: React.FC<table> = ({ roles, tahun, kode_opd }) => {
                         <th className="border-r border-b px-6 py-3 text-center w-[50px]">No</th>
                         <th className="border-r border-b px-6 py-3">Permasalahan</th>
                         <th className="border-r border-b px-6 py-3">Jenis</th>
-                        {roles != "reviewer" &&
-                            <th className="border-r border-b px-6 py-3 w-[50px]">Aksi</th>
-                        }
+                        <th className="border-r border-b px-6 py-3 w-[50px]">Aksi</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -128,25 +125,23 @@ const TablePermasalahan: React.FC<table> = ({ roles, tahun, kode_opd }) => {
                                 <td className="border-r border-b border-orange-500 px-6 py-4 text-center">
                                     {data.jenis_masalah || "-"}
                                 </td>
-                                {roles != "reviewer" &&
-                                    <td className="border-r border-b border-orange-500 px-6 py-4">
-                                        <div className="flex flex-col jutify-center items-center gap-2">
-                                            <ButtonRedBorder
-                                                className="flex items-center gap-1 w-full"
-                                                onClick={() => {
-                                                    AlertQuestion("Hapus?", "Data Permasalahan akan di hapus?", "question", "Hapus", "Batal").then((result) => {
-                                                        if (result.isConfirmed) {
-                                                            hapusPermasalahan(data.id);
-                                                        }
-                                                    });
-                                                }}
-                                            >
-                                                <TbTrash />
-                                                Hapus
-                                            </ButtonRedBorder>
-                                        </div>
-                                    </td>
-                                }
+                                <td className="border-r border-b border-orange-500 px-6 py-4">
+                                    <div className="flex flex-col jutify-center items-center gap-2">
+                                        <ButtonRedBorder
+                                            className="flex items-center gap-1 w-full"
+                                            onClick={() => {
+                                                AlertQuestion("Hapus?", "Data Permasalahan akan di hapus?", "question", "Hapus", "Batal").then((result) => {
+                                                    if (result.isConfirmed) {
+                                                        hapusPermasalahan(data.id);
+                                                    }
+                                                });
+                                            }}
+                                        >
+                                            <TbTrash />
+                                            Hapus
+                                        </ButtonRedBorder>
+                                    </div>
+                                </td>
                             </tr>
                         ))
                     }

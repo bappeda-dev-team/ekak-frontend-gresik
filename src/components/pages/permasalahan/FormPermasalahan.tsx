@@ -6,9 +6,9 @@ import { TbCircleX, TbDeviceFloppy } from "react-icons/tb"
 import { useBrandingContext } from "@/context/BrandingContext"
 import { AlertNotification } from "@/components/global/Alert"
 import { Childs } from "./TablePermasalahan"
+import { getUser } from "@/components/lib/Cookie"
 
 interface FormPermasalahan {
-    roles: string;
     data?: Childs;
     rowSpan: number;
     jenis: "edit" | "baru" | "";
@@ -36,13 +36,21 @@ interface FormValue {
     tahun: string;
 }
 
-export const FormPermasalahan: React.FC<FormPermasalahan> = ({ roles, data, jenis, rowSpan, editing }) => {
+export const FormPermasalahan: React.FC<FormPermasalahan> = ({ data, jenis, rowSpan, editing }) => {
 
     const { branding } = useBrandingContext();
     const branding_tahun = branding?.tahun ? branding?.tahun?.value : 0;
     const [Proses, setProses] = useState<boolean>(false);
     const [Success, setSuccess] = useState<boolean>(false);
     const [DataResult, setDataResult] = useState<any>(null);
+    const [User, setUser] = useState<any>(null);
+
+    useEffect(() => {
+            const fetchUser = getUser();
+            if (fetchUser) {
+                setUser(fetchUser.user);
+            }
+        }, []);
 
     const { control, reset, handleSubmit } = useForm<FormValue>({
         defaultValues: {
@@ -68,7 +76,8 @@ export const FormPermasalahan: React.FC<FormPermasalahan> = ({ roles, data, jeni
             jenis_masalah: data?.level_pohon === 4 ? "MASALAH_POKOK" :
                 data?.level_pohon === 5 ? "MASALAH" :
                     data?.level_pohon === 6 ? "AKAR_MASALAH" : "",
-            kode_opd: branding?.opd?.value,
+            kode_opd: branding?.user?.roles == "super_admin" ? branding?.opd?.value : User?.kode_opd,
+            nama_opd: branding?.user?.roles == "super_admin" ? branding?.opd?.label : User?.nama_opd,
             tahun: String(branding?.tahun?.value),
         }
         // console.log(formData);
@@ -113,7 +122,6 @@ export const FormPermasalahan: React.FC<FormPermasalahan> = ({ roles, data, jeni
         <React.Fragment>
             {Success && DataResult ?
                 <Childs
-                    roles={roles}
                     data={DataResult}
                     rowSpan={rowSpan}
                     tahun={branding_tahun}
