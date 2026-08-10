@@ -115,7 +115,9 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
 
   useEffect(() => {
     //DATA MASTER
-    if (url.startsWith("/DataMaster")) {
+    if (
+      url.startsWith("/DataMaster")
+    ) {
       setDataMaster(true);
       setDataMasterOpd(false);
       setDataMasterDewan(false);
@@ -127,6 +129,22 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
     }
     if (url.startsWith("/DataMaster/masterprogramkegiatan")) {
       setMasterProgramKegiatan(true);
+    }
+    // BIDANG URUSAN OPD
+    if (
+      url === "/DataMasterOpd/bidang-urusan-opd"
+    ) {
+      if (User?.roles == "super_admin") {
+      setDataMaster(true);
+      setDataMasterOpd(false);
+      } else {
+      setDataMaster(false);
+      setDataMasterOpd(true);
+      }
+      setDataMasterDewan(false);
+      setPerencanaanKota(false);
+      setPerencanaanOPD(false);
+      setLaporan(false);
     }
     //DATA MASTER OPD
     if (
@@ -700,6 +718,18 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
                       User OPD
                     </span>
                   </li>
+                </Link>
+                <Link href="/DataMaster/bidang-urusan-opd">
+                    <li
+                    className={`flex items-center gap-x-2 cursor-pointer p-2 rounded-xl transition-all duration-300 ease-in-out ${url === "/DataMaster/bidang-urusan-opd" ? "bg-white text-gray-800" : "hover:bg-slate-500"}`}
+                    >
+                    <TbFileDelta className="text-xl" />
+                    <span
+                        className={`${!isOpen && "hidden"} origin-left duration-200 text-sm`}
+                    >
+                        Bidang Urusan OPD
+                    </span>
+                    </li>
                 </Link>
                 <Link href="/subkegiatanopd">
                   <li
