@@ -17,6 +17,7 @@ import {
   TargetJumlahData,
   PermasalahanOpd,
 } from "@/types";
+import { getToken } from "@/components/lib/Cookie";
 
 interface Table {
   kode_opd: string;
@@ -59,6 +60,8 @@ const TableIsuStrategis: React.FC<Table> = ({ kode_opd, tahun }) => {
     }
   };
 
+  const token = getToken();
+
   useEffect(() => {
     let url = "";
     if (branding?.user?.roles == "super_admin") {
@@ -71,6 +74,7 @@ const TableIsuStrategis: React.FC<Table> = ({ kode_opd, tahun }) => {
         setLoading(true);
         const response = await fetch(`${branding?.api_permasalahan}/${url}`, {
           headers: {
+            Authorization: `${token}`,
             "Content-Type": "application/json",
           },
         });
@@ -91,7 +95,7 @@ const TableIsuStrategis: React.FC<Table> = ({ kode_opd, tahun }) => {
       }
     };
     fetchIsuStrategis();
-  }, [branding, FetchTrigger]);
+  }, [branding, FetchTrigger, token]);
 
   const hapusIsu = async (id: number) => {
     const API_URL = process.env.NEXT_PUBLIC_API_URL_PERMASALAHAN;

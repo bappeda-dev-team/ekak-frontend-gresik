@@ -39,6 +39,11 @@ interface FormValue {
   kode_bidang_urusan: BidangUrusan | null;
   tahun_awal: string;
   tahun_akhir: string;
+  id_ppd: number | null;
+  id_isu_klhs: number | null;
+  id_isu_global: number | null;
+  id_isu_nasional: number | null;
+  id_isu_regional: number | null;
   potensi_perangkat_daerah: Ppd | null;
   isu_klhs: IsuKlhs | null;
   isu_global: IsuGlobal | null;
@@ -507,6 +512,11 @@ export const ModalIsu: React.FC<modal> = ({
       nama_bidang_urusan: data.kode_bidang_urusan?.nama_bidang_urusan,
       tahun_awal: "",
       tahun_akhir: "",
+      id_ppd: data.potensi_perangkat_daerah?.id ?? "",
+      id_isu_klhs: data.isu_klhs?.id,
+      id_isu_global: data.isu_global?.id ?? "",
+      id_isu_nasional: data.isu_nasional?.id ?? "",
+      id_isu_regional: data.isu_regional?.id ?? "",
       potensi_perangkat_daerah: data.potensi_perangkat_daerah?.potensi ?? "",
       isu_klhs: data.isu_klhs?.isu ?? "",
       isu_global: data.isu_global?.isu ?? "",
@@ -536,6 +546,11 @@ export const ModalIsu: React.FC<modal> = ({
       nama_bidang_urusan: data.kode_bidang_urusan?.nama_bidang_urusan,
       tahun_awal: "",
       tahun_akhir: "",
+      id_ppd: data.potensi_perangkat_daerah?.id ?? "",
+      id_isu_klhs: data.isu_klhs?.id,
+      id_isu_global: data.isu_global?.id ?? "",
+      id_isu_nasional: data.isu_nasional?.id ?? "",
+      id_isu_regional: data.isu_regional?.id ?? "",
       potensi_perangkat_daerah: data.potensi_perangkat_daerah?.potensi ?? "",
       isu_klhs: data.isu_klhs?.isu ?? "",
       isu_global: data.isu_global?.isu ?? "",
