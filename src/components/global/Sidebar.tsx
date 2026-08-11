@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import {
     TbBook,
+    TbLayoutList,
     TbApps,
     TbChecklist,
     TbShoppingCartDollar,
@@ -230,6 +231,7 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
             url === "/sasaranopd" ||
             url === "/ikuopd" ||
             url === "/matrix-renstra" ||
+            url.startsWith("/Renstra") ||
             url.startsWith("/Renja") ||
             url === "/rencanaaksiopd"
         ) {
@@ -1235,6 +1237,18 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
                                             Isu Strategis
                                         </span>
                                     </li>
+                                </Link>
+                                <Link href="/Renstra/permasalahan&isustrategisopd">
+                                <li
+                                    className={`flex items-center gap-x-2 cursor-pointer p-2 rounded-xl ${url === "/Renstra/permasalahan&isustrategisopd" ? "bg-white text-gray-800" : "hover:bg-slate-500"}`}
+                                >
+                                    <TbLayoutList className="text-4xl" />
+                                    <span
+                                    className={`${!isOpen && "hidden"} origin-left duration-200`}
+                                    >
+                                    Permasalahan & Isu Strategis
+                                    </span>
+                                </li>
                                 </Link>
                                 <Link href="/tujuanopd">
                                     <li
