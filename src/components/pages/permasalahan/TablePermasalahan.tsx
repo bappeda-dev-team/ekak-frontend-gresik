@@ -211,33 +211,37 @@ export const Childs: React.FC<Childs> = ({ data, rowSpan, tahun }) => {
     }
 
     const handlePilih = async (id: number) => {
-        const API_URL_PERMASALAHAN = process.env.NEXT_PUBLIC_API_URL_PERMASALAHAN;
-        const formData = {
-            masalah_id: id,
-            kode_opd: data?.perangkat_daerah.kode_opd,
-            tahun: String(tahun),
-        }
-        // console.log(formData);
-        try {
-            setLoadingPilih(true);
-            const response = await fetch(`${API_URL_PERMASALAHAN}/permasalahan_terpilih/create`, {
-                method: "POST",
-                headers: {
-                    'Content-Type': "application/json",
-                },
-                body: JSON.stringify(formData),
-            });
-            const result = await response.json();
-            if (result.code === 200) {
-                AlertNotification("Berhasil", "Berhasil memilih data permasalahan, lanjut ke halaman isu strategis", "success", 2000, true);
-                setTerpilh(true);
-            } else {
-                AlertNotification("Gagal", `${result.data}`, "error");
+        if (data?.perangkat_daerah.kode_opd === null || data?.perangkat_daerah.kode_opd === undefined) {
+            AlertNotification("Kode OPD tidak ada", "Reload halaman dan coba lagi", "error", 5000)
+        } else {
+            const API_URL_PERMASALAHAN = process.env.NEXT_PUBLIC_API_URL_PERMASALAHAN;
+            const formData = {
+                masalah_id: id,
+                kode_opd: data?.perangkat_daerah.kode_opd,
+                tahun: String(tahun),
             }
-        } catch (err) {
-            console.error(err);
-        } finally {
-            setLoadingPilih(false);
+            // console.log(formData);
+            try {
+                setLoadingPilih(true);
+                const response = await fetch(`${API_URL_PERMASALAHAN}/permasalahan_terpilih/create`, {
+                    method: "POST",
+                    headers: {
+                        'Content-Type': "application/json",
+                    },
+                    body: JSON.stringify(formData),
+                });
+                const result = await response.json();
+                if (result.code === 200) {
+                    AlertNotification("Berhasil", "Berhasil memilih data permasalahan, lanjut ke halaman isu strategis", "success", 2000, true);
+                    setTerpilh(true);
+                } else {
+                    AlertNotification("Gagal", `${result.data}`, "error");
+                }
+            } catch (err) {
+                console.error(err);
+            } finally {
+                setLoadingPilih(false);
+            }
         }
     }
 
