@@ -122,6 +122,11 @@ export interface IsuStrategis {
   kode_opd: string;
   nama_bidang_urusan: string;
   nama_opd: string;
+  id_ppd: number;
+  id_isu_klhs: number;
+  id_isu_global: number;
+  id_isu_nasional: number;
+  id_isu_regional: number;
   potensi_perangkat_daerah: string;
   isu_klhs: string;
   isu_global: string;
