@@ -10,6 +10,7 @@ import { usePathname } from "next/navigation";
 import { getUser } from "@/components/lib/Cookie";
 import NextTopLoader from "nextjs-toploader";
 import { BrandingProvider } from "@/context/BrandingContext";
+import ToastProvider from "@/context/ToastProvider";
 
 const font = Poppins({
   subsets: ['latin'],
