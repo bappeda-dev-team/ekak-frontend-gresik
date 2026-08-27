@@ -9,6 +9,7 @@ function generateCSP() {
         process.env.NEXT_PUBLIC_API_URL_CSF,
         process.env.NEXT_PUBLIC_API_URL_TAGGING,
         process.env.NEXT_PUBLIC_API_URL_CASCADING_PEMDA,
+        process.env.NEXT_PUBLIC_API_CETAK,
     ].filter(Boolean);
 
     const connectSrc = ["'self'", ...allowedDomains].join(' ');
