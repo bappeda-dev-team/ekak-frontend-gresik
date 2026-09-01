@@ -6,7 +6,7 @@ import { ButtonSky, ButtonRed, ButtonSkyBorder, ButtonRedBorder } from '@/compon
 import { getToken } from "@/components/lib/Cookie";
 import Select from 'react-select';
 import { LoadingButtonClip } from "@/components/global/Loading";
-import { AlertNotification, AlertQuestion } from "@/components/global/Alert";
+import { AlertNotification } from "@/components/global/Alert";
 
 interface OptionTypeString {
     value: string;
@@ -24,6 +24,7 @@ interface FormValue {
 interface indikator {
     id_indikator?: string;
     indikator: string;
+    definisi_operasional: string;
     rumus_perhitungan: string;
     sumber_data: string;
     target: target[];
@@ -50,13 +51,15 @@ interface modal {
     id?: number; // id tujuan opd
     periode?: number; // id periode
     tahun?: number; // tahun value header
+    tahun_awal?: number;
+    tahun_akhir?: number;
     tahun_list?: string[];
     kode_opd?: string;
     special?: boolean;
     onSuccess: () => void;
 }
 
-export const ModalTujuanOpd: React.FC<modal> = ({ isOpen, onClose, id, kode_opd, periode, metode, tahun, tahun_list, special, onSuccess }) => {
+export const ModalTujuanOpd: React.FC<modal> = ({ isOpen, onClose, id, kode_opd, periode, metode, tahun, tahun_awal, tahun_akhir, tahun_list, special, onSuccess }) => {
 
     const {
         control,
@@ -83,7 +86,7 @@ export const ModalTujuanOpd: React.FC<modal> = ({ isOpen, onClose, id, kode_opd,
 
     const handleTambahIndikator = () => {
         const defaultTarget = Array(special === true ? Periode?.tahun_list.length : (tahun_list && tahun_list.length)).fill({ target: '', satuan: '' }); // Buat array (jumlahnya sesuai dengan tahun_list length) dengan target kosong
-        append({ indikator: '', rumus_perhitungan: '', sumber_data: '', target: defaultTarget });
+        append({ indikator: '', definisi_operasional: "", rumus_perhitungan: '', sumber_data: '', target: defaultTarget });
     };
 
     useEffect(() => {
@@ -115,11 +118,19 @@ export const ModalTujuanOpd: React.FC<modal> = ({ isOpen, onClose, id, kode_opd,
                     id: item.id, // Sesuai dengan struktur API
                     indikator: item.indikator,
                     rumus_perhitungan: item.rumus_perhitungan,
+                    definisi_operasional: item.definisi_operasional,
                     sumber_data: item.sumber_data,
-                    target: item.target.map((t: any) => ({
-                        target: t.target,
-                        satuan: t.satuan,
-                    })),
+                    target: tahun_list?.map((tahun: string) => {
+                        const targetTahun = item.target.find(
+                            (t: target) => t.tahun === tahun
+                        );
+
+                        return {
+                            tahun,
+                            target: targetTahun?.target ?? "",
+                            satuan: targetTahun?.satuan ?? "",
+                        };
+                    }),
                 })) || [];
 
                 reset({ indikator: indikatorData });
@@ -135,11 +146,11 @@ export const ModalTujuanOpd: React.FC<modal> = ({ isOpen, onClose, id, kode_opd,
         }
     }, [id, token, isOpen, metode, reset, replace, tahun, tahun_list, special]);
 
-    const fetchOptionBidangUrusan = async() => {
+    const fetchOptionBidangUrusan = async () => {
         const API_URL = process.env.NEXT_PUBLIC_API_URL;
-        try{
+        try {
             setIsLoading(true);
-            const response = await fetch(`${API_URL}/bidang_urusan/findall/${kode_opd}`, {
+            const response = await fetch(`${API_URL}/bidang_urusan_opd/findall/${kode_opd}`, {
                 headers: {
                     Authorization: `${token}`,
                     'Content-Type': 'application/json',
@@ -158,9 +169,9 @@ export const ModalTujuanOpd: React.FC<modal> = ({ isOpen, onClose, id, kode_opd,
             setIsLoading(false);
         }
     }
-    const fetchOptionPeriode = async() => {
+    const fetchOptionPeriode = async () => {
         const API_URL = process.env.NEXT_PUBLIC_API_URL;
-        try{
+        try {
             setIsLoading(true);
             const response = await fetch(`${API_URL}/periode/findall`, {
                 headers: {
@@ -191,15 +202,18 @@ export const ModalTujuanOpd: React.FC<modal> = ({ isOpen, onClose, id, kode_opd,
         const formDataNew = {
             //key : value
             kode_bidang_urusan: BidangUrusan?.value,
+            tahun_awal: special === true ? Periode?.tahun_awal : String(tahun_awal),
+            tahun_akhir: special === true ? Periode?.tahun_akhir : String(tahun_akhir),
             periode_id: special === true ? Periode?.value : periode,
             kode_opd: kode_opd,
             tujuan: TujuanOpd,
             indikator: data.indikator.map((ind) => ({
                 indikator: ind.indikator,
+                definisi_operasional: ind.definisi_operasional,
                 rumus_perhitungan: ind.rumus_perhitungan,
                 sumber_data: ind.sumber_data,
                 target: ind.target.map((t, index) => ({
-                    target: t.target,
+                    target: String(t.target),
                     satuan: t.satuan,
                     tahun: special === true ? Periode?.tahun_list[index] : (tahun_list && tahun_list[index]),
                 })),
@@ -212,12 +226,15 @@ export const ModalTujuanOpd: React.FC<modal> = ({ isOpen, onClose, id, kode_opd,
             kode_bidang_urusan: BidangUrusan?.value,
             tujuan: TujuanOpd,
             periode_id: periode,
+            tahun_awal: String(tahun_awal),
+            tahun_akhir: String(tahun_akhir),
             indikator: data.indikator.map((ind) => ({
                 indikator: ind.indikator,
+                definisi_operasional: ind.definisi_operasional,
                 rumus_perhitungan: ind.rumus_perhitungan,
                 sumber_data: ind.sumber_data,
                 target: ind.target.map((t, index) => ({
-                    target: t.target,
+                    target: String(t.target),
                     satuan: t.satuan,
                     tahun: tahun_list && tahun_list[index],
                 })),
@@ -233,9 +250,9 @@ export const ModalTujuanOpd: React.FC<modal> = ({ isOpen, onClose, id, kode_opd,
         try {
             let url = "";
             if (metode === "lama") {
-                url = `tujuan_opd/update/${id}`;
+                url = `tujuan_opd/renstra/update/${id}`;
             } else if (metode === "baru") {
-                url = `tujuan_opd/create`;
+                url = `tujuan_opd/renstra/create`;
             } else {
                 url = '';
             }
@@ -254,7 +271,7 @@ export const ModalTujuanOpd: React.FC<modal> = ({ isOpen, onClose, id, kode_opd,
                 onClose();
                 onSuccess();
                 reset();
-            } else if(result.code === 500) {
+            } else if (result.code === 500) {
                 AlertNotification("Gagal", `${result.data}`, "error", 2000);
             } else {
                 AlertNotification("Gagal", "terdapat kesalahan pada backend / database server dengan response !ok", "error", 2000);
@@ -347,7 +364,7 @@ export const ModalTujuanOpd: React.FC<modal> = ({ isOpen, onClose, id, kode_opd,
                                                 borderRadius: '8px',
                                                 borderColor: 'black', // Warna default border menjadi merah
                                                 '&:hover': {
-                                                borderColor: '#3673CA', // Warna border tetap merah saat hover
+                                                    borderColor: '#3673CA', // Warna border tetap merah saat hover
                                                 },
                                             }),
                                         }}
@@ -389,7 +406,7 @@ export const ModalTujuanOpd: React.FC<modal> = ({ isOpen, onClose, id, kode_opd,
                                                     borderRadius: '8px',
                                                     borderColor: 'black', // Warna default border menjadi merah
                                                     '&:hover': {
-                                                    borderColor: '#3673CA', // Warna border tetap merah saat hover
+                                                        borderColor: '#3673CA', // Warna border tetap merah saat hover
                                                     },
                                                 }),
                                             }}
@@ -402,7 +419,7 @@ export const ModalTujuanOpd: React.FC<modal> = ({ isOpen, onClose, id, kode_opd,
                             indikator Tujuan OPD :
                         </label>
                         {fields.map((field, index) => (
-                            <React.Fragment key={index}>
+                            <React.Fragment key={field.id}>
                                 <div className="flex flex-col my-2 py-2 rounded-lg">
                                     <Controller
                                         name={`indikator.${index}.indikator`}
@@ -417,6 +434,25 @@ export const ModalTujuanOpd: React.FC<modal> = ({ isOpen, onClose, id, kode_opd,
                                                     {...field}
                                                     className="border px-4 py-2 rounded-lg"
                                                     placeholder={`Masukkan nama indikator ${index + 1}`}
+                                                />
+                                            </div>
+                                        )}
+                                    />
+                                </div>
+                                <div className="flex flex-col border border-gray-200 my-2 py-2 px-2 rounded-lg">
+                                    <Controller
+                                        name={`indikator.${index}.definisi_operasional`}
+                                        control={control}
+                                        defaultValue={field.definisi_operasional}
+                                        render={({ field }) => (
+                                            <div className="flex flex-col py-3">
+                                                <label className="uppercase text-xs font-bold text-gray-700 mb-2">
+                                                    Definisi Operasional :
+                                                </label>
+                                                <input
+                                                    {...field}
+                                                    className="border px-4 py-2 rounded-lg"
+                                                    placeholder={`Masukkan Definisi Operasional`}
                                                 />
                                             </div>
                                         )}
@@ -441,7 +477,7 @@ export const ModalTujuanOpd: React.FC<modal> = ({ isOpen, onClose, id, kode_opd,
                                         )}
                                     />
                                 </div>
-                                <div key={index} className="flex flex-col border border-gray-200 my-2 py-2 px-2 rounded-lg">
+                                <div className="flex flex-col border border-gray-200 my-2 py-2 px-2 rounded-lg">
                                     <Controller
                                         name={`indikator.${index}.sumber_data`}
                                         control={control}
@@ -460,7 +496,7 @@ export const ModalTujuanOpd: React.FC<modal> = ({ isOpen, onClose, id, kode_opd,
                                         )}
                                     />
                                 </div>
-                                <div className="flex flex-wrap justify-between gap-1 target&satuan">
+                                <div className="grid grid-cols-2 md:grid-cols-3 justify-between gap-1 target&satuan">
                                     {field.target.map((_, subindex) => (
                                         <div key={`${index}-${subindex}`} className="flex flex-col py-1 px-3 border border-gray-200 rounded-lg">
                                             <label className="text-base text-center text-gray-700">
