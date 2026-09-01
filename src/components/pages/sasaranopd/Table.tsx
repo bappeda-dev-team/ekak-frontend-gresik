@@ -142,9 +142,9 @@ const Table: React.FC<table> = ({
         const API_URL = process.env.NEXT_PUBLIC_API_URL;
         let url = "";
         if (User?.roles == "super_admin") {
-            url = `sasaran_opd/renstra/${SelectedOpd?.value}/${tahun_awal}/${tahun_akhir}/${jenis}`;
+            url = `sasaran_opd/findall/${SelectedOpd?.value}/${tahun_awal}/${tahun_akhir}/${jenis}`;
         } else {
-            url = `sasaran_opd/renstra/${User?.kode_opd}/${tahun_awal}/${tahun_akhir}/${jenis}`;
+            url = `sasaran_opd/findall/${User?.kode_opd}/${tahun_awal}/${tahun_akhir}/${jenis}`;
         }
         const fetchSasaranOpd = async () => {
             setLoading(true);
