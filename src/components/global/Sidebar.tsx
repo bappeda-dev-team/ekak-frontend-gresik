@@ -294,6 +294,8 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
             url === "/listopd" ||
             url === "/reviewpemda" ||
             url === "/reviewopd" ||
+            url === "/permasalahan-opd-view" ||
+            url === "/isu-strategis-opd-view" ||
             url === "/tujuanopdview" ||
             url === "/sasaranopdview" ||
             url === "/ikuopdview" ||
@@ -320,6 +322,8 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
             setRenstraView(false);
         }
         if (
+            url === "/permasalahan-opd-view" ||
+            url === "/isu-strategis-opd-view" ||
             url === "/tujuanopdview" ||
             url === "/sasaranopdview" ||
             url === "/ikuopdview" ||
@@ -1239,16 +1243,16 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
                                     </li>
                                 </Link>
                                 <Link href="/Renstra/permasalahan&isustrategisopd">
-                                <li
-                                    className={`flex items-center gap-x-2 cursor-pointer p-2 rounded-xl ${url === "/Renstra/permasalahan&isustrategisopd" ? "bg-white text-gray-800" : "hover:bg-slate-500"}`}
-                                >
-                                    <TbLayoutList className="text-4xl" />
-                                    <span
-                                    className={`${!isOpen && "hidden"} origin-left duration-200`}
+                                    <li
+                                        className={`flex items-center gap-x-2 cursor-pointer p-2 rounded-xl ${url === "/Renstra/permasalahan&isustrategisopd" ? "bg-white text-gray-800" : "hover:bg-slate-500"}`}
                                     >
-                                    Permasalahan & Isu Strategis
-                                    </span>
-                                </li>
+                                        <TbLayoutList className="text-4xl" />
+                                        <span
+                                            className={`${!isOpen && "hidden"} origin-left duration-200`}
+                                        >
+                                            Permasalahan & Isu Strategis
+                                        </span>
+                                    </li>
                                 </Link>
                                 <Link href="/tujuanopd">
                                     <li
@@ -1698,75 +1702,67 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
                         <div
                             className={`transition-all duration-300 ease-in-out ${RenstraView ? "px-3 py-2 flex flex-col border-l-2 border-white rounded-b-xl ml-2  max-h-screen opacity-100" : "max-h-0 opacity-0 pointer-events-none"}`}
                         >
-                            <Link href="/tujuanopdview">
-                                <li
-                                    className={`flex items-center gap-x-2 cursor-pointer p-2 rounded-xl ${url === "/tujuanopdview" ? "bg-white text-gray-800" : "hover:bg-slate-500"}`}
-                                >
+                            <Link href="/permasalahan-opd-view">
+                                <li className={`flex items-center gap-x-2 cursor-pointer p-2 rounded-xl ${url === "/permasalahan-opd-view" ? "bg-white text-gray-800" : "hover:bg-slate-500"}`}>
                                     <TbMapPin className="text-xl" />
-                                    <span
-                                        className={`${!isOpen && "hidden"} origin-left duration-200`}
-                                    >
+                                    <span className={`${!isOpen && "hidden"} text-sm origin-left duration-200`}>
+                                        Permasalahan
+                                    </span>
+                                </li>
+                            </Link>
+                            <Link href="/isu-strategis-opd-view">
+                                <li className={`flex items-center gap-x-2 cursor-pointer p-2 rounded-xl ${url === "/isu-strategis-opd-view" ? "bg-white text-gray-800" : "hover:bg-slate-500"}`}>
+                                    <TbMapPin className="text-xl" />
+                                    <span className={`${!isOpen && "hidden"} text-sm origin-left duration-200`}>
+                                        Isu Strategis
+                                    </span>
+                                </li>
+                            </Link>
+                            <Link href="/tujuanopdview">
+                                <li className={`flex items-center gap-x-2 cursor-pointer p-2 rounded-xl ${url === "/tujuanopdview" ? "bg-white text-gray-800" : "hover:bg-slate-500"}`}>
+                                    <TbMapPin className="text-xl" />
+                                    <span className={`${!isOpen && "hidden"} origin-left duration-200`}>
                                         Tujuan OPD
                                     </span>
                                 </li>
                             </Link>
                             <Link href="/sasaranopdview">
-                                <li
-                                    className={`flex items-center gap-x-2 cursor-pointer p-2 rounded-xl ${url === "/sasaranopdview" ? "bg-white text-gray-800" : "hover:bg-slate-500"}`}
-                                >
+                                <li className={`flex items-center gap-x-2 cursor-pointer p-2 rounded-xl ${url === "/sasaranopdview" ? "bg-white text-gray-800" : "hover:bg-slate-500"}`}>
                                     <TbTarget className="text-xl" />
-                                    <span
-                                        className={`${!isOpen && "hidden"} origin-left duration-200`}
-                                    >
+                                    <span className={`${!isOpen && "hidden"} origin-left duration-200`}>
                                         Sasaran OPD
                                     </span>
                                 </li>
                             </Link>
                             <Link href="/ikuopdview">
-                                <li
-                                    className={`flex items-center gap-x-2 cursor-pointer p-2 rounded-xl ${url === "/ikuopdview" ? "bg-white text-gray-800" : "hover:bg-slate-500"}`}
-                                >
+                                <li className={`flex items-center gap-x-2 cursor-pointer p-2 rounded-xl ${url === "/ikuopdview" ? "bg-white text-gray-800" : "hover:bg-slate-500"}`}>
                                     <TbChartBar className="text-xl" />
-                                    <span
-                                        className={`${!isOpen && "hidden"} origin-left duration-200`}
-                                    >
+                                    <span className={`${!isOpen && "hidden"} origin-left duration-200`}>
                                         IKU OPD
                                     </span>
                                 </li>
                             </Link>
                             <Link href="/laporanrenstra">
-                                <li
-                                    className={`flex items-center gap-x-2 cursor-pointer p-2 rounded-xl ${url === "/laporanrenstra" ? "bg-white text-gray-800" : "hover:bg-slate-500"}`}
-                                >
+                                <li className={`flex items-center gap-x-2 cursor-pointer p-2 rounded-xl ${url === "/laporanrenstra" ? "bg-white text-gray-800" : "hover:bg-slate-500"}`}>
                                     <TbShoppingCartDollar className="text-xl" />
-                                    <span
-                                        className={`${!isOpen && "hidden"} origin-left duration-200`}
-                                    >
+                                    <span className={`${!isOpen && "hidden"} origin-left duration-200`}>
                                         Matrix Renstra
                                     </span>
                                 </li>
                             </Link>
                         </div>
                         <Link href="#">
-                            <li
-                                className={`flex items-center gap-x-2 text-sm cursor-pointer p-2 rounded-xl ${url === "/rencanakinerja-kak" ? "bg-white text-gray-800" : "hover:bg-slate-500"}`}
-                            >
+                            <li className={`flex items-center gap-x-2 text-sm cursor-pointer p-2 rounded-xl ${url === "/rencanakinerja-kak" ? "bg-white text-gray-800" : "hover:bg-slate-500"}`}>
                                 <TbChecklist className="text-xl" />
-                                <span
-                                    className={`${!isOpen && "hidden"} origin-left duration-200`}
-                                >
+                                <span className={`${!isOpen && "hidden"} origin-left duration-200`}>
                                     Rencana Kinerja KAK
                                 </span>
                             </li>
                         </Link>
                         <Link href="/laporanrincianbelanja">
-                            <li
-                                className={`flex items-center gap-x-2 cursor-pointer p-2 rounded-xl ${url === "/laporanrincianbelanja" ? "bg-white text-gray-800" : "hover:bg-slate-500"}`}
-                            >
+                            <li className={`flex items-center gap-x-2 cursor-pointer p-2 rounded-xl ${url === "/laporanrincianbelanja" ? "bg-white text-gray-800" : "hover:bg-slate-500"}`}>
                                 <TbDeviceImacDollar className="text-xl" />
-                                <span
-                                    className={`${!isOpen && "hidden"} origin-left duration-200`}
-                                >
+                                <span className={`${!isOpen && "hidden"} origin-left duration-200`}>
                                     Rincian Belanja
                                 </span>
                             </li>

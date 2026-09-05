@@ -58,14 +58,16 @@ const IsuStrategis = () => {
                   ? branding?.opd?.value
                   : branding?.user?.kode_opd
               }
-            />
+              jenis="opd"
+              />
             <TableIsuStrategis
               tahun={tahun}
               kode_opd={
                 branding?.user?.roles == "super_admin"
-                  ? branding?.opd?.value
-                  : branding?.user?.kode_opd
+                ? branding?.opd?.value
+                : branding?.user?.kode_opd
               }
+              jenis="opd"
             />
           </div>
         </>
